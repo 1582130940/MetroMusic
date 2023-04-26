@@ -525,8 +525,6 @@
     <string name="top_artists">인기 아티스트</string>
     <string name="track_hint">"트랙 (트랙 2는 2, CD3의 트랙 4는 3004)"</string>
     <string name="track_list">트랙 번호</string>
-    <string name="translate">번역</string>
-    <string name="translate_community">Help us translate the app to your language</string>
     <string name="try_retro_music_premium">Try Retro Music Premium</string>
     <string name="twitter_page">Twitter</string>
     <string name="twitter_page_summary">Share your design with Retro Music</string>

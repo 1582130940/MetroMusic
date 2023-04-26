@@ -526,8 +526,6 @@
     <string name="top_artists">热门艺术家</string>
     <string name="track_hint">"音轨（2 代表第 2 条音轨，3004 代表第 3 张盘的第 4 条音轨）"</string>
     <string name="track_list">音轨编号</string>
-    <string name="translate">翻译</string>
-    <string name="translate_community">帮助我们将应用翻译成您的语言</string>
     <string name="try_retro_music_premium">试试 Retro Music 高级版</string>
     <string name="twitter_page">Twitter</string>
     <string name="twitter_page_summary">与 Retro Music 分享您的设计</string>

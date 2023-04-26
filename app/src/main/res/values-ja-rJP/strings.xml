@@ -526,8 +526,6 @@
     <string name="top_artists">トップアーティスト</string>
     <string name="track_hint">"トラック(トラック2の場合は「truck 2」、CD3でtruck4の場合は 「3004」)"</string>
     <string name="track_list">トラック番号</string>
-    <string name="translate">翻訳</string>
-    <string name="translate_community">翻訳を手伝ってください！</string>
     <string name="try_retro_music_premium">Retro Music Premium を試す</string>
     <string name="twitter_page">ツイッター</string>
     <string name="twitter_page_summary">あなたのデザインを皆に共有しましょう</string>

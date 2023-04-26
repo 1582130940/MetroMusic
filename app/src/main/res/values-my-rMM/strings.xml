@@ -525,8 +525,6 @@
     <string name="top_artists">ထိပ်ဆုံးအဆိုတော်များ</string>
     <string name="track_hint">"Track (2 for track 2 or 3004 for CD3 track 4)"</string>
     <string name="track_list">အပုဒ်နံပါတ်</string>
-    <string name="translate">ဘာသာပြန်ခြင်း</string>
-    <string name="translate_community">App ကိုသင့်ဘာသာစကားသို့ ကူပြန်ပေးပါ</string>
     <string name="try_retro_music_premium">Retro Music Premium ကိုစမ်းကြည့်ပါ</string>
     <string name="twitter_page">Twitter</string>
     <string name="twitter_page_summary">သင့် Retro Music ဒီဇိုင်းများကိုမျှဝေပါ</string>

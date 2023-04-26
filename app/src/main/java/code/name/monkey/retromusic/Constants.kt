@@ -18,7 +18,6 @@ import android.provider.BaseColumns
 import android.provider.MediaStore
 
 object Constants {
-    const val TRANSLATE = "https://crowdin.com/project/retromusicplayer"
     const val GITHUB_PROJECT = "https://github.com/1582130940/MetroMusic"
     const val USER_PROFILE = "profile.jpg"
     const val USER_BANNER = "banner.jpg"

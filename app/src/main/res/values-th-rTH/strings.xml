@@ -525,8 +525,6 @@
     <string name="top_artists">Top ศิลปิน</string>
     <string name="track_hint">"แทร็ก (2 สำหรับแทร็ก 2 หรือ 3004 สำหรับ CD3 แทร็ก 4)"</string>
     <string name="track_list">หมายเลขแทร็ก</string>
-    <string name="translate">แปลภาษา</string>
-    <string name="translate_community">ช่วยพวกเราแปลภาษาเป็นภาษาของคุณ</string>
     <string name="try_retro_music_premium">ลอง Retro Music พรีเมียม</string>
     <string name="twitter_page">Twitter</string>
     <string name="twitter_page_summary">แชร์การออกแบบของคุณด้วย Retro Music</string>
