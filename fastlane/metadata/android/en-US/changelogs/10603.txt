@@ -1,2 +1,0 @@
-- Remove startup warnings
-- Target Android 13
