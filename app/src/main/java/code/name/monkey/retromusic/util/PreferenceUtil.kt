@@ -32,9 +32,9 @@ object PreferenceUtil {
     val defaultCategories = listOf(
         CategoryInfo(CategoryInfo.Category.Home, true),
         CategoryInfo(CategoryInfo.Category.Songs, true),
-        CategoryInfo(CategoryInfo.Category.Albums, true),
-        CategoryInfo(CategoryInfo.Category.Artists, true),
-        CategoryInfo(CategoryInfo.Category.Playlists, true),
+        CategoryInfo(CategoryInfo.Category.Albums, false),
+        CategoryInfo(CategoryInfo.Category.Artists, false),
+        CategoryInfo(CategoryInfo.Category.Playlists, false),
         CategoryInfo(CategoryInfo.Category.Genres, false),
         CategoryInfo(CategoryInfo.Category.Folder, false),
         CategoryInfo(CategoryInfo.Category.Search, false)
@@ -227,7 +227,7 @@ object PreferenceUtil {
 
     private val isBlackMode
         get() = sharedPreferences.getBoolean(
-            BLACK_THEME, false
+            BLACK_THEME, true
         )
 
     val isExtraControls
@@ -551,7 +551,7 @@ object PreferenceUtil {
 
     var nowPlayingScreen: NowPlayingScreen
         get() {
-            val id: Int = sharedPreferences.getInt(NOW_PLAYING_SCREEN_ID, 0)
+            val id: Int = sharedPreferences.getInt(NOW_PLAYING_SCREEN_ID, 5)
             for (nowPlayingScreen in NowPlayingScreen.values()) {
                 if (nowPlayingScreen.id == id) {
                     return nowPlayingScreen
@@ -643,7 +643,7 @@ object PreferenceUtil {
         set(value) = sharedPreferences.edit { putInt(AUDIO_FADE_DURATION, value) }
 
     var showLyrics: Boolean
-        get() = sharedPreferences.getBoolean(SHOW_LYRICS, false)
+        get() = sharedPreferences.getBoolean(SHOW_LYRICS, true)
         set(value) = sharedPreferences.edit { putBoolean(SHOW_LYRICS, value) }
 
     val rememberLastTab: Boolean
