@@ -20,7 +20,6 @@ import android.provider.MediaStore
 object Constants {
     const val TRANSLATE = "https://crowdin.com/project/retromusicplayer"
     const val GITHUB_PROJECT = "https://github.com/1582130940/MetroMusic"
-    const val TELEGRAM_CHANGE_LOG = "https://t.me/AppManagerChannel"
     const val USER_PROFILE = "profile.jpg"
     const val USER_BANNER = "banner.jpg"
     const val FAQ_LINK = "https://github.com/1582130940/MetroMusic/blob/master/FAQ.md"

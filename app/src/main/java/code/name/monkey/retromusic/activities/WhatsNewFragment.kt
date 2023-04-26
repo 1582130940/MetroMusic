@@ -97,19 +97,6 @@ class WhatsNewFragment : BottomSheetDialogFragment() {
             )
         }
         setChangelogRead(requireContext())
-        binding.tgFab.setOnClickListener {
-            openUrl(Constants.TELEGRAM_CHANGE_LOG)
-        }
-        binding.tgFab.accentColor()
-        binding.tgFab.shrink()
-        binding.container.setOnScrollChangeListener { _: NestedScrollView?, _: Int, scrollY: Int, _: Int, oldScrollY: Int ->
-            val dy = scrollY - oldScrollY
-            if (dy > 0) {
-                binding.tgFab.shrink()
-            } else if (dy < 0) {
-                binding.tgFab.extend()
-            }
-        }
     }
 
     override fun onDestroy() {
