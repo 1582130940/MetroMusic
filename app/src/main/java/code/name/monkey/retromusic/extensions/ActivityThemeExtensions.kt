@@ -9,7 +9,11 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
-import androidx.core.view.*
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.isGone
 import androidx.fragment.app.FragmentActivity
 import code.name.monkey.appthemehelper.util.ColorUtil
 import code.name.monkey.appthemehelper.util.VersionUtils
@@ -105,9 +109,9 @@ fun FragmentActivity.setTaskDescriptionColor(color: Int) {
     if (VersionUtils.hasP()) {
         setTaskDescription(
             ActivityManager.TaskDescription(
-                title as String?,
-                -1,
-                colorFinal
+                /* label = */ title as String?,
+                /* iconRes = */ -1,
+                /* colorPrimary = */ colorFinal
             )
         )
     } else {
@@ -230,6 +234,8 @@ fun AppCompatActivity.hideSoftKeyboard() {
     if (currentFocus != null) {
         val inputMethodManager =
             getSystemService<InputMethodManager>()
-        inputMethodManager?.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+        inputMethodManager?.hideSoftInputFromWindow(/* windowToken = */ currentFocus.windowToken, /* flags = */
+            0
+        )
     }
 }

@@ -26,7 +26,11 @@ import code.name.monkey.appthemehelper.util.MaterialValueHelper
 import code.name.monkey.appthemehelper.util.TintHelper
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.FragmentCardPlayerPlaybackControlsBinding
-import code.name.monkey.retromusic.extensions.*
+import code.name.monkey.retromusic.extensions.accentColor
+import code.name.monkey.retromusic.extensions.getSongInfo
+import code.name.monkey.retromusic.extensions.hide
+import code.name.monkey.retromusic.extensions.ripAlpha
+import code.name.monkey.retromusic.extensions.show
 import code.name.monkey.retromusic.fragments.base.AbsPlayerControlsFragment
 import code.name.monkey.retromusic.fragments.base.goToAlbum
 import code.name.monkey.retromusic.fragments.base.goToArtist
@@ -116,13 +120,19 @@ class CardPlaybackControlsFragment :
     override fun setColor(color: MediaNotificationProcessor) {
         if (!ATHUtil.isWindowBackgroundDark(requireContext())
         ) {
-            lastPlaybackControlsColor = MaterialValueHelper.getSecondaryTextColor(activity, true)
+            lastPlaybackControlsColor = MaterialValueHelper.getSecondaryTextColor(
+                context = activity,
+                dark = true
+            )
             lastDisabledPlaybackControlsColor =
-                MaterialValueHelper.getSecondaryDisabledTextColor(activity, true)
+                MaterialValueHelper.getSecondaryDisabledTextColor(context = activity, dark = true)
         } else {
-            lastPlaybackControlsColor = MaterialValueHelper.getPrimaryTextColor(activity, false)
+            lastPlaybackControlsColor = MaterialValueHelper.getPrimaryTextColor(
+                context = activity,
+                dark = false
+            )
             lastDisabledPlaybackControlsColor =
-                MaterialValueHelper.getPrimaryDisabledTextColor(activity, false)
+                MaterialValueHelper.getPrimaryDisabledTextColor(context = activity, dark = false)
         }
 
         updateRepeatState()
@@ -138,11 +148,17 @@ class CardPlaybackControlsFragment :
         }
         binding.image.setColorFilter(colorFinal, PorterDuff.Mode.SRC_IN)
         TintHelper.setTintAuto(
-            binding.mediaButton.playPauseButton,
+            /* view = */ binding.mediaButton.playPauseButton,
+            /* color = */
             MaterialValueHelper.getPrimaryTextColor(context, ColorUtil.isColorLight(colorFinal)),
+            /* background = */
             false
         )
-        TintHelper.setTintAuto(binding.mediaButton.playPauseButton, colorFinal, true)
+        TintHelper.setTintAuto(
+            /* view = */ binding.mediaButton.playPauseButton,
+            /* color = */ colorFinal,
+            /* background = */ true
+        )
 
         volumeFragment?.setTintable(colorFinal)
     }
@@ -171,7 +187,7 @@ class CardPlaybackControlsFragment :
     }
 
     private fun updateProgressTextColor() {
-        val color = MaterialValueHelper.getPrimaryTextColor(context, false)
+        val color = MaterialValueHelper.getPrimaryTextColor(context = context, dark = false)
         binding.songTotalTime.setTextColor(color)
         binding.songCurrentProgress.setTextColor(color)
     }

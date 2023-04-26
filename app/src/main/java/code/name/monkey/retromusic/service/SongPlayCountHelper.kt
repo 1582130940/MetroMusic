@@ -28,14 +28,14 @@ class SongPlayCountHelper {
     }
 
     fun notifySongChanged(song: Song) {
-        synchronized(this) {
+        synchronized(lock = this) {
             stopWatch.reset()
             this.song = song
         }
     }
 
     fun notifyPlayStateChanged(isPlaying: Boolean) {
-        synchronized(this) {
+        synchronized(lock = this) {
             if (isPlaying) {
                 stopWatch.start()
             } else {

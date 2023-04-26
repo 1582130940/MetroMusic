@@ -1,22 +1,12 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.home
 
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.MenuItem.SHOW_AS_ACTION_IF_ROOM
+import android.view.View
+import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnLayout
@@ -29,7 +19,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import code.name.monkey.appthemehelper.common.ATHToolbarActivity
 import code.name.monkey.appthemehelper.util.ColorUtil
 import code.name.monkey.appthemehelper.util.ToolbarContentTintHelper
-import code.name.monkey.retromusic.*
+import code.name.monkey.retromusic.EXTRA_PLAYLIST_TYPE
+import code.name.monkey.retromusic.HISTORY_PLAYLIST
+import code.name.monkey.retromusic.LAST_ADDED_PLAYLIST
+import code.name.monkey.retromusic.R
+import code.name.monkey.retromusic.TOP_PLAYED_PLAYLIST
 import code.name.monkey.retromusic.adapter.HomeAdapter
 import code.name.monkey.retromusic.databinding.FragmentHomeBinding
 import code.name.monkey.retromusic.dialogs.CreatePlaylistDialog
@@ -108,7 +102,10 @@ class HomeFragment :
     private fun setupListeners() {
         binding.bannerImage?.setOnClickListener {
             findNavController().navigate(
-                R.id.user_info_fragment, null, null, FragmentNavigatorExtras(
+                resId = R.id.user_info_fragment,
+                args = null,
+                navOptions = null,
+                navigatorExtras = FragmentNavigatorExtras(
                     binding.userImage to "user_image"
                 )
             )
@@ -117,16 +114,16 @@ class HomeFragment :
 
         binding.lastAdded.setOnClickListener {
             findNavController().navigate(
-                R.id.detailListFragment,
-                bundleOf(EXTRA_PLAYLIST_TYPE to LAST_ADDED_PLAYLIST)
+                resId = R.id.detailListFragment,
+                args = bundleOf(EXTRA_PLAYLIST_TYPE to LAST_ADDED_PLAYLIST)
             )
             setSharedAxisYTransitions()
         }
 
         binding.topPlayed.setOnClickListener {
             findNavController().navigate(
-                R.id.detailListFragment,
-                bundleOf(EXTRA_PLAYLIST_TYPE to TOP_PLAYED_PLAYLIST)
+                resId = R.id.detailListFragment,
+                args = bundleOf(EXTRA_PLAYLIST_TYPE to TOP_PLAYED_PLAYLIST)
             )
             setSharedAxisYTransitions()
         }
@@ -137,15 +134,18 @@ class HomeFragment :
 
         binding.history.setOnClickListener {
             findNavController().navigate(
-                R.id.detailListFragment,
-                bundleOf(EXTRA_PLAYLIST_TYPE to HISTORY_PLAYLIST)
+                resId = R.id.detailListFragment,
+                args = bundleOf(EXTRA_PLAYLIST_TYPE to HISTORY_PLAYLIST)
             )
             setSharedAxisYTransitions()
         }
 
         binding.userImage.setOnClickListener {
             findNavController().navigate(
-                R.id.user_info_fragment, null, null, FragmentNavigatorExtras(
+                resId = R.id.user_info_fragment,
+                args = null,
+                navOptions = null,
+                navigatorExtras = FragmentNavigatorExtras(
                     binding.userImage to "user_image"
                 )
             )
@@ -160,7 +160,11 @@ class HomeFragment :
 
     private fun setupTitle() {
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigate(R.id.action_search, null, navOptions)
+            findNavController().navigate(
+                resId = R.id.action_search,
+                args = null,
+                navOptions = navOptions
+            )
         }
         binding.appBarLayout.title = getString(R.string.app_name)
     }
@@ -188,7 +192,7 @@ class HomeFragment :
     private fun checkForMargins() {
         if (mainActivity.isBottomNavVisible) {
             binding.recyclerView.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                bottomMargin = dip(R.dimen.bottom_nav_height)
+                bottomMargin = dip(id = R.dimen.bottom_nav_height)
             }
         }
     }
@@ -200,28 +204,37 @@ class HomeFragment :
         menu.removeItem(R.id.action_sort_order)
         menu.findItem(R.id.action_settings).setShowAsAction(SHOW_AS_ACTION_IF_ROOM)
         ToolbarContentTintHelper.handleOnCreateOptionsMenu(
-            requireContext(),
+            /* context = */ requireContext(),
+            /* toolbar = */
             binding.toolbar,
+            /* menu = */
             menu,
-            ATHToolbarActivity.getToolbarBackgroundColor(binding.toolbar)
+            /* toolbarColor = */
+            ATHToolbarActivity.getToolbarBackgroundColor(/* toolbar = */ binding.toolbar)
         )
     }
 
     override fun scrollToTop() {
-        binding.container.scrollTo(0, 0)
+        binding.container.scrollTo(/* x = */ 0, /* y = */ 0)
         binding.appBarLayout.setExpanded(true)
     }
 
     fun setSharedAxisXTransitions() {
         exitTransition =
-            MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(CoordinatorLayout::class.java)
-        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+            MaterialSharedAxis(/* axis = */ MaterialSharedAxis.X, /* forward = */ true).addTarget(
+                CoordinatorLayout::class.java
+            )
+        reenterTransition =
+            MaterialSharedAxis(/* axis = */ MaterialSharedAxis.X, /* forward = */ false)
     }
 
     private fun setSharedAxisYTransitions() {
         exitTransition =
-            MaterialSharedAxis(MaterialSharedAxis.Y, true).addTarget(CoordinatorLayout::class.java)
-        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Y, false)
+            MaterialSharedAxis(/* axis = */ MaterialSharedAxis.Y, /* forward = */ true).addTarget(
+                CoordinatorLayout::class.java
+            )
+        reenterTransition =
+            MaterialSharedAxis(/* axis = */ MaterialSharedAxis.Y, /* forward = */ false)
     }
 
     private fun loadSuggestions(songs: List<Song>) {
@@ -244,24 +257,29 @@ class HomeFragment :
             setTextColor(color)
             setOnClickListener {
                 it.isClickable = false
-                it.postDelayed({ it.isClickable = true }, 500)
+                it.postDelayed(/* action = */ { it.isClickable = true }, /* delayMillis = */ 500)
                 MusicPlayerRemote.playNext(songs.subList(0, 8))
                 if (!MusicPlayerRemote.isPlaying) {
                     MusicPlayerRemote.playNextSong()
                 }
             }
         }
-        binding.suggestions.card6.setCardBackgroundColor(ColorUtil.withAlpha(color, 0.12f))
+        binding.suggestions.card6.setCardBackgroundColor(
+            ColorUtil.withAlpha(
+                baseColor = color,
+                alpha = 0.12f
+            )
+        )
         images.forEachIndexed { index, imageView ->
             imageView.setOnClickListener {
                 it.isClickable = false
-                it.postDelayed({ it.isClickable = true }, 500)
+                it.postDelayed(/* action = */ { it.isClickable = true }, /* delayMillis = */ 500)
                 MusicPlayerRemote.playNext(songs[index])
                 if (!MusicPlayerRemote.isPlaying) {
                     MusicPlayerRemote.playNextSong()
                 }
             }
-            Glide.with(this)
+            Glide.with(/* fragment = */ this)
                 .load(RetroGlideExtension.getSongModel(songs[index]))
                 .songCoverOptions(songs[index])
                 .into(imageView)
@@ -281,19 +299,19 @@ class HomeFragment :
     override fun onMenuItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_settings -> findNavController().navigate(
-                R.id.settings_fragment,
-                null,
-                navOptions
+                resId = R.id.settings_fragment,
+                args = null,
+                navOptions = navOptions
             )
 
             R.id.action_import_playlist -> ImportPlaylistDialog().show(
-                childFragmentManager,
-                "ImportPlaylist"
+                /* manager = */ childFragmentManager,
+                /* tag = */ "ImportPlaylist"
             )
 
             R.id.action_add_to_playlist -> CreatePlaylistDialog.create(emptyList()).show(
-                childFragmentManager,
-                "ShowCreatePlaylistDialog"
+                /* manager = */ childFragmentManager,
+                /* tag = */ "ShowCreatePlaylistDialog"
             )
         }
         return false
@@ -301,7 +319,9 @@ class HomeFragment :
 
     override fun onPrepareMenu(menu: Menu) {
         super.onPrepareMenu(menu)
-        ToolbarContentTintHelper.handleOnPrepareOptionsMenu(requireActivity(), binding.toolbar)
+        ToolbarContentTintHelper.handleOnPrepareOptionsMenu(/* activity = */ requireActivity(), /* toolbar = */
+            binding.toolbar
+        )
     }
 
     override fun onResume() {

@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.player.color
 
 import android.animation.ValueAnimator
@@ -62,9 +48,9 @@ class ColorFragment : AbsPlayerFragment(R.layout.fragment_color_player) {
         animator.start()
         binding.playerToolbar.post {
             ToolbarContentTintHelper.colorizeToolbar(
-                binding.playerToolbar,
-                color.secondaryTextColor,
-                requireActivity()
+                /* toolbarView = */ binding.playerToolbar,
+                /* toolbarIconsColor = */ color.secondaryTextColor,
+                /* activity = */ requireActivity()
             )
         }
     }
@@ -122,9 +108,9 @@ class ColorFragment : AbsPlayerFragment(R.layout.fragment_color_player) {
             setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
             setOnMenuItemClickListener(this@ColorFragment)
             ToolbarContentTintHelper.colorizeToolbar(
-                this,
-                colorControlNormal(),
-                requireActivity()
+                /* toolbarView = */ this,
+                /* toolbarIconsColor = */ colorControlNormal(),
+                /* activity = */ requireActivity()
             )
         }
     }

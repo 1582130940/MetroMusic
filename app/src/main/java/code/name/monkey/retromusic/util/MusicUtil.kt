@@ -36,9 +36,9 @@ import org.koin.core.component.get
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 import java.util.regex.Pattern
-
 
 object MusicUtil : KoinComponent {
     fun createShareSongFileIntent(context: Context, song: Song): Intent {
@@ -47,9 +47,9 @@ object MusicUtil : KoinComponent {
             putExtra(
                 Intent.EXTRA_STREAM, try {
                     FileProvider.getUriForFile(
-                        context,
-                        context.applicationContext.packageName,
-                        File(song.data)
+                        /* context = */ context,
+                        /* authority = */ context.applicationContext.packageName,
+                        /* file = */ File(song.data)
                     )
                 } catch (e: IllegalArgumentException) {
                     getSongFileUri(song.id)
@@ -71,9 +71,9 @@ object MusicUtil : KoinComponent {
                 files.add(
                     try {
                         FileProvider.getUriForFile(
-                            context,
-                            context.applicationContext.packageName,
-                            File(song.data)
+                            /* context = */ context,
+                            /* authority = */ context.applicationContext.packageName,
+                            /* file = */ File(song.data)
                         )
                     } catch (e: IllegalArgumentException) {
                         getSongFileUri(song.id)
@@ -209,7 +209,6 @@ object MusicUtil : KoinComponent {
         val sArtworkUri = "content://media/external/audio/albumart".toUri()
         return ContentUris.withAppendedId(sArtworkUri, albumId)
     }
-
 
     fun getPlaylistInfoString(
         context: Context,

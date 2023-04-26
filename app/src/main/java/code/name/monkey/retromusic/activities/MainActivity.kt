@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.activities
 
 import android.content.Intent
@@ -23,7 +9,11 @@ import androidx.navigation.contains
 import androidx.navigation.ui.setupWithNavController
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.activities.base.AbsSlidingMusicPanelActivity
-import code.name.monkey.retromusic.extensions.*
+import code.name.monkey.retromusic.extensions.currentFragment
+import code.name.monkey.retromusic.extensions.extra
+import code.name.monkey.retromusic.extensions.findNavController
+import code.name.monkey.retromusic.extensions.hideStatusBar
+import code.name.monkey.retromusic.extensions.setTaskDescriptionColorAuto
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.helper.SearchQueryHelper.getSongs
 import code.name.monkey.retromusic.interfaces.IScrollHelper
@@ -48,10 +38,8 @@ class MainActivity : AbsSlidingMusicPanelActivity() {
         setTaskDescriptionColorAuto()
         hideStatusBar()
         updateTabs()
-
         setupNavigationController()
-
-        WhatsNewFragment.showChangeLog(this)
+        WhatsNewFragment.showChangeLog(activity = this)
     }
 
     private fun setupNavigationController() {
@@ -98,9 +86,11 @@ class MainActivity : AbsSlidingMusicPanelActivity() {
                     // Show Bottom Navigation Bar
                     setBottomNavVisibility(visible = true, animate = true)
                 }
+
                 R.id.playing_queue_fragment -> {
                     setBottomNavVisibility(visible = false, hideBottomSheet = true)
                 }
+
                 else -> setBottomNavVisibility(
                     visible = false,
                     animate = true
@@ -145,44 +135,65 @@ class MainActivity : AbsSlidingMusicPanelActivity() {
             ) {
                 val songs: List<Song> = getSongs(intent.extras!!)
                 if (MusicPlayerRemote.shuffleMode == MusicService.SHUFFLE_MODE_SHUFFLE) {
-                    MusicPlayerRemote.openAndShuffleQueue(songs, true)
+                    MusicPlayerRemote.openAndShuffleQueue(queue = songs, startPlaying = true)
                 } else {
-                    MusicPlayerRemote.openQueue(songs, 0, true)
+                    MusicPlayerRemote.openQueue(
+                        queue = songs,
+                        startPosition = 0,
+                        startPlaying = true
+                    )
                 }
                 handled = true
             }
             if (uri != null && uri.toString().isNotEmpty()) {
-                MusicPlayerRemote.playFromUri(this@MainActivity, uri)
+                MusicPlayerRemote.playFromUri(context = this@MainActivity, uri = uri)
                 handled = true
             } else if (MediaStore.Audio.Playlists.CONTENT_TYPE == mimeType) {
-                val id = parseLongFromIntent(intent, "playlistId", "playlist")
+                val id = parseLongFromIntent(
+                    intent = intent,
+                    longKey = "playlistId",
+                    stringKey = "playlist"
+                )
                 if (id >= 0L) {
-                    val position: Int = intent.getIntExtra("position", 0)
+                    val position: Int =
+                        intent.getIntExtra(/* name = */ "position", /* defaultValue = */
+                            0
+                        )
                     val songs: List<Song> = PlaylistSongsLoader.getPlaylistSongList(get(), id)
-                    MusicPlayerRemote.openQueue(songs, position, true)
+                    MusicPlayerRemote.openQueue(
+                        queue = songs,
+                        startPosition = position,
+                        startPlaying = true
+                    )
                     handled = true
                 }
             } else if (MediaStore.Audio.Albums.CONTENT_TYPE == mimeType) {
-                val id = parseLongFromIntent(intent, "albumId", "album")
+                val id =
+                    parseLongFromIntent(intent = intent, longKey = "albumId", stringKey = "album")
                 if (id >= 0L) {
-                    val position: Int = intent.getIntExtra("position", 0)
+                    val position: Int =
+                        intent.getIntExtra(/* name = */ "position", /* defaultValue = */
+                            0
+                        )
                     val songs = libraryViewModel.albumById(id).songs
                     MusicPlayerRemote.openQueue(
-                        songs,
-                        position,
-                        true
+                        queue = songs,
+                        startPosition = position,
+                        startPlaying = true
                     )
                     handled = true
                 }
             } else if (MediaStore.Audio.Artists.CONTENT_TYPE == mimeType) {
-                val id = parseLongFromIntent(intent, "artistId", "artist")
+                val id =
+                    parseLongFromIntent(intent = intent, longKey = "artistId", stringKey = "artist")
                 if (id >= 0L) {
-                    val position: Int = intent.getIntExtra("position", 0)
+                    val position: Int =
+                        intent.getIntExtra(/* name = */ "position", /* defaultValue = */ 0)
                     val songs: List<Song> = libraryViewModel.artistById(id).songs
                     MusicPlayerRemote.openQueue(
-                        songs,
-                        position,
-                        true
+                        queue = songs,
+                        startPosition = position,
+                        startPlaying = true
                     )
                     handled = true
                 }
@@ -193,12 +204,8 @@ class MainActivity : AbsSlidingMusicPanelActivity() {
         }
     }
 
-    private fun parseLongFromIntent(
-        intent: Intent,
-        longKey: String,
-        stringKey: String,
-    ): Long {
-        var id = intent.getLongExtra(longKey, -1)
+    private fun parseLongFromIntent(intent: Intent, longKey: String, stringKey: String): Long {
+        var id = intent.getLongExtra(/* name = */ longKey, /* defaultValue = */ -1)
         if (id < 0) {
             val idString = intent.getStringExtra(stringKey)
             if (idString != null) {

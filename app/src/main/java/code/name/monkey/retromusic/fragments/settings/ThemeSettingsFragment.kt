@@ -1,16 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- */
 package code.name.monkey.retromusic.fragments.settings
 
 import android.annotation.SuppressLint
@@ -25,17 +12,25 @@ import code.name.monkey.appthemehelper.common.prefs.supportv7.ATEColorPreference
 import code.name.monkey.appthemehelper.common.prefs.supportv7.ATESwitchPreference
 import code.name.monkey.appthemehelper.util.ColorUtil
 import code.name.monkey.appthemehelper.util.VersionUtils
-import code.name.monkey.retromusic.*
+import code.name.monkey.retromusic.ACCENT_COLOR
+import code.name.monkey.retromusic.ADAPTIVE_COLOR_APP
+import code.name.monkey.retromusic.App
+import code.name.monkey.retromusic.BLACK_THEME
+import code.name.monkey.retromusic.CUSTOM_FONT
+import code.name.monkey.retromusic.DESATURATED_COLOR
+import code.name.monkey.retromusic.GENERAL_THEME
+import code.name.monkey.retromusic.MATERIAL_YOU
+import code.name.monkey.retromusic.R
+import code.name.monkey.retromusic.SHOULD_COLOR_APP_SHORTCUTS
+import code.name.monkey.retromusic.WALLPAPER_ACCENT
 import code.name.monkey.retromusic.appshortcuts.DynamicShortcutManager
 import code.name.monkey.retromusic.extensions.materialDialog
-import code.name.monkey.retromusic.fragments.NowPlayingScreen.*
+import code.name.monkey.retromusic.fragments.NowPlayingScreen.Flat
+import code.name.monkey.retromusic.fragments.NowPlayingScreen.Material
+import code.name.monkey.retromusic.fragments.NowPlayingScreen.Normal
 import code.name.monkey.retromusic.util.PreferenceUtil
 import com.afollestad.materialdialogs.color.colorChooser
 import com.google.android.material.color.DynamicColors
-
-/**
- * @author Hemanth S (h4h13).
- */
 
 class ThemeSettingsFragment : AbsSettingsFragment() {
     @SuppressLint("CheckResult")
@@ -78,7 +73,7 @@ class ThemeSettingsFragment : AbsSettingsFragment() {
         blackTheme?.setOnPreferenceChangeListener { _, _ ->
             ThemeStore.markChanged(requireContext())
             if (VersionUtils.hasNougatMR()) {
-                requireActivity().setTheme(PreferenceUtil.themeResFromPrefValue("black"))
+                requireActivity().setTheme(/* resid = */ PreferenceUtil.themeResFromPrefValue("black"))
                 DynamicShortcutManager(requireContext()).updateDynamicShortcuts()
             }
             restartActivity()
@@ -89,7 +84,7 @@ class ThemeSettingsFragment : AbsSettingsFragment() {
         desaturatedColor?.setOnPreferenceChangeListener { _, value ->
             val desaturated = value as Boolean
             ThemeStore.prefs(requireContext()).edit {
-                putBoolean("desaturated_color", desaturated)
+                putBoolean(/* p0 = */ "desaturated_color", /* p1 = */ desaturated)
             }
             PreferenceUtil.isDesaturatedColor = desaturated
             restartActivity()

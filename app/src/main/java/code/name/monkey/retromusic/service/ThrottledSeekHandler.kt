@@ -14,19 +14,18 @@
 
 package code.name.monkey.retromusic.service
 
-
 import android.os.Handler
 import code.name.monkey.retromusic.service.MusicService.Companion.PLAY_STATE_CHANGED
 
 class ThrottledSeekHandler(
     private val musicService: MusicService,
-    private val handler: Handler
+    private val handler: Handler,
 ) : Runnable {
 
     fun notifySeek() {
         musicService.updateMediaSessionPlaybackState()
-        handler.removeCallbacks(this)
-        handler.postDelayed(this, THROTTLE)
+        handler.removeCallbacks(/* r = */ this)
+        handler.postDelayed(/* r = */ this, /* delayMillis = */ THROTTLE)
     }
 
     override fun run() {

@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2019 Hemanth Savarala.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by
- *  the Free Software Foundation either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- */
-
 package code.name.monkey.retromusic.repository
 
 import android.content.ContentResolver
@@ -38,7 +24,7 @@ interface GenreRepository {
 
 class RealGenreRepository(
     private val contentResolver: ContentResolver,
-    private val songRepository: RealSongRepository
+    private val songRepository: RealSongRepository,
 ) : GenreRepository {
 
     override fun genres(query: String): List<Genre> {
@@ -63,11 +49,13 @@ class RealGenreRepository(
 
     private fun getSongCount(genreId: Long): Int {
         contentResolver.query(
-            Genres.Members.getContentUri("external", genreId),
-            null,
-            null,
-            null,
-            null
+            /* uri = */ Genres.Members.getContentUri(/* volumeName = */ "external", /* genreId = */
+                genreId
+            ),
+            /* projection = */ null,
+            /* selection = */ null,
+            /* selectionArgs = */ null,
+            /* sortOrder = */ null
         ).use {
             return it?.count ?: 0
         }
@@ -89,11 +77,13 @@ class RealGenreRepository(
     private fun makeGenreSongCursor(genreId: Long): Cursor? {
         return try {
             contentResolver.query(
-                Genres.Members.getContentUri("external", genreId),
-                baseProjection,
-                IS_MUSIC,
-                null,
-                PreferenceUtil.songSortOrder
+                /* uri = */ Genres.Members.getContentUri(/* volumeName = */ "external", /* genreId = */
+                    genreId
+                ),
+                /* projection = */ baseProjection,
+                /* selection = */ IS_MUSIC,
+                /* selectionArgs = */ null,
+                /* sortOrder = */ PreferenceUtil.songSortOrder
             )
         } catch (e: SecurityException) {
             return null
@@ -119,11 +109,11 @@ class RealGenreRepository(
         val projection = arrayOf(Genres._ID, Genres.NAME)
         return try {
             contentResolver.query(
-                Genres.EXTERNAL_CONTENT_URI,
-                projection,
-                null,
-                null,
-                PreferenceUtil.genreSortOrder
+                /* uri = */ Genres.EXTERNAL_CONTENT_URI,
+                /* projection = */ projection,
+                /* selection = */ null,
+                /* selectionArgs = */ null,
+                /* sortOrder = */ PreferenceUtil.genreSortOrder
             )
         } catch (e: SecurityException) {
             return null
@@ -134,11 +124,11 @@ class RealGenreRepository(
         val projection = arrayOf(Genres._ID, Genres.NAME)
         return try {
             contentResolver.query(
-                Genres.EXTERNAL_CONTENT_URI,
-                projection,
-                Genres.NAME + " = ?",
-                arrayOf(query),
-                PreferenceUtil.genreSortOrder
+                /* uri = */ Genres.EXTERNAL_CONTENT_URI,
+                /* projection = */ projection,
+                /* selection = */ Genres.NAME + " = ?",
+                /* selectionArgs = */ arrayOf(query),
+                /* sortOrder = */ PreferenceUtil.genreSortOrder
             )
         } catch (e: SecurityException) {
             return null

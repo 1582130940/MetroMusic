@@ -29,10 +29,10 @@ fun getSongInfo(song: Song): String {
 
 private fun getMimeType(url: String): String {
     var type: String? = MimeTypeMap.getFileExtensionFromUrl(
-        URLEncoder.encode(url, "utf-8")
+        URLEncoder.encode(/* s = */ url, /* enc = */ "utf-8")
     ).uppercase()
     if (type == null) {
-        type = url.substring(url.lastIndexOf(".") + 1)
+        type = url.substring(startIndex = url.lastIndexOf(string = ".") + 1)
     }
     return type
 }

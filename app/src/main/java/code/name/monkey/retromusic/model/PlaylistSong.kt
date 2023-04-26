@@ -34,7 +34,7 @@ class PlaylistSong(
     val playlistId: Long,
     val idInPlayList: Long,
     override val composer: String?,
-    override val albumArtist: String?
+    override val albumArtist: String?,
 ) : Song(
     id = id,
     title = title,

@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.player.fit
 
 import android.os.Bundle
@@ -23,9 +9,14 @@ import android.widget.TextView
 import code.name.monkey.appthemehelper.util.ColorUtil
 import code.name.monkey.appthemehelper.util.MaterialValueHelper
 import code.name.monkey.appthemehelper.util.TintHelper
-import code.name.monkey.retromusic.extensions.*
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.FragmentFitPlaybackControlsBinding
+import code.name.monkey.retromusic.extensions.accentColor
+import code.name.monkey.retromusic.extensions.colorBackground
+import code.name.monkey.retromusic.extensions.getSongInfo
+import code.name.monkey.retromusic.extensions.hide
+import code.name.monkey.retromusic.extensions.ripAlpha
+import code.name.monkey.retromusic.extensions.show
 import code.name.monkey.retromusic.fragments.base.AbsPlayerControlsFragment
 import code.name.monkey.retromusic.fragments.base.goToAlbum
 import code.name.monkey.retromusic.fragments.base.goToArtist
@@ -115,13 +106,19 @@ class FitPlaybackControlsFragment :
     override fun setColor(color: MediaNotificationProcessor) {
         if (ColorUtil.isColorLight(colorBackground())) {
             lastPlaybackControlsColor =
-                MaterialValueHelper.getSecondaryTextColor(requireContext(), true)
+                MaterialValueHelper.getSecondaryTextColor(context = requireContext(), dark = true)
             lastDisabledPlaybackControlsColor =
-                MaterialValueHelper.getSecondaryDisabledTextColor(requireContext(), true)
+                MaterialValueHelper.getSecondaryDisabledTextColor(
+                    context = requireContext(),
+                    dark = true
+                )
         } else {
-            lastPlaybackControlsColor = MaterialValueHelper.getPrimaryTextColor(activity, false)
+            lastPlaybackControlsColor = MaterialValueHelper.getPrimaryTextColor(
+                context = activity,
+                dark = false
+            )
             lastDisabledPlaybackControlsColor =
-                MaterialValueHelper.getPrimaryDisabledTextColor(activity, false)
+                MaterialValueHelper.getPrimaryDisabledTextColor(context = activity, dark = false)
         }
 
         val colorFinal = if (PreferenceUtil.isAdaptiveColor) {
@@ -140,11 +137,18 @@ class FitPlaybackControlsFragment :
 
     private fun setFabColor(i: Int) {
         TintHelper.setTintAuto(
-            binding.playPauseButton,
-            MaterialValueHelper.getPrimaryTextColor(context, ColorUtil.isColorLight(i)),
-            false
+            /* view = */ binding.playPauseButton,
+            /* color = */ MaterialValueHelper.getPrimaryTextColor(
+                context = context,
+                dark = ColorUtil.isColorLight(i)
+            ),
+            /* background = */ false
         )
-        TintHelper.setTintAuto(binding.playPauseButton, i, true)
+        TintHelper.setTintAuto(
+            /* view = */ binding.playPauseButton,
+            /* color = */ i,
+            /* background = */ true
+        )
     }
 
     private fun setUpPlayPauseFab() {
@@ -168,9 +172,9 @@ class FitPlaybackControlsFragment :
 
     public override fun show() {
         binding.playPauseButton.animate()
-            .scaleX(1f)
-            .scaleY(1f)
-            .rotation(360f)
+            .scaleX(/* value = */ 1f)
+            .scaleY(/* value = */ 1f)
+            .rotation(/* value = */ 360f)
             .setInterpolator(DecelerateInterpolator())
             .start()
     }

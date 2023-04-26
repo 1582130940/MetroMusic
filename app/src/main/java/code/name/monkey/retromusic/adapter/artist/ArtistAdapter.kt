@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.adapter.artist
 
 import android.annotation.SuppressLint
@@ -46,7 +32,7 @@ class ArtistAdapter(
     var dataSet: List<Artist>,
     var itemLayoutRes: Int,
     val IArtistClickListener: IArtistClickListener,
-    val IAlbumArtistClickListener: IAlbumArtistClickListener? = null
+    val IAlbumArtistClickListener: IAlbumArtistClickListener? = null,
 ) : AbsMultiSelectAdapter<ArtistAdapter.ViewHolder, Artist>(activity, R.menu.menu_media_selection),
     PopupTextProvider {
 
@@ -70,9 +56,17 @@ class ArtistAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             try {
-                LayoutInflater.from(activity).inflate(itemLayoutRes, parent, false)
+                LayoutInflater.from(activity).inflate(
+                    /* resource = */ itemLayoutRes,
+                    /* root = */ parent,
+                    /* attachToRoot = */ false
+                )
             } catch (e: Resources.NotFoundException) {
-                LayoutInflater.from(activity).inflate(R.layout.item_grid_circle, parent, false)
+                LayoutInflater.from(activity).inflate(
+                    /* resource = */ R.layout.item_grid_circle,
+                    /* root = */ parent,
+                    /* attachToRoot = */ false
+                )
             }
         return createViewHolder(view)
     }
@@ -136,7 +130,7 @@ class ArtistAdapter(
 
     override fun onMultipleItemAction(
         menuItem: MenuItem,
-        selection: List<Artist>
+        selection: List<Artist>,
     ) {
         SongsMenuHelper.handleMenuClick(activity, getSongList(selection), menuItem.itemId)
     }
@@ -157,7 +151,8 @@ class ArtistAdapter(
         return MusicUtil.getSectionName(dataSet[position].name)
     }
 
-    inner class ViewHolder(itemView: View) : code.name.monkey.retromusic.adapter.base.MediaEntryViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) :
+        code.name.monkey.retromusic.adapter.base.MediaEntryViewHolder(itemView) {
 
         init {
             menu?.isVisible = false
@@ -171,9 +166,15 @@ class ArtistAdapter(
                 val artist = dataSet[layoutPosition]
                 image?.let {
                     if (albumArtistsOnly && IAlbumArtistClickListener != null) {
-                        IAlbumArtistClickListener.onAlbumArtist(artist.name, imageContainer ?: it)
+                        IAlbumArtistClickListener.onAlbumArtist(
+                            artistName = artist.name,
+                            view = imageContainer ?: it
+                        )
                     } else {
-                        IArtistClickListener.onArtist(artist.id, imageContainer ?: it)
+                        IArtistClickListener.onArtist(
+                            artistId = artist.id,
+                            view = imageContainer ?: it
+                        )
                     }
                 }
             }

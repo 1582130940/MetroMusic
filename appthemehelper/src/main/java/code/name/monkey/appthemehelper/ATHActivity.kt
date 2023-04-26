@@ -5,9 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 
-/**
- * @author Aidan Follestad (afollestad), Karim Abou Zeid (kabouzeid)
- */
 open class ATHActivity : AppCompatActivity() {
 
     private var updateTime: Long = -1
@@ -19,7 +16,7 @@ open class ATHActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (ATH.didThemeValuesChange(this, updateTime)) {
+        if (ATH.didThemeValuesChange(context = this, since = updateTime)) {
             onThemeChanged()
         }
     }

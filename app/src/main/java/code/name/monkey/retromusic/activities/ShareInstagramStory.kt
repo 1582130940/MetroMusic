@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.activities
 
 import android.content.res.ColorStateList
@@ -39,12 +25,7 @@ import code.name.monkey.retromusic.util.Share
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
 import com.bumptech.glide.Glide
 
-/**
- * Created by hemanths on 2020-02-02.
- */
-
 class ShareInstagramStory : AbsThemeActivity() {
-
     private lateinit var binding: ActivityShareInstagramBinding
 
     companion object {
@@ -68,9 +49,10 @@ class ShareInstagramStory : AbsThemeActivity() {
         binding.toolbar.setBackgroundColor(Color.TRANSPARENT)
         setSupportActionBar(binding.toolbar)
 
-        val song = intent.extras?.let { BundleCompat.getParcelable(it, EXTRA_SONG, Song::class.java) }
+        val song =
+            intent.extras?.let { BundleCompat.getParcelable(it, EXTRA_SONG, Song::class.java) }
         song?.let { songFinal ->
-            Glide.with(this)
+            Glide.with(/* activity = */ this)
                 .asBitmapPalette()
                 .songCoverOptions(songFinal)
                 .load(RetroGlideExtension.getSongModel(songFinal))
@@ -83,21 +65,18 @@ class ShareInstagramStory : AbsThemeActivity() {
             binding.shareTitle.text = songFinal.title
             binding.shareText.text = songFinal.artistName
             binding.shareButton.setOnClickListener {
-                val path: String = Media.insertImage(
-                    contentResolver,
-                    binding.mainContent.drawToBitmap(Bitmap.Config.ARGB_8888),
-                    "Design", null
+                val path: String = Media.insertImage(/* cr = */ contentResolver, /* source = */
+                    binding.mainContent.drawToBitmap(Bitmap.Config.ARGB_8888), /* title = */
+                    "Design", /* description = */
+                    null
                 )
-                Share.shareStoryToSocial(
-                    this@ShareInstagramStory,
-                    path.toUri()
-                )
+                Share.shareStoryToSocial(context = this@ShareInstagramStory, uri = path.toUri())
             }
         }
         binding.shareButton.setTextColor(
             MaterialValueHelper.getPrimaryTextColor(
-                this,
-                ColorUtil.isColorLight(accentColor())
+                context = this,
+                dark = ColorUtil.isColorLight(accentColor())
             )
         )
         binding.shareButton.backgroundTintList =
@@ -106,8 +85,7 @@ class ShareInstagramStory : AbsThemeActivity() {
 
     private fun setColors(color: Int) {
         binding.mainContent.background =
-            GradientDrawable(
-                GradientDrawable.Orientation.TOP_BOTTOM,
+            GradientDrawable(/* orientation = */ GradientDrawable.Orientation.TOP_BOTTOM, /* colors = */
                 intArrayOf(color, Color.BLACK)
             )
     }

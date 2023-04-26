@@ -76,7 +76,6 @@
         app:layout_constraintTop_toTopOf="@+id/titleContainer"
         app:srcCompat="@drawable/ic_favorite_border" />
 
-
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/songCurrentProgress"
         android:layout_width="wrap_content"
@@ -94,11 +93,11 @@
 
     <com.google.android.material.slider.Slider
         android:id="@+id/progressSlider"
+        style="@style/Widget.Retro.Slider"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:maxHeight="2dp"
-        style="@style/Widget.Retro.Slider"
         android:progressDrawable="@drawable/color_progress_seek"
         app:layout_constraintEnd_toStartOf="@id/songTotalTime"
         app:layout_constraintStart_toEndOf="@id/songCurrentProgress"
@@ -120,7 +119,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/progressSlider"
         tools:text="@tools:sample/date/hhmmss" />
-
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/repeatButton"

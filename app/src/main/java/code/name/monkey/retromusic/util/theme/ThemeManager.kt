@@ -6,7 +6,10 @@ import androidx.appcompat.app.AppCompatDelegate
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.extensions.generalThemeValue
 import code.name.monkey.retromusic.util.PreferenceUtil
-import code.name.monkey.retromusic.util.theme.ThemeMode.*
+import code.name.monkey.retromusic.util.theme.ThemeMode.AUTO
+import code.name.monkey.retromusic.util.theme.ThemeMode.BLACK
+import code.name.monkey.retromusic.util.theme.ThemeMode.DARK
+import code.name.monkey.retromusic.util.theme.ThemeMode.LIGHT
 
 @StyleRes
 fun Context.getThemeResValue(): Int =

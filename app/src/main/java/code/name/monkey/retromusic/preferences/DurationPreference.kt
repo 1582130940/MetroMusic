@@ -18,17 +18,16 @@ import code.name.monkey.retromusic.extensions.materialDialog
 import code.name.monkey.retromusic.util.PreferenceUtil
 import com.google.android.material.slider.Slider
 
-
 class DurationPreference @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-    defStyleRes: Int = 0
+    defStyleRes: Int = 0,
 ) : ATEDialogPreference(context, attrs, defStyleAttr, defStyleRes) {
     init {
         icon?.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
-            context.colorControlNormal(),
-            SRC_IN
+            /* color = */ context.colorControlNormal(),
+            /* blendModeCompat = */ SRC_IN
         )
     }
 }
@@ -51,7 +50,7 @@ class DurationPreferenceDialog : DialogFragment() {
 
 
         return materialDialog(R.string.audio_fade_duration)
-            .setNegativeButton(android.R.string.cancel, null)
+            .setNegativeButton(/* textId = */ android.R.string.cancel, /* listener = */ null)
             .setPositiveButton(R.string.save) { _, _ -> updateDuration(binding.slider.value.toInt()) }
             .setView(binding.root)
             .create()

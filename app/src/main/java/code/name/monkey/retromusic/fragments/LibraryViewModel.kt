@@ -1,35 +1,41 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments
 
 import android.animation.ValueAnimator
 import android.content.Context
 import androidx.core.animation.doOnEnd
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
+import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.RECENT_ALBUMS
 import code.name.monkey.retromusic.RECENT_ARTISTS
 import code.name.monkey.retromusic.TOP_ALBUMS
 import code.name.monkey.retromusic.TOP_ARTISTS
-import code.name.monkey.retromusic.db.*
-import code.name.monkey.retromusic.*
+import code.name.monkey.retromusic.db.HistoryEntity
+import code.name.monkey.retromusic.db.PlaylistEntity
+import code.name.monkey.retromusic.db.PlaylistWithSongs
+import code.name.monkey.retromusic.db.SongEntity
+import code.name.monkey.retromusic.db.toSong
+import code.name.monkey.retromusic.db.toSongEntity
 import code.name.monkey.retromusic.extensions.showToast
-import code.name.monkey.retromusic.fragments.ReloadType.*
+import code.name.monkey.retromusic.fragments.ReloadType.Albums
+import code.name.monkey.retromusic.fragments.ReloadType.Artists
+import code.name.monkey.retromusic.fragments.ReloadType.Genres
+import code.name.monkey.retromusic.fragments.ReloadType.HomeSections
+import code.name.monkey.retromusic.fragments.ReloadType.Playlists
+import code.name.monkey.retromusic.fragments.ReloadType.Songs
+import code.name.monkey.retromusic.fragments.ReloadType.Suggestions
 import code.name.monkey.retromusic.fragments.search.Filter
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.interfaces.IMusicServiceEventListener
-import code.name.monkey.retromusic.model.*
+import code.name.monkey.retromusic.model.Album
+import code.name.monkey.retromusic.model.Artist
+import code.name.monkey.retromusic.model.Genre
+import code.name.monkey.retromusic.model.Home
+import code.name.monkey.retromusic.model.Playlist
+import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.repository.RealRepository
 import code.name.monkey.retromusic.util.DensityUtil
 import code.name.monkey.retromusic.util.PreferenceUtil
@@ -53,7 +59,7 @@ class LibraryViewModel(
     private val playlists = MutableLiveData<List<PlaylistWithSongs>>()
     private val genres = MutableLiveData<List<Genre>>()
     private val searchResults = MutableLiveData<List<Any>>()
-    private val fabMargin = MutableLiveData(0)
+    private val fabMargin = MutableLiveData(/* value = */ 0)
     private val songHistory = MutableLiveData<List<Song>>()
     private var previousSongHistory = ArrayList<HistoryEntity>()
     val paletteColor: LiveData<Int> = _paletteColor
@@ -184,11 +190,14 @@ class LibraryViewModel(
     fun shuffleSongs() = viewModelScope.launch(IO) {
         val songs = repository.allSongs()
         withContext(Main) {
-            MusicPlayerRemote.openAndShuffleQueue(songs, true)
+            MusicPlayerRemote.openAndShuffleQueue(queue = songs, startPlaying = true)
         }
     }
 
-    fun renameRoomPlaylist(playListId: Long, name: String) = viewModelScope.launch(IO) {
+    fun renameRoomPlaylist(
+        playListId: Long,
+        name: String,
+    ) = viewModelScope.launch(IO) {
         repository.renameRoomPlaylist(playListId, name)
     }
 
@@ -325,7 +334,11 @@ class LibraryViewModel(
         searchResults.value = emptyList()
     }
 
-    fun addToPlaylist(context: Context, playlistName: String, songs: List<Song>) {
+    fun addToPlaylist(
+        context: Context,
+        playlistName: String,
+        songs: List<Song>,
+    ) {
         viewModelScope.launch(IO) {
             val playlists = checkPlaylistExists(playlistName)
             if (playlists.isEmpty()) {
@@ -333,8 +346,12 @@ class LibraryViewModel(
                     createPlaylist(PlaylistEntity(playlistName = playlistName))
                 insertSongs(songs.map { it.toSongEntity(playlistId) })
                 withContext(Main) {
-                    context.showToast(context.getString(R.string.playlist_created_sucessfully,
-                        playlistName))
+                    context.showToast(
+                        context.getString(
+                            R.string.playlist_created_sucessfully,
+                            playlistName
+                        )
+                    )
                 }
             } else {
                 val playlist = playlists.firstOrNull()
@@ -350,13 +367,18 @@ class LibraryViewModel(
                     context.getString(
                         R.string.added_song_count_to_playlist,
                         songs.size,
-                        playlistName))
+                        playlistName
+                    )
+                )
             }
         }
     }
 
-    fun setFabMargin(context: Context, bottomMargin: Int) {
-        val currentValue = DensityUtil.dip2px(context, 16F) +
+    fun setFabMargin(
+        context: Context,
+        bottomMargin: Int,
+    ) {
+        val currentValue = DensityUtil.dip2px(context = context, dpVale = 16F) +
                 bottomMargin
         ValueAnimator.ofInt(fabMargin.value!!, currentValue).apply {
             addUpdateListener {

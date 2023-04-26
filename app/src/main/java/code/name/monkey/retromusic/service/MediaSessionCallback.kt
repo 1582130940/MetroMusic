@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2019 Hemanth Savarala.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by
- *  the Free Software Foundation either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- */
-
 package code.name.monkey.retromusic.service
 
 import android.os.Bundle
@@ -25,7 +11,12 @@ import code.name.monkey.retromusic.model.Album
 import code.name.monkey.retromusic.model.Artist
 import code.name.monkey.retromusic.model.Playlist
 import code.name.monkey.retromusic.model.Song
-import code.name.monkey.retromusic.repository.*
+import code.name.monkey.retromusic.repository.AlbumRepository
+import code.name.monkey.retromusic.repository.ArtistRepository
+import code.name.monkey.retromusic.repository.GenreRepository
+import code.name.monkey.retromusic.repository.PlaylistRepository
+import code.name.monkey.retromusic.repository.SongRepository
+import code.name.monkey.retromusic.repository.TopPlayedRepository
 import code.name.monkey.retromusic.service.MusicService.Companion.CYCLE_REPEAT
 import code.name.monkey.retromusic.service.MusicService.Companion.TOGGLE_FAVORITE
 import code.name.monkey.retromusic.service.MusicService.Companion.TOGGLE_SHUFFLE
@@ -35,14 +26,9 @@ import code.name.monkey.retromusic.util.logE
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-/**
- * Created by hemanths on 2019-08-01.
- */
-
 class MediaSessionCallback(
     private val musicService: MusicService,
 ) : MediaSessionCompat.Callback(), KoinComponent {
-
     private val songRepository by inject<SongRepository>()
     private val albumRepository by inject<AlbumRepository>()
     private val artistRepository by inject<ArtistRepository>()
@@ -50,7 +36,10 @@ class MediaSessionCallback(
     private val playlistRepository by inject<PlaylistRepository>()
     private val topPlayedRepository by inject<TopPlayedRepository>()
 
-    override fun onPlayFromMediaId(mediaId: String?, extras: Bundle?) {
+    override fun onPlayFromMediaId(
+        mediaId: String?,
+        extras: Bundle?,
+    ) {
         super.onPlayFromMediaId(mediaId, extras)
         val musicId = AutoMediaIDHelper.extractMusicID(mediaId!!)
         logD("Music Id $musicId")
@@ -60,33 +49,43 @@ class MediaSessionCallback(
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM -> {
                 val album: Album = albumRepository.album(itemId)
                 songs.addAll(album.songs)
-                musicService.openQueue(songs, 0, true)
+                musicService.openQueue(playingQueue = songs, startPosition = 0, startPlaying = true)
             }
+
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST -> {
                 val artist: Artist = artistRepository.artist(itemId)
                 songs.addAll(artist.songs)
-                musicService.openQueue(songs, 0, true)
+                musicService.openQueue(playingQueue = songs, startPosition = 0, startPlaying = true)
             }
+
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM_ARTIST -> {
                 val artist: Artist =
                     artistRepository.albumArtist(albumRepository.album(itemId).albumArtist!!)
                 songs.addAll(artist.songs)
-                musicService.openQueue(songs, 0, true)
+                musicService.openQueue(playingQueue = songs, startPosition = 0, startPlaying = true)
             }
+
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST -> {
                 val playlist: Playlist = playlistRepository.playlist(itemId)
                 songs.addAll(playlist.getSongs())
-                musicService.openQueue(songs, 0, true)
+                musicService.openQueue(playingQueue = songs, startPosition = 0, startPlaying = true)
             }
+
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_GENRE -> {
                 songs.addAll(genreRepository.songs(itemId))
-                musicService.openQueue(songs, 0, true)
+                musicService.openQueue(playingQueue = songs, startPosition = 0, startPlaying = true)
             }
+
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE -> {
                 val allSongs: ArrayList<Song> = songRepository.songs() as ArrayList<Song>
-                makeShuffleList(allSongs, -1)
-                musicService.openQueue(allSongs, 0, true)
+                makeShuffleList(allSongs, current = -1)
+                musicService.openQueue(
+                    playingQueue = allSongs,
+                    startPosition = 0,
+                    startPlaying = true
+                )
             }
+
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY,
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SUGGESTIONS,
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS,
@@ -103,7 +102,9 @@ class MediaSessionCallback(
                 if (songIndex == -1) {
                     songIndex = 0
                 }
-                musicService.openQueue(songs, songIndex, true)
+                musicService.openQueue(
+                    playingQueue = songs, startPosition = songIndex, startPlaying = true
+                )
             }
         }
         musicService.play()
@@ -142,7 +143,7 @@ class MediaSessionCallback(
             }
         }
 
-        musicService.openQueue(songs, 0, true)
+        musicService.openQueue(playingQueue = songs, startPosition = 0, startPlaying = true)
 
         musicService.play()
     }
@@ -165,12 +166,12 @@ class MediaSessionCallback(
 
     override fun onSkipToNext() {
         super.onSkipToNext()
-        musicService.playNextSong(true)
+        musicService.playNextSong(force = true)
     }
 
     override fun onSkipToPrevious() {
         super.onSkipToPrevious()
-        musicService.playPreviousSong(true)
+        musicService.playPreviousSong(force = true)
     }
 
     override fun onStop() {
@@ -194,9 +195,11 @@ class MediaSessionCallback(
                 musicService.toggleShuffle()
                 musicService.updateMediaSessionPlaybackState()
             }
+
             TOGGLE_FAVORITE -> {
                 musicService.toggleFavorite()
             }
+
             else -> {
                 logE("Unsupported action: $action")
             }
@@ -211,7 +214,11 @@ class MediaSessionCallback(
         openQueue(songs, songIndex)
     }
 
-    private fun openQueue(songs: ArrayList<Song>, index: Int, startPlaying: Boolean = true) {
+    private fun openQueue(
+        songs: ArrayList<Song>,
+        index: Int,
+        startPlaying: Boolean = true,
+    ) {
         MusicPlayerRemote.openQueue(songs, index, startPlaying)
     }
 }

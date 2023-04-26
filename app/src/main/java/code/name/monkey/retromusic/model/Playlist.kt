@@ -11,11 +11,11 @@ import org.koin.core.component.get
 @Parcelize
 open class Playlist(
     val id: Long,
-    val name: String
+    val name: String,
 ) : Parcelable, KoinComponent {
 
     companion object {
-        val empty = Playlist(-1, "")
+        val empty = Playlist(id = -1, name = "")
     }
 
     // this default implementation covers static playlists
@@ -27,8 +27,8 @@ open class Playlist(
         val songCount = getSongs().size
         val songCountString = MusicUtil.getSongCountString(context, songCount)
         return MusicUtil.buildInfoString(
-            songCountString,
-            ""
+            string1 = songCountString,
+            string2 = ""
         )
     }
 

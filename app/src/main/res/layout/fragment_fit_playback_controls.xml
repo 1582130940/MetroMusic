@@ -15,7 +15,6 @@
         android:background="@color/twenty_percent_black_overlay"
         app:layout_constraintTop_toTopOf="parent">
 
-
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/songCurrentProgress"
             android:layout_width="wrap_content"
@@ -43,8 +42,8 @@
             android:id="@+id/songTotalTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="8dp"
             android:paddingStart="0dp"
+            android:paddingEnd="8dp"
             android:singleLine="true"
             android:textColor="?android:attr/textColorSecondary"
             android:textSize="12sp"

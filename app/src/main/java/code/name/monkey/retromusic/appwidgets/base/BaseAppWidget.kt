@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.appwidgets.base
 
 import android.app.PendingIntent
@@ -20,7 +6,13 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapShader
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
+import android.graphics.Shader
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.widget.RemoteViews
@@ -43,7 +35,7 @@ abstract class BaseAppWidget : AppWidgetProvider() {
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
+        appWidgetIds: IntArray,
     ) {
         defaultAppWidget(context, appWidgetIds)
         val updateIntent = Intent(APP_WIDGET_UPDATE)
@@ -59,7 +51,7 @@ abstract class BaseAppWidget : AppWidgetProvider() {
     fun notifyChange(service: MusicService, what: String) {
         if (hasInstances(service)) {
             if (META_CHANGED == what || PLAY_STATE_CHANGED == what || FAVORITE_STATE_CHANGED == what) {
-                performUpdate(service, null)
+                performUpdate(service = service, appWidgetIds = null)
             }
         }
     }
@@ -67,11 +59,11 @@ abstract class BaseAppWidget : AppWidgetProvider() {
     protected fun pushUpdate(
         context: Context,
         appWidgetIds: IntArray?,
-        views: RemoteViews
+        views: RemoteViews,
     ) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
         if (appWidgetIds != null) {
-            appWidgetManager.updateAppWidget(appWidgetIds, views)
+            appWidgetManager.updateAppWidget(/* appWidgetIds = */ appWidgetIds, /* views = */ views)
         } else {
             appWidgetManager.updateAppWidget(ComponentName(context, javaClass), views)
         }
@@ -84,7 +76,7 @@ abstract class BaseAppWidget : AppWidgetProvider() {
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val mAppWidgetIds = appWidgetManager.getAppWidgetIds(
             ComponentName(
-                context, javaClass
+                /* pkg = */ context, /* cls = */ javaClass
             )
         )
         return mAppWidgetIds.isNotEmpty()
@@ -93,15 +85,23 @@ abstract class BaseAppWidget : AppWidgetProvider() {
     protected fun buildPendingIntent(
         context: Context,
         action: String,
-        serviceName: ComponentName
+        serviceName: ComponentName,
     ): PendingIntent {
         val intent = Intent(action)
         intent.component = serviceName
         return if (VersionUtils.hasOreo()) {
-            PendingIntent.getForegroundService(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+            PendingIntent.getForegroundService(
+                /* context = */ context,
+                /* requestCode = */ 0,
+                /* intent = */ intent,
+                /* flags = */ PendingIntent.FLAG_IMMUTABLE
+            )
         } else {
             PendingIntent.getService(
-                context, 0, intent, if (VersionUtils.hasMarshmallow())
+                /* context = */ context,
+                /* requestCode = */ 0,
+                /* intent = */ intent,
+                /* flags = */ if (VersionUtils.hasMarshmallow())
                     PendingIntent.FLAG_IMMUTABLE
                 else 0
             )
@@ -114,9 +114,11 @@ abstract class BaseAppWidget : AppWidgetProvider() {
 
     protected fun getAlbumArtDrawable(context: Context, bitmap: Bitmap?): Drawable {
         return if (bitmap == null) {
-            ContextCompat.getDrawable(context, R.drawable.default_audio_art)!!
+            ContextCompat.getDrawable(/* context = */ context, /* id = */
+                R.drawable.default_audio_art
+            )!!
         } else {
-            BitmapDrawable(context.resources, bitmap)
+            BitmapDrawable(/* res = */ context.resources, /* bitmap = */ bitmap)
         }
     }
 
@@ -141,26 +143,52 @@ abstract class BaseAppWidget : AppWidgetProvider() {
             tl: Float,
             tr: Float,
             bl: Float,
-            br: Float
+            br: Float,
         ): Bitmap? {
             if (drawable == null) {
                 return null
             }
 
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val bitmap = Bitmap.createBitmap(
+                /* width = */ width,
+                /* height = */ height,
+                /* config = */ Bitmap.Config.ARGB_8888
+            )
             val c = Canvas(bitmap)
-            drawable.setBounds(0, 0, width, height)
-            drawable.draw(c)
+            drawable.setBounds(
+                /* left = */ 0,
+                /* top = */ 0,
+                /* right = */width,
+                /* bottom = */ height
+            )
+            drawable.draw(/* p0 = */ c)
 
-            val rounded = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val rounded = Bitmap.createBitmap(
+                /* width = */ width,
+                /* height = */ height,
+                /* config = */ Bitmap.Config.ARGB_8888
+            )
 
             val canvas = Canvas(rounded)
             val paint = Paint()
-            paint.shader = BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+            paint.shader = BitmapShader(
+                /* bitmap = */ bitmap,
+                /* tileX = */ Shader.TileMode.CLAMP,
+                /* tileY = */ Shader.TileMode.CLAMP
+            )
             paint.isAntiAlias = true
             canvas.drawPath(
                 composeRoundedRectPath(
-                    RectF(0f, 0f, width.toFloat(), height.toFloat()), tl, tr, bl, br
+                    rect = RectF(
+                        /* left = */ 0f,
+                        /* top = */ 0f,
+                        /* right = */ width.toFloat(),
+                        /* bottom = */ height.toFloat()
+                    ),
+                    tl = tl,
+                    tr = tr,
+                    bl = bl,
+                    br = br
                 ), paint
             )
 
@@ -172,18 +200,38 @@ abstract class BaseAppWidget : AppWidgetProvider() {
             tl: Float,
             tr: Float,
             bl: Float,
-            br: Float
+            br: Float,
         ): Path {
             val path = Path()
-            path.moveTo(rect.left + tl, rect.top)
-            path.lineTo(rect.right - tr, rect.top)
-            path.quadTo(rect.right, rect.top, rect.right, rect.top + tr)
-            path.lineTo(rect.right, rect.bottom - br)
-            path.quadTo(rect.right, rect.bottom, rect.right - br, rect.bottom)
-            path.lineTo(rect.left + bl, rect.bottom)
-            path.quadTo(rect.left, rect.bottom, rect.left, rect.bottom - bl)
-            path.lineTo(rect.left, rect.top + tl)
-            path.quadTo(rect.left, rect.top, rect.left + tl, rect.top)
+            path.moveTo(/* x = */ rect.left + tl, /* y = */ rect.top)
+            path.lineTo(/* x = */ rect.right - tr, /* y = */ rect.top)
+            path.quadTo(
+                /* x1 = */ rect.right,
+                /* y1 = */ rect.top,
+                /* x2 = */ rect.right,
+                /* y2 = */rect.top + tr
+            )
+            path.lineTo(/* x = */ rect.right, /* y = */ rect.bottom - br)
+            path.quadTo(
+                /* x1 = */ rect.right,
+                /* y1 = */ rect.bottom,
+                /* x2 = */ rect.right - br,
+                /* y2 = */rect.bottom
+            )
+            path.lineTo(/* x = */ rect.left + bl, /* y = */ rect.bottom)
+            path.quadTo(
+                /* x1 = */ rect.left,
+                /* y1 = */ rect.bottom,
+                /* x2 = */ rect.left,
+                /* y2 = */ rect.bottom - bl
+            )
+            path.lineTo(/* x = */ rect.left, /* y = */ rect.top + tl)
+            path.quadTo(
+                /* x1 = */ rect.left,
+                /* y1 = */ rect.top,
+                /* x2 = */ rect.left + tl,
+                /* y2 = */ rect.top
+            )
             path.close()
 
             return path

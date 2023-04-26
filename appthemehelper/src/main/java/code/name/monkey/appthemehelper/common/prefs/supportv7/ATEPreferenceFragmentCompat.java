@@ -8,9 +8,6 @@ import androidx.preference.PreferenceFragmentCompat;
 import code.name.monkey.appthemehelper.common.prefs.supportv7.dialogs.ATEListPreferenceDialogFragmentCompat;
 import code.name.monkey.appthemehelper.common.prefs.supportv7.dialogs.ATEPreferenceDialogFragment;
 
-/**
- * @author Karim Abou Zeid (kabouzeid)
- */
 public abstract class ATEPreferenceFragmentCompat extends PreferenceFragmentCompat {
     @Override
     public void onDisplayPreferenceDialog(Preference preference) {

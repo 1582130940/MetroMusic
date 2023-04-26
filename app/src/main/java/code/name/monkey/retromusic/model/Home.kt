@@ -22,5 +22,5 @@ data class Home(
     @HomeSection
     val homeSection: Int,
     @StringRes
-    val titleRes: Int
+    val titleRes: Int,
 )

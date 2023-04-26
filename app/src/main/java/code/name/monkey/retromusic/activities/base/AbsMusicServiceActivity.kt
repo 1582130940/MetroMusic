@@ -1,21 +1,12 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.activities.base
 
 import android.Manifest
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import androidx.core.content.ContextCompat
@@ -41,7 +32,6 @@ import org.koin.android.ext.android.inject
 import java.lang.ref.WeakReference
 
 abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventListener {
-
     private val mMusicServiceEventListeners = ArrayList<IMusicServiceEventListener>()
     private val repository: RealRepository by inject()
     private var serviceToken: MusicPlayerRemote.ServiceToken? = null
@@ -50,17 +40,18 @@ abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventLi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        serviceToken = MusicPlayerRemote.bindToService(this, object : ServiceConnection {
-            override fun onServiceConnected(name: ComponentName, service: IBinder) {
-                this@AbsMusicServiceActivity.onServiceConnected()
-            }
+        serviceToken =
+            MusicPlayerRemote.bindToService(context = this, callback = object : ServiceConnection {
+                override fun onServiceConnected(name: ComponentName, service: IBinder) {
+                    this@AbsMusicServiceActivity.onServiceConnected()
+                }
 
-            override fun onServiceDisconnected(name: ComponentName) {
-                this@AbsMusicServiceActivity.onServiceDisconnected()
-            }
-        })
+                override fun onServiceDisconnected(name: ComponentName) {
+                    this@AbsMusicServiceActivity.onServiceDisconnected()
+                }
+            })
 
-        setPermissionDeniedMessage(getString(R.string.permission_external_storage_denied))
+        setPermissionDeniedMessage(getString(/* resId = */ R.string.permission_external_storage_denied))
     }
 
     override fun onDestroy() {
@@ -86,7 +77,7 @@ abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventLi
 
     override fun onServiceConnected() {
         if (!receiverRegistered) {
-            musicStateReceiver = MusicStateReceiver(this)
+            musicStateReceiver = MusicStateReceiver(activity = this)
 
             val filter = IntentFilter()
             filter.addAction(PLAY_STATE_CHANGED)
@@ -97,7 +88,11 @@ abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventLi
             filter.addAction(MEDIA_STORE_CHANGED)
             filter.addAction(FAVORITE_STATE_CHANGED)
 
-            ContextCompat.registerReceiver(this, musicStateReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
+            ContextCompat.registerReceiver(/* context = */ this, /* receiver = */
+                musicStateReceiver, /* filter = */
+                filter, /* flags = */
+                ContextCompat.RECEIVER_NOT_EXPORTED
+            )
             receiverRegistered = true
         }
 
@@ -172,8 +167,7 @@ abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventLi
     override fun onHasPermissionsChanged(hasPermissions: Boolean) {
         super.onHasPermissionsChanged(hasPermissions)
         val intent = Intent(MEDIA_STORE_CHANGED)
-        intent.putExtra(
-            "from_permissions_changed",
+        intent.putExtra(/* name = */ "from_permissions_changed", /* value = */
             true
         ) // just in case we need to know this at some point
         sendBroadcast(intent)

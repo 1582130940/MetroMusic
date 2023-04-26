@@ -14,7 +14,9 @@
         android:layout_height="match_parent"
         android:paddingBottom="48dp">
 
-        <include android:id="@+id/status_bar_layout" layout="@layout/status_bar" />
+        <include
+            android:id="@+id/status_bar_layout"
+            layout="@layout/status_bar" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/playerAlbumCoverFragment"
@@ -54,11 +56,11 @@
             android:name="code.name.monkey.retromusic.fragments.player.CoverLyricsFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginBottom="16dp"
             android:elevation="20dp"
             app:layout_constraintBottom_toBottomOf="@+id/playerAlbumCoverFragment"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="16dp"
             tools:layout="@layout/fragment_cover_lyrics" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

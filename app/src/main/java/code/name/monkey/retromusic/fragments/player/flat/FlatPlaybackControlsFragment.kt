@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.player.flat
 
 import android.os.Bundle
@@ -24,9 +10,14 @@ import code.name.monkey.appthemehelper.util.ATHUtil
 import code.name.monkey.appthemehelper.util.ColorUtil
 import code.name.monkey.appthemehelper.util.MaterialValueHelper
 import code.name.monkey.appthemehelper.util.TintHelper
-import code.name.monkey.retromusic.extensions.*
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.FragmentFlatPlayerPlaybackControlsBinding
+import code.name.monkey.retromusic.extensions.accentColor
+import code.name.monkey.retromusic.extensions.applyColor
+import code.name.monkey.retromusic.extensions.getSongInfo
+import code.name.monkey.retromusic.extensions.hide
+import code.name.monkey.retromusic.extensions.ripAlpha
+import code.name.monkey.retromusic.extensions.show
 import code.name.monkey.retromusic.fragments.base.AbsPlayerControlsFragment
 import code.name.monkey.retromusic.fragments.base.goToAlbum
 import code.name.monkey.retromusic.fragments.base.goToArtist
@@ -79,8 +70,8 @@ class FlatPlaybackControlsFragment :
 
     public override fun show() {
         binding.playPauseButton.animate()
-            .scaleX(1f)
-            .scaleY(1f)
+            .scaleX(/* value = */ 1f)
+            .scaleY(/* value = */ 1f)
             .setInterpolator(DecelerateInterpolator())
             .start()
     }
@@ -96,14 +87,20 @@ class FlatPlaybackControlsFragment :
     override fun setColor(color: MediaNotificationProcessor) {
         if (ATHUtil.isWindowBackgroundDark(requireContext())) {
             lastPlaybackControlsColor =
-                MaterialValueHelper.getSecondaryTextColor(requireContext(), false)
+                MaterialValueHelper.getSecondaryTextColor(context = requireContext(), dark = false)
             lastDisabledPlaybackControlsColor =
-                MaterialValueHelper.getSecondaryDisabledTextColor(requireContext(), false)
+                MaterialValueHelper.getSecondaryDisabledTextColor(
+                    context = requireContext(),
+                    dark = false
+                )
         } else {
             lastPlaybackControlsColor =
-                MaterialValueHelper.getPrimaryTextColor(requireContext(), true)
+                MaterialValueHelper.getPrimaryTextColor(context = requireContext(), dark = true)
             lastDisabledPlaybackControlsColor =
-                MaterialValueHelper.getPrimaryDisabledTextColor(requireContext(), true)
+                MaterialValueHelper.getPrimaryDisabledTextColor(
+                    context = requireContext(),
+                    dark = true
+                )
         }
 
         val colorFinal = if (PreferenceUtil.isAdaptiveColor) {
@@ -122,12 +119,23 @@ class FlatPlaybackControlsFragment :
     private fun updateTextColors(color: Int) {
         val isDark = ColorUtil.isColorLight(color)
         val darkColor = ColorUtil.darkenColor(color)
-        val colorPrimary = MaterialValueHelper.getPrimaryTextColor(context, isDark)
+        val colorPrimary = MaterialValueHelper.getPrimaryTextColor(context = context, dark = isDark)
         val colorSecondary =
-            MaterialValueHelper.getSecondaryTextColor(context, ColorUtil.isColorLight(darkColor))
+            MaterialValueHelper.getSecondaryTextColor(
+                context = context,
+                dark = ColorUtil.isColorLight(darkColor)
+            )
 
-        TintHelper.setTintAuto(binding.playPauseButton, colorPrimary, false)
-        TintHelper.setTintAuto(binding.playPauseButton, color, true)
+        TintHelper.setTintAuto(
+            /* view = */ binding.playPauseButton,
+            /* color = */ colorPrimary,
+            /* background = */ false
+        )
+        TintHelper.setTintAuto(
+            /* view = */ binding.playPauseButton,
+            /* color = */ color,
+            /* background = */ true
+        )
 
         binding.title.setBackgroundColor(color)
         binding.title.setTextColor(colorPrimary)

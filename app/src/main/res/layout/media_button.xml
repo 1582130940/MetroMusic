@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_weight="1"
+    android:clipToPadding="false"
     android:layoutDirection="ltr"
     android:paddingStart="4dp"
-    android:paddingEnd="4dp"
-    android:clipToPadding="false">
+    android:paddingEnd="4dp">
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/repeatButton"

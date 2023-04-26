@@ -49,7 +49,6 @@
         app:layout_constraintTop_toTopOf="@id/progressSlider"
         tools:text="@tools:sample/date/hhmmss" />
 
-
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/songInfo"
         android:layout_width="wrap_content"
@@ -129,7 +128,6 @@
             android:textStyle="bold"
             tools:text="@tools:sample/full_names" />
     </LinearLayout>
-
 
     <RelativeLayout
         android:id="@+id/playerMediaControllerContainer"

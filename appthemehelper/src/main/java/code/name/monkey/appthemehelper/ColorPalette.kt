@@ -1,189 +1,343 @@
 package code.name.monkey.appthemehelper
 
-/**
- * Designed and developed by Aidan Follestad (@afollestad)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 import android.graphics.Color.parseColor
 
 val PRIMARY_COLORS = intArrayOf(
-        parseColor("#F44336"), parseColor("#E91E63"), parseColor("#9C27B0"),
-        parseColor("#673AB7"), parseColor("#3F51B5"), parseColor("#2196F3"),
-        parseColor("#03A9F4"), parseColor("#00BCD4"), parseColor("#009688"),
-        parseColor("#4CAF50"), parseColor("#8BC34A"), parseColor("#CDDC39"),
-        parseColor("#FFEB3B"), parseColor("#FFC107"), parseColor("#FF9800"),
-        parseColor("#FF5722"), parseColor("#795548"), parseColor("#9E9E9E"),
-        parseColor("#607D8B")
+    parseColor(/* colorString = */ "#F44336"),
+    parseColor(/* colorString = */ "#E91E63"),
+    parseColor(/* colorString = */ "#9C27B0"),
+    parseColor(/* colorString = */ "#673AB7"),
+    parseColor(/* colorString = */ "#3F51B5"),
+    parseColor(/* colorString = */ "#2196F3"),
+    parseColor(/* colorString = */ "#03A9F4"),
+    parseColor(/* colorString = */ "#00BCD4"),
+    parseColor(/* colorString = */ "#009688"),
+    parseColor(/* colorString = */ "#4CAF50"),
+    parseColor(/* colorString = */ "#8BC34A"),
+    parseColor(/* colorString = */ "#CDDC39"),
+    parseColor(/* colorString = */ "#FFEB3B"),
+    parseColor(/* colorString = */ "#FFC107"),
+    parseColor(/* colorString = */ "#FF9800"),
+    parseColor(/* colorString = */ "#FF5722"),
+    parseColor(/* colorString = */ "#795548"),
+    parseColor(/* colorString = */ "#9E9E9E"),
+    parseColor(/* colorString = */ "#607D8B")
 )
 
 val PRIMARY_COLORS_SUB = arrayOf(
-        intArrayOf(
-                parseColor("#FFEBEE"), parseColor("#FFCDD2"), parseColor("#EF9A9A"),
-                parseColor("#E57373"), parseColor("#EF5350"), parseColor("#F44336"),
-                parseColor("#E53935"), parseColor("#D32F2F"), parseColor("#C62828"),
-                parseColor("#B71C1C")
-        ), intArrayOf(
-        parseColor("#FCE4EC"), parseColor("#F8BBD0"), parseColor("#F48FB1"),
-        parseColor("#F06292"), parseColor("#EC407A"), parseColor("#E91E63"),
-        parseColor("#D81B60"), parseColor("#C2185B"), parseColor("#AD1457"),
-        parseColor("#880E4F")
-), intArrayOf(
-        parseColor("#F3E5F5"), parseColor("#E1BEE7"), parseColor("#CE93D8"),
-        parseColor("#BA68C8"), parseColor("#AB47BC"), parseColor("#9C27B0"),
-        parseColor("#8E24AA"), parseColor("#7B1FA2"), parseColor("#6A1B9A"),
-        parseColor("#4A148C")
-), intArrayOf(
-        parseColor("#EDE7F6"), parseColor("#D1C4E9"), parseColor("#B39DDB"),
-        parseColor("#9575CD"), parseColor("#7E57C2"), parseColor("#673AB7"),
-        parseColor("#5E35B1"), parseColor("#512DA8"), parseColor("#4527A0"),
-        parseColor("#311B92")
-), intArrayOf(
-        parseColor("#E8EAF6"), parseColor("#C5CAE9"), parseColor("#9FA8DA"),
-        parseColor("#7986CB"), parseColor("#5C6BC0"), parseColor("#3F51B5"),
-        parseColor("#3949AB"), parseColor("#303F9F"), parseColor("#283593"),
-        parseColor("#1A237E")
-), intArrayOf(
-        parseColor("#E3F2FD"), parseColor("#BBDEFB"), parseColor("#90CAF9"),
-        parseColor("#64B5F6"), parseColor("#42A5F5"), parseColor("#2196F3"),
-        parseColor("#1E88E5"), parseColor("#1976D2"), parseColor("#1565C0"),
-        parseColor("#0D47A1")
-), intArrayOf(
-        parseColor("#E1F5FE"), parseColor("#B3E5FC"), parseColor("#81D4FA"),
-        parseColor("#4FC3F7"), parseColor("#29B6F6"), parseColor("#03A9F4"),
-        parseColor("#039BE5"), parseColor("#0288D1"), parseColor("#0277BD"),
-        parseColor("#01579B")
-), intArrayOf(
-        parseColor("#E0F7FA"), parseColor("#B2EBF2"), parseColor("#80DEEA"),
-        parseColor("#4DD0E1"), parseColor("#26C6DA"), parseColor("#00BCD4"),
-        parseColor("#00ACC1"), parseColor("#0097A7"), parseColor("#00838F"),
-        parseColor("#006064")
-), intArrayOf(
-        parseColor("#E0F2F1"), parseColor("#B2DFDB"), parseColor("#80CBC4"),
-        parseColor("#4DB6AC"), parseColor("#26A69A"), parseColor("#009688"),
-        parseColor("#00897B"), parseColor("#00796B"), parseColor("#00695C"),
-        parseColor("#004D40")
-), intArrayOf(
-        parseColor("#E8F5E9"), parseColor("#C8E6C9"), parseColor("#A5D6A7"),
-        parseColor("#81C784"), parseColor("#66BB6A"), parseColor("#4CAF50"),
-        parseColor("#43A047"), parseColor("#388E3C"), parseColor("#2E7D32"),
-        parseColor("#1B5E20")
-), intArrayOf(
-        parseColor("#F1F8E9"), parseColor("#DCEDC8"), parseColor("#C5E1A5"),
-        parseColor("#AED581"), parseColor("#9CCC65"), parseColor("#8BC34A"),
-        parseColor("#7CB342"), parseColor("#689F38"), parseColor("#558B2F"),
-        parseColor("#33691E")
-), intArrayOf(
-        parseColor("#F9FBE7"), parseColor("#F0F4C3"), parseColor("#E6EE9C"),
-        parseColor("#DCE775"), parseColor("#D4E157"), parseColor("#CDDC39"),
-        parseColor("#C0CA33"), parseColor("#AFB42B"), parseColor("#9E9D24"),
-        parseColor("#827717")
-), intArrayOf(
-        parseColor("#FFFDE7"), parseColor("#FFF9C4"), parseColor("#FFF59D"),
-        parseColor("#FFF176"), parseColor("#FFEE58"), parseColor("#FFEB3B"),
-        parseColor("#FDD835"), parseColor("#FBC02D"), parseColor("#F9A825"),
-        parseColor("#F57F17")
-), intArrayOf(
-        parseColor("#FFF8E1"), parseColor("#FFECB3"), parseColor("#FFE082"),
-        parseColor("#FFD54F"), parseColor("#FFCA28"), parseColor("#FFC107"),
-        parseColor("#FFB300"), parseColor("#FFA000"), parseColor("#FF8F00"),
-        parseColor("#FF6F00")
-), intArrayOf(
-        parseColor("#FFF3E0"), parseColor("#FFE0B2"), parseColor("#FFCC80"),
-        parseColor("#FFB74D"), parseColor("#FFA726"), parseColor("#FF9800"),
-        parseColor("#FB8C00"), parseColor("#F57C00"), parseColor("#EF6C00"),
-        parseColor("#E65100")
-), intArrayOf(
-        parseColor("#FBE9E7"), parseColor("#FFCCBC"), parseColor("#FFAB91"),
-        parseColor("#FF8A65"), parseColor("#FF7043"), parseColor("#FF5722"),
-        parseColor("#F4511E"), parseColor("#E64A19"), parseColor("#D84315"),
-        parseColor("#BF360C")
-), intArrayOf(
-        parseColor("#EFEBE9"), parseColor("#D7CCC8"), parseColor("#BCAAA4"),
-        parseColor("#A1887F"), parseColor("#8D6E63"), parseColor("#795548"),
-        parseColor("#6D4C41"), parseColor("#5D4037"), parseColor("#4E342E"),
-        parseColor("#3E2723")
-), intArrayOf(
-        parseColor("#FAFAFA"), parseColor("#F5F5F5"), parseColor("#EEEEEE"),
-        parseColor("#E0E0E0"), parseColor("#BDBDBD"), parseColor("#9E9E9E"),
-        parseColor("#757575"), parseColor("#616161"), parseColor("#424242"),
-        parseColor("#212121")
-), intArrayOf(
-        parseColor("#ECEFF1"), parseColor("#CFD8DC"), parseColor("#B0BEC5"),
-        parseColor("#90A4AE"), parseColor("#78909C"), parseColor("#607D8B"),
-        parseColor("#546E7A"), parseColor("#455A64"), parseColor("#37474F"),
-        parseColor("#263238")
-)
+    intArrayOf(
+        parseColor(/* colorString = */ "#FFEBEE"),
+        parseColor(/* colorString = */ "#FFCDD2"),
+        parseColor(/* colorString = */ "#EF9A9A"),
+        parseColor(/* colorString = */ "#E57373"),
+        parseColor(/* colorString = */ "#EF5350"),
+        parseColor(/* colorString = */ "#F44336"),
+        parseColor(/* colorString = */ "#E53935"),
+        parseColor(/* colorString = */ "#D32F2F"),
+        parseColor(/* colorString = */ "#C62828"),
+        parseColor(/* colorString = */ "#B71C1C")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#FCE4EC"),
+        parseColor(/* colorString = */ "#F8BBD0"),
+        parseColor(/* colorString = */ "#F48FB1"),
+        parseColor(/* colorString = */ "#F06292"),
+        parseColor(/* colorString = */ "#EC407A"),
+        parseColor(/* colorString = */ "#E91E63"),
+        parseColor(/* colorString = */ "#D81B60"),
+        parseColor(/* colorString = */ "#C2185B"),
+        parseColor(/* colorString = */ "#AD1457"),
+        parseColor(/* colorString = */ "#880E4F")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#F3E5F5"),
+        parseColor(/* colorString = */ "#E1BEE7"),
+        parseColor(/* colorString = */ "#CE93D8"),
+        parseColor(/* colorString = */ "#BA68C8"),
+        parseColor(/* colorString = */ "#AB47BC"),
+        parseColor(/* colorString = */ "#9C27B0"),
+        parseColor(/* colorString = */ "#8E24AA"),
+        parseColor(/* colorString = */ "#7B1FA2"),
+        parseColor(/* colorString = */ "#6A1B9A"),
+        parseColor(/* colorString = */ "#4A148C")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#EDE7F6"),
+        parseColor(/* colorString = */ "#D1C4E9"),
+        parseColor(/* colorString = */ "#B39DDB"),
+        parseColor(/* colorString = */ "#9575CD"),
+        parseColor(/* colorString = */ "#7E57C2"),
+        parseColor(/* colorString = */ "#673AB7"),
+        parseColor(/* colorString = */ "#5E35B1"),
+        parseColor(/* colorString = */ "#512DA8"),
+        parseColor(/* colorString = */ "#4527A0"),
+        parseColor(/* colorString = */ "#311B92")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#E8EAF6"),
+        parseColor(/* colorString = */ "#C5CAE9"),
+        parseColor(/* colorString = */ "#9FA8DA"),
+        parseColor(/* colorString = */ "#7986CB"),
+        parseColor(/* colorString = */ "#5C6BC0"),
+        parseColor(/* colorString = */ "#3F51B5"),
+        parseColor(/* colorString = */ "#3949AB"),
+        parseColor(/* colorString = */ "#303F9F"),
+        parseColor(/* colorString = */ "#283593"),
+        parseColor(/* colorString = */ "#1A237E")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#E3F2FD"),
+        parseColor(/* colorString = */ "#BBDEFB"),
+        parseColor(/* colorString = */ "#90CAF9"),
+        parseColor(/* colorString = */ "#64B5F6"),
+        parseColor(/* colorString = */ "#42A5F5"),
+        parseColor(/* colorString = */ "#2196F3"),
+        parseColor(/* colorString = */ "#1E88E5"),
+        parseColor(/* colorString = */ "#1976D2"),
+        parseColor(/* colorString = */
+            "#1565C0"
+        ),
+        parseColor(/* colorString = */ "#0D47A1")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#E1F5FE"),
+        parseColor(/* colorString = */ "#B3E5FC"),
+        parseColor(/* colorString = */ "#81D4FA"),
+        parseColor(/* colorString = */ "#4FC3F7"),
+        parseColor(/* colorString = */ "#29B6F6"),
+        parseColor(/* colorString = */ "#03A9F4"),
+        parseColor(/* colorString = */ "#039BE5"),
+        parseColor(/* colorString = */ "#0288D1"),
+        parseColor(/* colorString = */ "#0277BD"),
+        parseColor(/* colorString = */ "#01579B")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#E0F7FA"),
+        parseColor(/* colorString = */ "#B2EBF2"),
+        parseColor(/* colorString = */ "#80DEEA"),
+        parseColor(/* colorString = */ "#4DD0E1"),
+        parseColor(/* colorString = */ "#26C6DA"),
+        parseColor(/* colorString = */ "#00BCD4"),
+        parseColor(/* colorString = */ "#00ACC1"),
+        parseColor(/* colorString = */ "#0097A7"),
+        parseColor(/* colorString = */ "#00838F"),
+        parseColor(/* colorString = */ "#006064")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#E0F2F1"),
+        parseColor(/* colorString = */ "#B2DFDB"),
+        parseColor(/* colorString = */ "#80CBC4"),
+        parseColor(/* colorString = */ "#4DB6AC"),
+        parseColor(/* colorString = */ "#26A69A"),
+        parseColor(/* colorString = */ "#009688"),
+        parseColor(/* colorString = */ "#00897B"),
+        parseColor(/* colorString = */ "#00796B"),
+        parseColor(/* colorString = */ "#00695C"),
+        parseColor(/* colorString = */ "#004D40")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#E8F5E9"),
+        parseColor(/* colorString = */ "#C8E6C9"),
+        parseColor(/* colorString = */ "#A5D6A7"),
+        parseColor(/* colorString = */ "#81C784"),
+        parseColor(/* colorString = */ "#66BB6A"),
+        parseColor(/* colorString = */ "#4CAF50"),
+        parseColor(/* colorString = */ "#43A047"),
+        parseColor(/* colorString = */ "#388E3C"),
+        parseColor(/* colorString = */ "#2E7D32"),
+        parseColor(/* colorString = */ "#1B5E20")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#F1F8E9"),
+        parseColor(/* colorString = */ "#DCEDC8"),
+        parseColor(/* colorString = */ "#C5E1A5"),
+        parseColor(/* colorString = */ "#AED581"),
+        parseColor(/* colorString = */ "#9CCC65"),
+        parseColor(/* colorString = */ "#8BC34A"),
+        parseColor(/* colorString = */ "#7CB342"),
+        parseColor(/* colorString = */ "#689F38"),
+        parseColor(/* colorString = */ "#558B2F"),
+        parseColor(/* colorString = */ "#33691E")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#F9FBE7"),
+        parseColor(/* colorString = */ "#F0F4C3"),
+        parseColor(/* colorString = */ "#E6EE9C"),
+        parseColor(/* colorString = */ "#DCE775"),
+        parseColor(/* colorString = */ "#D4E157"),
+        parseColor(/* colorString = */ "#CDDC39"),
+        parseColor(/* colorString = */ "#C0CA33"),
+        parseColor(/* colorString = */ "#AFB42B"),
+        parseColor(/* colorString = */ "#9E9D24"),
+        parseColor(/* colorString = */ "#827717")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#FFFDE7"),
+        parseColor(/* colorString = */ "#FFF9C4"),
+        parseColor(/* colorString = */ "#FFF59D"),
+        parseColor(/* colorString = */ "#FFF176"),
+        parseColor(/* colorString = */ "#FFEE58"),
+        parseColor(/* colorString = */ "#FFEB3B"),
+        parseColor(/* colorString = */ "#FDD835"),
+        parseColor(/* colorString = */ "#FBC02D"),
+        parseColor(/* colorString = */ "#F9A825"),
+        parseColor(/* colorString = */ "#F57F17")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#FFF8E1"),
+        parseColor(/* colorString = */ "#FFECB3"),
+        parseColor(/* colorString = */ "#FFE082"),
+        parseColor(/* colorString = */ "#FFD54F"),
+        parseColor(/* colorString = */ "#FFCA28"),
+        parseColor(/* colorString = */ "#FFC107"),
+        parseColor(/* colorString = */ "#FFB300"),
+        parseColor(/* colorString = */ "#FFA000"),
+        parseColor(/* colorString = */ "#FF8F00"),
+        parseColor(/* colorString = */ "#FF6F00")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#FFF3E0"),
+        parseColor(/* colorString = */ "#FFE0B2"),
+        parseColor(/* colorString = */ "#FFCC80"),
+        parseColor(/* colorString = */ "#FFB74D"),
+        parseColor(/* colorString = */ "#FFA726"),
+        parseColor(/* colorString = */ "#FF9800"),
+        parseColor(/* colorString = */ "#FB8C00"),
+        parseColor(/* colorString = */ "#F57C00"),
+        parseColor(/* colorString = */ "#EF6C00"),
+        parseColor(/* colorString = */ "#E65100")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#FBE9E7"),
+        parseColor(/* colorString = */ "#FFCCBC"),
+        parseColor(/* colorString = */ "#FFAB91"),
+        parseColor(/* colorString = */ "#FF8A65"),
+        parseColor(/* colorString = */ "#FF7043"),
+        parseColor(/* colorString = */ "#FF5722"),
+        parseColor(/* colorString = */ "#F4511E"),
+        parseColor(/* colorString = */ "#E64A19"),
+        parseColor(/* colorString = */ "#D84315"),
+        parseColor(/* colorString = */ "#BF360C")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#EFEBE9"),
+        parseColor(/* colorString = */ "#D7CCC8"),
+        parseColor(/* colorString = */ "#BCAAA4"),
+        parseColor(/* colorString = */ "#A1887F"),
+        parseColor(/* colorString = */ "#8D6E63"),
+        parseColor(/* colorString = */ "#795548"),
+        parseColor(/* colorString = */ "#6D4C41"),
+        parseColor(/* colorString = */ "#5D4037"),
+        parseColor(/* colorString = */ "#4E342E"),
+        parseColor(/* colorString = */ "#3E2723")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#FAFAFA"),
+        parseColor(/* colorString = */ "#F5F5F5"),
+        parseColor(/* colorString = */ "#EEEEEE"),
+        parseColor(/* colorString = */ "#E0E0E0"),
+        parseColor(/* colorString = */ "#BDBDBD"),
+        parseColor(/* colorString = */ "#9E9E9E"),
+        parseColor(/* colorString = */ "#757575"),
+        parseColor(/* colorString = */ "#616161"),
+        parseColor(/* colorString = */ "#424242"),
+        parseColor(/* colorString = */ "#212121")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#ECEFF1"),
+        parseColor(/* colorString = */ "#CFD8DC"),
+        parseColor(/* colorString = */ "#B0BEC5"),
+        parseColor(/* colorString = */ "#90A4AE"),
+        parseColor(/* colorString = */ "#78909C"),
+        parseColor(/* colorString = */ "#607D8B"),
+        parseColor(/* colorString = */ "#546E7A"),
+        parseColor(/* colorString = */ "#455A64"),
+        parseColor(/* colorString = */ "#37474F"),
+        parseColor(/* colorString = */ "#263238")
+    )
 )
 
 val ACCENT_COLORS = intArrayOf(
-        parseColor("#FF1744"), parseColor("#F50057"), parseColor("#D500F9"),
-        parseColor("#651FFF"), parseColor("#3D5AFE"), parseColor("#2979FF"),
-        parseColor("#00B0FF"), parseColor("#00E5FF"), parseColor("#1DE9B6"),
-        parseColor("#00E676"), parseColor("#76FF03"), parseColor("#C6FF00"),
-        parseColor("#FFEA00"), parseColor("#FFC400"), parseColor("#FF9100"),
-        parseColor("#FF3D00")
+    parseColor(/* colorString = */ "#FF1744"),
+    parseColor(/* colorString = */ "#F50057"),
+    parseColor(/* colorString = */ "#D500F9"),
+    parseColor(/* colorString = */ "#651FFF"),
+    parseColor(/* colorString = */ "#3D5AFE"),
+    parseColor(/* colorString = */ "#2979FF"),
+    parseColor(/* colorString = */ "#00B0FF"),
+    parseColor(/* colorString = */ "#00E5FF"),
+    parseColor(/* colorString = */ "#1DE9B6"),
+    parseColor(/* colorString = */ "#00E676"),
+    parseColor(/* colorString = */ "#76FF03"),
+    parseColor(/* colorString = */ "#C6FF00"),
+    parseColor(/* colorString = */ "#FFEA00"),
+    parseColor(/* colorString = */ "#FFC400"),
+    parseColor(/* colorString = */ "#FF9100"),
+    parseColor(/* colorString = */ "#FF3D00")
 )
 
 val ACCENT_COLORS_SUB = arrayOf(
-        intArrayOf(
-                parseColor("#FF8A80"), parseColor("#FF5252"), parseColor("#FF1744"),
-                parseColor("#D50000")
-        ), intArrayOf(
-        parseColor("#FF80AB"), parseColor("#FF4081"), parseColor("#F50057"),
-        parseColor("#C51162")
-), intArrayOf(
-        parseColor("#EA80FC"), parseColor("#E040FB"), parseColor("#D500F9"),
-        parseColor("#AA00FF")
-), intArrayOf(
-        parseColor("#B388FF"), parseColor("#7C4DFF"), parseColor("#651FFF"),
-        parseColor("#6200EA")
-), intArrayOf(
-        parseColor("#8C9EFF"), parseColor("#536DFE"), parseColor("#3D5AFE"),
-        parseColor("#304FFE")
-), intArrayOf(
-        parseColor("#82B1FF"), parseColor("#448AFF"), parseColor("#2979FF"),
-        parseColor("#2962FF")
-), intArrayOf(
-        parseColor("#80D8FF"), parseColor("#40C4FF"), parseColor("#00B0FF"),
-        parseColor("#0091EA")
-), intArrayOf(
-        parseColor("#84FFFF"), parseColor("#18FFFF"), parseColor("#00E5FF"),
-        parseColor("#00B8D4")
-), intArrayOf(
-        parseColor("#A7FFEB"), parseColor("#64FFDA"), parseColor("#1DE9B6"),
-        parseColor("#00BFA5")
-), intArrayOf(
-        parseColor("#B9F6CA"), parseColor("#69F0AE"), parseColor("#00E676"),
-        parseColor("#00C853")
-), intArrayOf(
-        parseColor("#CCFF90"), parseColor("#B2FF59"), parseColor("#76FF03"),
-        parseColor("#64DD17")
-), intArrayOf(
-        parseColor("#F4FF81"), parseColor("#EEFF41"), parseColor("#C6FF00"),
-        parseColor("#AEEA00")
-), intArrayOf(
-        parseColor("#FFFF8D"), parseColor("#FFFF00"), parseColor("#FFEA00"),
-        parseColor("#FFD600")
-), intArrayOf(
-        parseColor("#FFE57F"), parseColor("#FFD740"), parseColor("#FFC400"),
-        parseColor("#FFAB00")
-), intArrayOf(
-        parseColor("#FFD180"), parseColor("#FFAB40"), parseColor("#FF9100"),
-        parseColor("#FF6D00")
-), intArrayOf(
-        parseColor("#FF9E80"), parseColor("#FF6E40"), parseColor("#FF3D00"),
-        parseColor("#DD2C00")
-)
+    intArrayOf(
+        parseColor(/* colorString = */ "#FF8A80"),
+        parseColor(/* colorString = */ "#FF5252"),
+        parseColor(/* colorString = */ "#FF1744"),
+        parseColor(/* colorString = */ "#D50000")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#FF80AB"),
+        parseColor(/* colorString = */ "#FF4081"),
+        parseColor(/* colorString = */ "#F50057"),
+        parseColor(/* colorString = */ "#C51162")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#EA80FC"),
+        parseColor(/* colorString = */ "#E040FB"),
+        parseColor(/* colorString = */ "#D500F9"),
+        parseColor(/* colorString = */ "#AA00FF")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#B388FF"),
+        parseColor(/* colorString = */ "#7C4DFF"),
+        parseColor(/* colorString = */ "#651FFF"),
+        parseColor(/* colorString = */ "#6200EA")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#8C9EFF"),
+        parseColor(/* colorString = */ "#536DFE"),
+        parseColor(/* colorString = */ "#3D5AFE"),
+        parseColor(/* colorString = */ "#304FFE")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#82B1FF"),
+        parseColor(/* colorString = */ "#448AFF"),
+        parseColor(/* colorString = */ "#2979FF"),
+        parseColor(/* colorString = */ "#2962FF")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#80D8FF"),
+        parseColor(/* colorString = */ "#40C4FF"),
+        parseColor(/* colorString = */ "#00B0FF"),
+        parseColor(/* colorString = */ "#0091EA")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#84FFFF"),
+        parseColor(/* colorString = */ "#18FFFF"),
+        parseColor(/* colorString = */ "#00E5FF"),
+        parseColor(/* colorString = */ "#00B8D4")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#A7FFEB"),
+        parseColor(/* colorString = */ "#64FFDA"),
+        parseColor(/* colorString = */ "#1DE9B6"),
+        parseColor(/* colorString = */ "#00BFA5")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#B9F6CA"),
+        parseColor(/* colorString = */ "#69F0AE"),
+        parseColor(/* colorString = */ "#00E676"),
+        parseColor(/* colorString = */ "#00C853")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#CCFF90"),
+        parseColor(/* colorString = */ "#B2FF59"),
+        parseColor(/* colorString = */ "#76FF03"),
+        parseColor(/* colorString = */ "#64DD17")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#F4FF81"),
+        parseColor(/* colorString = */ "#EEFF41"),
+        parseColor(/* colorString = */ "#C6FF00"),
+        parseColor(/* colorString = */ "#AEEA00")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#FFFF8D"),
+        parseColor(/* colorString = */ "#FFFF00"),
+        parseColor(/* colorString = */ "#FFEA00"),
+        parseColor(/* colorString = */ "#FFD600")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#FFE57F"),
+        parseColor(/* colorString = */ "#FFD740"),
+        parseColor(/* colorString = */ "#FFC400"),
+        parseColor(/* colorString = */ "#FFAB00")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#FFD180"),
+        parseColor(/* colorString = */ "#FFAB40"),
+        parseColor(/* colorString = */ "#FF9100"),
+        parseColor(/* colorString = */ "#FF6D00")
+    ), intArrayOf(
+        parseColor(/* colorString = */ "#FF9E80"),
+        parseColor(/* colorString = */ "#FF6E40"),
+        parseColor(/* colorString = */ "#FF3D00"),
+        parseColor(/* colorString = */ "#DD2C00")
+    )
 )

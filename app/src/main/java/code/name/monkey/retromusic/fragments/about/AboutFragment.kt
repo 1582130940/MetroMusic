@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.about
 
 import android.content.pm.PackageManager
@@ -22,10 +8,8 @@ import code.name.monkey.retromusic.Constants
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.FragmentAboutBinding
 import code.name.monkey.retromusic.extensions.openUrl
-import code.name.monkey.retromusic.fragments.LibraryViewModel
 import code.name.monkey.retromusic.util.NavigationUtil
 import dev.chrisbanes.insetter.applyInsetter
-import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class AboutFragment : Fragment(R.layout.fragment_about), View.OnClickListener {
     private var _binding: FragmentAboutBinding? = null
@@ -60,7 +44,10 @@ class AboutFragment : Fragment(R.layout.fragment_about), View.OnClickListener {
 
     private fun getAppVersion(): String {
         return try {
-            requireActivity().packageManager.getPackageInfo(requireActivity().packageName, 0).versionName
+            requireActivity().packageManager.getPackageInfo(
+                requireActivity().packageName,
+                0
+            ).versionName
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
             "0.0.0"

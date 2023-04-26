@@ -39,7 +39,7 @@ class PersistentStorage(context: Context) {
         private var instance: PersistentStorage? = null
 
         fun getInstance(context: Context) =
-            instance ?: synchronized(this) {
+            instance ?: synchronized(lock = this) {
                 instance ?: PersistentStorage(context).also { instance = it }
             }
     }

@@ -127,7 +127,6 @@
                         android:layout_marginTop="8dp"
                         app:hintEnabled="true">
 
-
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/albumArtistText"
                             android:layout_width="match_parent"
@@ -176,7 +175,6 @@
                             android:layout_weight="1"
                             app:hintEnabled="true">
 
-
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/genreText"
                                 android:layout_width="match_parent"
@@ -188,7 +186,6 @@
 
                         </com.google.android.material.textfield.TextInputLayout>
 
-
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/yearContainer"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -198,7 +195,6 @@
                             android:layout_marginTop="8dp"
                             android:layout_weight="1"
                             app:hintEnabled="true">
-
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/yearText"
@@ -272,7 +268,6 @@
                         android:layout_marginTop="8dp"
                         app:hintEnabled="true">
 
-
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/lyricsText"
                             android:layout_width="match_parent"
@@ -293,7 +288,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
-
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/saveTags"
@@ -320,4 +314,3 @@
         android:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-

@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.dialogs
 
 import android.app.Dialog
@@ -47,14 +33,17 @@ class RenamePlaylistDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val playlistEntity = extraNotNull<PlaylistEntity>(EXTRA_PLAYLIST_ID).value
-        val layout = layoutInflater.inflate(R.layout.dialog_playlist, null)
+        val layout = layoutInflater.inflate(
+            /* resource = */ R.layout.dialog_playlist,
+            /* root = */ null
+        )
         val inputEditText: TextInputEditText = layout.findViewById(R.id.actionNewPlaylist)
         val nameContainer: TextInputLayout = layout.findViewById(R.id.actionNewPlaylistContainer)
         nameContainer.accentColor()
         inputEditText.setText(playlistEntity.playlistName)
         return materialDialog(R.string.rename_playlist_title)
             .setView(layout)
-            .setNegativeButton(android.R.string.cancel, null)
+            .setNegativeButton(/* textId = */ android.R.string.cancel, /* listener = */ null)
             .setPositiveButton(R.string.action_rename) { _, _ ->
                 val name = inputEditText.text.toString()
                 if (name.isNotEmpty()) {

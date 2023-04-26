@@ -31,9 +31,8 @@ open class Song(
     open val artistId: Long,
     open val artistName: String,
     open val composer: String?,
-    open val albumArtist: String?
+    open val albumArtist: String?,
 ) : Parcelable {
-
 
     // need to override manually because is open and cannot be a data class
     override fun equals(other: Any?): Boolean {
@@ -75,7 +74,6 @@ open class Song(
         result = 31 * result + (albumArtist?.hashCode() ?: 0)
         return result
     }
-
 
     companion object {
 

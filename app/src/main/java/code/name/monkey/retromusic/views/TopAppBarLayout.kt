@@ -27,7 +27,10 @@ class TopAppBarLayout @JvmOverloads constructor(
     init {
         if (mode == AppBarMode.COLLAPSING) {
             collapsingAppbarBinding =
-                CollapsingAppbarLayoutBinding.inflate(LayoutInflater.from(context), this, true)
+                CollapsingAppbarLayoutBinding.inflate(/* inflater = */ LayoutInflater.from(context), /* parent = */
+                    this, /* attachToParent = */
+                    true
+                )
             val isLandscape =
                 context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
             if (isLandscape) {
@@ -36,7 +39,10 @@ class TopAppBarLayout @JvmOverloads constructor(
 
         } else {
             simpleAppbarBinding =
-                SimpleAppbarLayoutBinding.inflate(LayoutInflater.from(context), this, true)
+                SimpleAppbarLayoutBinding.inflate(/* inflater = */ LayoutInflater.from(context), /* parent = */
+                    this, /* attachToParent = */
+                    true
+                )
             simpleAppbarBinding?.root?.applyInsetter {
                 type(navigationBars = true) {
                     padding(horizontal = true)

@@ -16,7 +16,7 @@ package code.name.monkey.retromusic.model
 
 data class Album(
     val id: Long,
-    val songs: List<Song>
+    val songs: List<Song>,
 ) {
 
     val title: String
@@ -45,7 +45,7 @@ data class Album(
     }
 
     companion object {
-        val empty = Album(-1, emptyList())
+        val empty = Album(id = -1, songs = emptyList())
     }
 
 }

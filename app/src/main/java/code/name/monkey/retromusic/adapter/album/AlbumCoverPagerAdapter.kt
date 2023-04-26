@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.adapter.album
 
 import android.os.Bundle
@@ -27,7 +13,13 @@ import androidx.lifecycle.lifecycleScope
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.activities.MainActivity
 import code.name.monkey.retromusic.fragments.AlbumCoverStyle
-import code.name.monkey.retromusic.fragments.NowPlayingScreen.*
+import code.name.monkey.retromusic.fragments.NowPlayingScreen.Card
+import code.name.monkey.retromusic.fragments.NowPlayingScreen.Classic
+import code.name.monkey.retromusic.fragments.NowPlayingScreen.Fit
+import code.name.monkey.retromusic.fragments.NowPlayingScreen.Full
+import code.name.monkey.retromusic.fragments.NowPlayingScreen.Gradient
+import code.name.monkey.retromusic.fragments.NowPlayingScreen.Peek
+import code.name.monkey.retromusic.fragments.NowPlayingScreen.Tiny
 import code.name.monkey.retromusic.fragments.base.goToLyrics
 import code.name.monkey.retromusic.glide.RetroGlideExtension
 import code.name.monkey.retromusic.glide.RetroGlideExtension.asBitmapPalette
@@ -47,7 +39,7 @@ import kotlinx.coroutines.withContext
 
 class AlbumCoverPagerAdapter(
     fragmentManager: FragmentManager,
-    private val dataSet: List<Song>
+    private val dataSet: List<Song>,
 ) : CustomFragmentStatePagerAdapter(fragmentManager) {
 
     private var currentColorReceiver: AlbumCoverFragment.ColorReceiver? = null
@@ -105,9 +97,13 @@ class AlbumCoverPagerAdapter(
         override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
-            savedInstanceState: Bundle?
+            savedInstanceState: Bundle?,
         ): View? {
-            val view = inflater.inflate(getLayoutWithPlayerTheme(), container, false)
+            val view = inflater.inflate(
+                /* resource = */ getLayoutWithPlayerTheme(),
+                /* root = */ container,
+                /* attachToRoot = */ false
+            )
             view.setOnClickListener {
                 if (mainActivity.getBottomSheetBehavior().state == STATE_EXPANDED) {
                     showLyricsDialog()
@@ -121,7 +117,8 @@ class AlbumCoverPagerAdapter(
                 val data: String? = MusicUtil.getLyrics(song)
                 withContext(Dispatchers.Main) {
                     MaterialAlertDialogBuilder(
-                        requireContext(),
+                        /* context = */ requireContext(),
+                        /* overrideThemeResId = */
                         com.google.android.material.R.style.ThemeOverlay_MaterialComponents_Dialog_Alert
                     ).apply {
                         setTitle(song.title)
@@ -167,7 +164,7 @@ class AlbumCoverPagerAdapter(
         }
 
         private fun loadAlbumCover(albumCover: ImageView) {
-            Glide.with(this)
+            Glide.with(/* fragment = */ this)
                 .asBitmapPalette()
                 .songCoverOptions(song)
                 //.checkIgnoreMediaStore()
@@ -191,7 +188,7 @@ class AlbumCoverPagerAdapter(
 
         internal fun receiveColor(colorReceiver: ColorReceiver, request: Int) {
             if (isColorReady) {
-                colorReceiver.onColorReady(color, request)
+                colorReceiver.onColorReady(color = color, request = request)
             } else {
                 this.colorReceiver = colorReceiver
                 this.request = request

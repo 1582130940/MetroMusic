@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.adapter.song
 
 import android.view.LayoutInflater
@@ -26,13 +12,17 @@ import code.name.monkey.retromusic.model.Song
 abstract class AbsOffsetSongAdapter(
     activity: FragmentActivity,
     dataSet: MutableList<Song>,
-    @LayoutRes itemLayoutRes: Int
+    @LayoutRes itemLayoutRes: Int,
 ) : SongAdapter(activity, dataSet, itemLayoutRes) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongAdapter.ViewHolder {
         if (viewType == OFFSET_ITEM) {
             val view = LayoutInflater.from(activity)
-                .inflate(R.layout.item_list_quick_actions, parent, false)
+                .inflate(
+                    /* resource = */ R.layout.item_list_quick_actions,
+                    /* root = */ parent,
+                    /* attachToRoot = */ false
+                )
             return createViewHolder(view)
         }
         return super.onCreateViewHolder(parent, viewType)
@@ -73,7 +63,11 @@ abstract class AbsOffsetSongAdapter(
             if (isInQuickSelectMode && itemViewType != OFFSET_ITEM) {
                 toggleChecked(layoutPosition)
             } else {
-                MusicPlayerRemote.openQueue(dataSet, layoutPosition - 1, true)
+                MusicPlayerRemote.openQueue(
+                    queue = dataSet,
+                    startPosition = layoutPosition - 1,
+                    startPlaying = true
+                )
             }
         }
 

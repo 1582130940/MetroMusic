@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2019 Hemanth Savarala.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by
- *  the Free Software Foundation either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- */
-
 package code.name.monkey.retromusic.views
 
 import android.content.Context
@@ -30,7 +16,6 @@ class TintedBottomNavigationView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : BottomNavigationView(context, attrs, defStyleAttr) {
-
     init {
         if (!isInEditMode) {
             // If we are in Immersive mode we have to just set empty OnApplyWindowInsetsListener as
@@ -54,9 +39,10 @@ class TintedBottomNavigationView @JvmOverloads constructor(
             if (!PreferenceUtil.materialYou) {
                 val iconColor = ATHUtil.resolveColor(context, android.R.attr.colorControlNormal)
                 val accentColor = ThemeStore.accentColor(context)
-                setItemColors(iconColor, accentColor)
-                itemRippleColor = ColorStateList.valueOf(accentColor.addAlpha(0.08F))
-                itemActiveIndicatorColor = ColorStateList.valueOf(accentColor.addAlpha(0.12F))
+                setItemColors(normalColor = iconColor, selectedColor = accentColor)
+                itemRippleColor = ColorStateList.valueOf(accentColor.addAlpha(alpha = 0.08F))
+                itemActiveIndicatorColor =
+                    ColorStateList.valueOf(accentColor.addAlpha(alpha = 0.12F))
             }
         }
     }

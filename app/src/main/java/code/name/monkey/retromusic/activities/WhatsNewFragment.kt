@@ -12,21 +12,17 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.content.pm.PackageInfoCompat
-import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.FragmentActivity
 import code.name.monkey.appthemehelper.util.ATHUtil.isWindowBackgroundDark
 import code.name.monkey.appthemehelper.util.ColorUtil.isColorLight
 import code.name.monkey.appthemehelper.util.ColorUtil.lightenColor
 import code.name.monkey.appthemehelper.util.MaterialValueHelper.getPrimaryTextColor
-import code.name.monkey.retromusic.BuildConfig
-import code.name.monkey.retromusic.Constants
 import code.name.monkey.retromusic.databinding.FragmentWhatsNewBinding
 import code.name.monkey.retromusic.extensions.accentColor
-import code.name.monkey.retromusic.extensions.openUrl
 import code.name.monkey.retromusic.util.PreferenceUtil.lastVersion
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.nio.charset.StandardCharsets
-import java.util.*
+import java.util.Locale
 
 class WhatsNewFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentWhatsNewBinding? = null
@@ -35,9 +31,12 @@ class WhatsNewFragment : BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentWhatsNewBinding.inflate(inflater, container, false)
+        _binding = FragmentWhatsNewBinding.inflate(/* inflater = */ inflater, /* parent = */
+            container, /* attachToParent = */
+            false
+        )
         return binding.root
     }
 
@@ -45,7 +44,7 @@ class WhatsNewFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         try {
             val buf = StringBuilder()
-            val stream = requireContext().assets.open("retro-changelog.html")
+            val stream = requireContext().assets.open(/* fileName = */ "retro-changelog.html")
             stream.reader(StandardCharsets.UTF_8).buffered().use { br ->
                 var str: String?
                 while (br.readLine().also { str = it } != null) {
@@ -69,21 +68,22 @@ class WhatsNewFragment : BottomSheetDialogFragment() {
             )
             val changeLog = buf.toString()
                 .replace(
-                    "{style-placeholder}",
-                    "body { color: $contentColor; } li {color: $textColor;} h3 {color: $accentColorString;} .tag {background-color: $accentColorString; color: $accentTextColor; } div{background-color: $cardBackgroundColor;}"
+                    oldValue = "{style-placeholder}",
+                    newValue = "body { color: $contentColor; } li {color: $textColor;} h3 {color: $accentColorString;} .tag {background-color: $accentColorString; color: $accentTextColor; } div{background-color: $cardBackgroundColor;}"
                 )
-                .replace("{link-color}", colorToCSS(accentColor()))
+                .replace(oldValue = "{link-color}", newValue = colorToCSS(accentColor()))
                 .replace(
-                    "{link-color-active}",
-                    colorToCSS(
-                        lightenColor(accentColor())
-                    )
+                    oldValue = "{link-color-active}",
+                    newValue = colorToCSS(lightenColor(accentColor()))
                 )
-            binding.webView.loadData(changeLog, "text/html", "UTF-8")
+            binding.webView.loadData(/* data = */ changeLog, /* mimeType = */
+                "text/html", /* encoding = */
+                "UTF-8"
+            )
             binding.webView.webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(
                     view: WebView?,
-                    request: WebResourceRequest?
+                    request: WebResourceRequest?,
                 ): Boolean {
                     val url = request?.url ?: return false
                     //you can do checks here e.g. url.host equals to target one
@@ -92,8 +92,9 @@ class WhatsNewFragment : BottomSheetDialogFragment() {
                 }
             }
         } catch (e: Throwable) {
-            binding.webView.loadData(
-                "<h1>Unable to load</h1><p>" + e.localizedMessage + "</p>", "text/html", "UTF-8"
+            binding.webView.loadData(/* data = */ "<h1>Unable to load</h1><p>" + e.localizedMessage + "</p>", /* mimeType = */
+                "text/html", /* encoding = */
+                "UTF-8"
             )
         }
         setChangelogRead(requireContext())
@@ -109,8 +110,8 @@ class WhatsNewFragment : BottomSheetDialogFragment() {
         const val TAG = "WhatsNewFragment"
         private fun colorToCSS(color: Int): String {
             return String.format(
-                Locale.getDefault(),
-                "rgba(%d, %d, %d, %d)",
+                locale = Locale.getDefault(),
+                format = "rgba(%d, %d, %d, %d)",
                 Color.red(color),
                 Color.green(color),
                 Color.blue(color),
@@ -131,7 +132,7 @@ class WhatsNewFragment : BottomSheetDialogFragment() {
         fun showChangeLog(activity: FragmentActivity) {
             val pInfo = activity.packageManager.getPackageInfo(activity.packageName, 0)
             val currentVersion = PackageInfoCompat.getLongVersionCode(pInfo)
-            if (currentVersion > lastVersion && !BuildConfig.DEBUG) {
+            if (currentVersion > lastVersion) {
                 val changelogBottomSheet = WhatsNewFragment()
                 changelogBottomSheet.show(activity.supportFragmentManager, TAG)
             }

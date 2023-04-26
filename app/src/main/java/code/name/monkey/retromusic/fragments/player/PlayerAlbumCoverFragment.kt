@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.player
 
 import android.animation.ObjectAnimator
@@ -80,7 +66,10 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
         val transformer = ParallaxPagerTransformer(R.id.player_image)
         transformer.setSpeed(0.3f)
         lifecycleScope.launchWhenStarted {
-            viewPager.setPageTransformer(false, transformer)
+            viewPager.setPageTransformer(
+                /* reverseDrawingOrder = */ false,
+                /* transformer = */ transformer
+            )
         }
     }
 
@@ -114,10 +103,14 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentPlayerAlbumCoverBinding.bind(view)
         setupViewPager()
-        progressViewUpdateHelper = MusicProgressViewUpdateHelper(this, 500, 1000)
+        progressViewUpdateHelper = MusicProgressViewUpdateHelper(
+            callback = this,
+            intervalPlaying = 500,
+            intervalPaused = 1000
+        )
         maybeInitLyrics()
         lrcView.apply {
-            setDraggable(true) { time ->
+            setDraggable(draggable = true) { time ->
                 MusicPlayerRemote.seekTo(time.toInt())
                 MusicPlayerRemote.resumePlaying()
                 true
@@ -129,7 +122,7 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
     }
 
     private fun setupViewPager() {
-        binding.viewPager.addOnPageChangeListener(this)
+        binding.viewPager.addOnPageChangeListener(/* listener = */ this)
         val nps = PreferenceUtil.nowPlayingScreen
 
         if (nps == Full || nps == Classic || nps == Fit || nps == Gradient) {
@@ -144,14 +137,22 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
                 } else {
                     100
                 }
-            binding.viewPager.setPadding(padding, 0, padding, 0)
+            binding.viewPager.setPadding(
+                /* left = */ padding,
+                /* top = */ 0,
+                /* right = */ padding,
+                /* bottom = */ 0
+            )
             binding.viewPager.pageMargin = 0
-            binding.viewPager.setPageTransformer(false, CarousalPagerTransformer(requireContext()))
+            binding.viewPager.setPageTransformer(
+                /* reverseDrawingOrder = */ false,
+                /* transformer = */ CarousalPagerTransformer(requireContext())
+            )
         } else {
             binding.viewPager.offscreenPageLimit = 2
             binding.viewPager.setPageTransformer(
-                true,
-                PreferenceUtil.albumCoverTransform
+                /* reverseDrawingOrder = */ true,
+                /* transformer = */ PreferenceUtil.albumCoverTransform
             )
         }
     }
@@ -160,14 +161,14 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
         super.onResume()
         maybeInitLyrics()
         PreferenceManager.getDefaultSharedPreferences(requireContext())
-            .registerOnSharedPreferenceChangeListener(this)
+            .registerOnSharedPreferenceChangeListener(/* p0 = */ this)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         PreferenceManager.getDefaultSharedPreferences(requireContext())
-            .unregisterOnSharedPreferenceChangeListener(this)
-        binding.viewPager.removeOnPageChangeListener(this)
+            .unregisterOnSharedPreferenceChangeListener(/* p0 = */ this)
+        binding.viewPager.removeOnPageChangeListener(/* listener = */ this)
         progressViewUpdateHelper?.stop()
         _binding = null
     }
@@ -179,7 +180,9 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
 
     override fun onPlayingMetaChanged() {
         if (viewPager.currentItem != MusicPlayerRemote.position) {
-            viewPager.setCurrentItem(MusicPlayerRemote.position, true)
+            viewPager.setCurrentItem(/* item = */ MusicPlayerRemote.position, /* smoothScroll = */
+                true
+            )
         }
         updateLyrics()
     }
@@ -188,23 +191,30 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
         updatePlayingQueue()
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
+    override fun onSharedPreferenceChanged(
+        sharedPreferences: SharedPreferences,
+        key: String?,
+    ) {
         when (key) {
             SHOW_LYRICS -> {
                 if (PreferenceUtil.showLyrics) {
                     maybeInitLyrics()
                 } else {
-                    showLyrics(false)
+                    showLyrics(visible = false)
                     progressViewUpdateHelper?.stop()
                 }
             }
+
             LYRICS_TYPE -> {
                 maybeInitLyrics()
             }
         }
     }
 
-    private fun setLRCViewColors(@ColorInt primaryColor: Int, @ColorInt secondaryColor: Int) {
+    private fun setLRCViewColors(
+        @ColorInt primaryColor: Int,
+        @ColorInt secondaryColor: Int,
+    ) {
         lrcView.apply {
             setCurrentColor(primaryColor)
             setTimeTextColor(primaryColor)
@@ -222,7 +232,11 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
             ObjectAnimator.ofFloat(viewPager, View.ALPHA, if (visible) 0F else 1F).start()
             lrcView
         } else {
-            ObjectAnimator.ofFloat(viewPager, View.ALPHA, 1F).start()
+            ObjectAnimator.ofFloat(
+                /* target = */ viewPager,
+                /* property = */ View.ALPHA,
+                /* ...values = */ 1F
+            ).start()
             binding.coverLyrics
         }
         ObjectAnimator.ofFloat(lyrics, View.ALPHA, if (visible) 1F else 0F).apply {
@@ -237,12 +251,12 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
         val nps = PreferenceUtil.nowPlayingScreen
         // Don't show lyrics container for below conditions
         if (lyricViewNpsList.contains(nps) && PreferenceUtil.showLyrics) {
-            showLyrics(true)
+            showLyrics(visible = true)
             if (PreferenceUtil.lyricsType == CoverLyricsType.REPLACE_COVER) {
                 progressViewUpdateHelper?.start()
             }
         } else {
-            showLyrics(false)
+            showLyrics(visible = false)
             progressViewUpdateHelper?.stop()
         }
     }
@@ -250,19 +264,24 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
     private fun updatePlayingQueue() {
         binding.viewPager.apply {
             adapter = AlbumCoverPagerAdapter(parentFragmentManager, MusicPlayerRemote.playingQueue)
-            setCurrentItem(MusicPlayerRemote.position, true)
-            onPageSelected(MusicPlayerRemote.position)
+            setCurrentItem(/* item = */ MusicPlayerRemote.position, /* smoothScroll = */ true)
+            onPageSelected(position = MusicPlayerRemote.position)
         }
     }
 
-    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+    override fun onPageScrolled(
+        position: Int,
+        positionOffset: Float,
+        positionOffsetPixels: Int,
+    ) {
+    }
 
     override fun onPageSelected(position: Int) {
         currentPosition = position
         if (binding.viewPager.adapter != null) {
             (binding.viewPager.adapter as AlbumCoverPagerAdapter).receiveColor(
-                colorReceiver,
-                position
+                colorReceiver = colorReceiver,
+                position = position
             )
         }
         if (position != MusicPlayerRemote.position) {
@@ -273,27 +292,44 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
     override fun onPageScrollStateChanged(state: Int) {
     }
 
-
     private fun notifyColorChange(color: MediaNotificationProcessor) {
         callbacks?.onColorChanged(color)
         val primaryColor = MaterialValueHelper.getPrimaryTextColor(
-            requireContext(),
-            surfaceColor().isColorLight
+            context = requireContext(),
+            dark = surfaceColor().isColorLight
         )
         val secondaryColor = MaterialValueHelper.getSecondaryDisabledTextColor(
-            requireContext(),
-            surfaceColor().isColorLight
+            context = requireContext(),
+            dark = surfaceColor().isColorLight
         )
 
         when (PreferenceUtil.nowPlayingScreen) {
             Flat, Normal, Material -> if (PreferenceUtil.isAdaptiveColor) {
-                setLRCViewColors(color.primaryTextColor, color.secondaryTextColor)
+                setLRCViewColors(
+                    primaryColor = color.primaryTextColor,
+                    secondaryColor = color.secondaryTextColor
+                )
             } else {
-                setLRCViewColors(primaryColor, secondaryColor)
+                setLRCViewColors(
+                    primaryColor = primaryColor,
+                    secondaryColor = secondaryColor
+                )
             }
-            Color, Classic -> setLRCViewColors(color.primaryTextColor, color.secondaryTextColor)
-            Blur -> setLRCViewColors(Color.WHITE, ColorUtil.withAlpha(Color.WHITE, 0.5f))
-            else -> setLRCViewColors(primaryColor, secondaryColor)
+
+            Color, Classic -> setLRCViewColors(
+                primaryColor = color.primaryTextColor,
+                secondaryColor = color.secondaryTextColor
+            )
+
+            Blur -> setLRCViewColors(
+                primaryColor = Color.WHITE,
+                secondaryColor = ColorUtil.withAlpha(baseColor = Color.WHITE, alpha = 0.5f)
+            )
+
+            else -> setLRCViewColors(
+                primaryColor = primaryColor,
+                secondaryColor = secondaryColor
+            )
         }
     }
 

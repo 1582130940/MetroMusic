@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.player.adaptive
 
 import android.os.Bundle
@@ -20,7 +6,12 @@ import androidx.appcompat.widget.Toolbar
 import code.name.monkey.appthemehelper.util.ToolbarContentTintHelper
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.FragmentAdaptivePlayerBinding
-import code.name.monkey.retromusic.extensions.*
+import code.name.monkey.retromusic.extensions.colorControlNormal
+import code.name.monkey.retromusic.extensions.drawAboveSystemBars
+import code.name.monkey.retromusic.extensions.surfaceColor
+import code.name.monkey.retromusic.extensions.textColorPrimary
+import code.name.monkey.retromusic.extensions.textColorSecondary
+import code.name.monkey.retromusic.extensions.whichFragment
 import code.name.monkey.retromusic.fragments.base.AbsPlayerFragment
 import code.name.monkey.retromusic.fragments.player.PlayerAlbumCoverFragment
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
@@ -61,7 +52,11 @@ class AdaptiveFragment : AbsPlayerFragment(R.layout.fragment_adaptive_player) {
         binding.playerToolbar.apply {
             inflateMenu(R.menu.menu_player)
             setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
-            ToolbarContentTintHelper.colorizeToolbar(this, surfaceColor(), requireActivity())
+            ToolbarContentTintHelper.colorizeToolbar(
+                /* toolbarView = */ this,
+                /* toolbarIconsColor = */ surfaceColor(),
+                /* activity = */ requireActivity()
+            )
             setTitleTextColor(textColorPrimary())
             setSubtitleTextColor(textColorSecondary())
             setOnMenuItemClickListener(this@AdaptiveFragment)
@@ -103,9 +98,9 @@ class AdaptiveFragment : AbsPlayerFragment(R.layout.fragment_adaptive_player) {
         lastColor = color.primaryTextColor
         libraryViewModel.updateColor(color.primaryTextColor)
         ToolbarContentTintHelper.colorizeToolbar(
-            binding.playerToolbar,
-            colorControlNormal(),
-            requireActivity()
+            /* toolbarView = */ binding.playerToolbar,
+            /* toolbarIconsColor = */ colorControlNormal(),
+            /* activity = */ requireActivity()
         )
     }
 

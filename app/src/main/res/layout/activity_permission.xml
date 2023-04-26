@@ -81,7 +81,6 @@
         </LinearLayout>
     </ScrollView>
 
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/finish"
         style="@style/Widget.Material3.Button"

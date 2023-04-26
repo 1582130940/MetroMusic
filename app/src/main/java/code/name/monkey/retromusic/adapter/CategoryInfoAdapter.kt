@@ -1,16 +1,3 @@
-/*
- * Copyright (c) 2019 Hemanth Savarala.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by
- *  the Free Software Foundation either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- */
 package code.name.monkey.retromusic.adapter
 
 import android.annotation.SuppressLint
@@ -30,7 +17,8 @@ import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.SwipeAndDragHelper
 import code.name.monkey.retromusic.util.SwipeAndDragHelper.ActionCompletionContract
 
-class CategoryInfoAdapter : RecyclerView.Adapter<code.name.monkey.retromusic.adapter.CategoryInfoAdapter.ViewHolder>(),
+class CategoryInfoAdapter :
+    RecyclerView.Adapter<CategoryInfoAdapter.ViewHolder>(),
     ActionCompletionContract {
     var categoryInfos: MutableList<CategoryInfo> =
         PreferenceUtil.libraryCategory.toMutableList()
@@ -59,7 +47,7 @@ class CategoryInfoAdapter : RecyclerView.Adapter<code.name.monkey.retromusic.ada
                 categoryInfo.visible = !categoryInfo.visible
                 holder.binding.checkbox.isChecked = categoryInfo.visible
             } else {
-                holder.itemView.context.showToast(R.string.you_have_to_select_at_least_one_category)
+                holder.itemView.context.showToast(stringRes = R.string.you_have_to_select_at_least_one_category)
             }
         }
         holder.binding.dragView.setOnTouchListener { _: View?, event: MotionEvent ->
@@ -71,13 +59,13 @@ class CategoryInfoAdapter : RecyclerView.Adapter<code.name.monkey.retromusic.ada
     }
 
     override fun onCreateViewHolder(
-        parent: ViewGroup, viewType: Int
+        parent: ViewGroup, viewType: Int,
     ): ViewHolder {
         return ViewHolder(
             PreferenceDialogLibraryCategoriesListitemBinding.inflate(
-                LayoutInflater.from(
+                /* inflater = */ LayoutInflater.from(
                     parent.context
-                ), parent, false
+                ), /* parent = */ parent, /* attachToParent = */ false
             )
         )
     }
@@ -110,7 +98,7 @@ class CategoryInfoAdapter : RecyclerView.Adapter<code.name.monkey.retromusic.ada
     }
 
     init {
-        val swipeAndDragHelper = SwipeAndDragHelper(this)
+        val swipeAndDragHelper = SwipeAndDragHelper(/* contract = */ this)
         touchHelper = ItemTouchHelper(swipeAndDragHelper)
     }
 }

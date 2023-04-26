@@ -13,7 +13,6 @@ import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
 import java.security.MessageDigest
 
-
 @Suppress("Deprecation")
 class BlurTransformation private constructor(builder: Builder) : BitmapTransformation() {
 
@@ -61,8 +60,8 @@ class BlurTransformation private constructor(builder: Builder) : BitmapTransform
 
         fun build(): BlurTransformation {
             return if (bitmapPool != null) {
-                BlurTransformation(this)
-            } else BlurTransformation(this)
+                BlurTransformation(builder = this)
+            } else BlurTransformation(builder = this)
         }
     }
 
@@ -73,7 +72,11 @@ class BlurTransformation private constructor(builder: Builder) : BitmapTransform
         outHeight: Int,
     ): Bitmap {
         val sampling = if (this.sampling == 0) {
-            ImageUtil.calculateInSampleSize(toTransform.width, toTransform.height, 100)
+            ImageUtil.calculateInSampleSize(
+                /* width = */ toTransform.width,
+                /* height = */ toTransform.height,
+                /* reqWidth = */ 100
+            )
         } else {
             this.sampling
         }
@@ -83,18 +86,23 @@ class BlurTransformation private constructor(builder: Builder) : BitmapTransform
         val scaledHeight = height / sampling
         val out = pool[scaledWidth, scaledHeight, Bitmap.Config.ARGB_8888]
         val canvas = Canvas(out)
-        canvas.scale(1 / sampling.toFloat(), 1 / sampling.toFloat())
+        canvas.scale(/* sx = */ 1 / sampling.toFloat(), /* sy = */ 1 / sampling.toFloat())
         val paint = Paint()
         paint.flags = Paint.FILTER_BITMAP_FLAG
-        canvas.drawBitmap(toTransform, 0f, 0f, paint)
+        canvas.drawBitmap(
+            /* bitmap = */ toTransform,
+            /* left = */ 0f,
+            /* top = */ 0f,
+            /* paint = */ paint
+        )
 
         try {
             val rs = RenderScript.create(context!!.applicationContext)
             val input = Allocation.createFromBitmap(
-                rs,
-                out,
-                Allocation.MipmapControl.MIPMAP_NONE,
-                Allocation.USAGE_SCRIPT
+                /* rs = */ rs,
+                /* b = */ out,
+                /* mips = */ Allocation.MipmapControl.MIPMAP_NONE,
+                /* usage = */ Allocation.USAGE_SCRIPT
             )
             val output = Allocation.createTyped(rs, input.type)
             val script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs))

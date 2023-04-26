@@ -15,14 +15,16 @@ import code.name.monkey.retromusic.extensions.accentColor
 import code.name.monkey.retromusic.extensions.accentOutlineColor
 import code.name.monkey.retromusic.extensions.addAccentColor
 import code.name.monkey.retromusic.helper.BackupContent
-import code.name.monkey.retromusic.helper.BackupContent.*
+import code.name.monkey.retromusic.helper.BackupContent.CUSTOM_ARTIST_IMAGES
+import code.name.monkey.retromusic.helper.BackupContent.PLAYLISTS
+import code.name.monkey.retromusic.helper.BackupContent.SETTINGS
+import code.name.monkey.retromusic.helper.BackupContent.USER_IMAGES
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.theme.getNightMode
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.color.DynamicColorsOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
 
 class RestoreActivity : AppCompatActivity() {
 
@@ -55,7 +57,11 @@ class RestoreActivity : AppCompatActivity() {
             lifecycleScope.launch(Dispatchers.IO) {
                 if (backupUri != null) {
                     contentResolver.openInputStream(backupUri)?.use {
-                        backupViewModel.restoreBackup(this@RestoreActivity, it, backupContents)
+                        backupViewModel.restoreBackup(
+                            activity = this@RestoreActivity,
+                            inputStream = it,
+                            contents = backupContents
+                        )
                     }
                 }
             }
@@ -68,8 +74,8 @@ class RestoreActivity : AppCompatActivity() {
         // Apply dynamic colors to activity if enabled
         if (PreferenceUtil.materialYou) {
             DynamicColors.applyToActivityIfAvailable(
-                this,
-                DynamicColorsOptions.Builder()
+                /* activity = */ this,
+                /* dynamicColorsOptions = */ DynamicColorsOptions.Builder()
                     .setThemeOverlay(com.google.android.material.R.style.ThemeOverlay_Material3_DynamicColors_DayNight)
                     .build()
             )
@@ -81,10 +87,15 @@ class RestoreActivity : AppCompatActivity() {
             ContentResolver.SCHEME_FILE -> {
                 return uri.lastPathSegment
             }
+
             ContentResolver.SCHEME_CONTENT -> {
                 val proj = arrayOf(MediaStore.Files.FileColumns.DISPLAY_NAME)
                 contentResolver.query(
-                    uri, proj, null, null, null
+                    /* uri = */ uri,
+                    /* projection = */ proj,
+                    /* selection = */ null,
+                    /* selectionArgs = */ null,
+                    /* sortOrder = */ null
                 )?.use { cursor ->
                     if (cursor.count != 0) {
                         val columnIndex: Int =

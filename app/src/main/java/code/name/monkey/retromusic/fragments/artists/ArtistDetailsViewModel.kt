@@ -1,20 +1,9 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.artists
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import code.name.monkey.retromusic.interfaces.IMusicServiceEventListener
 import code.name.monkey.retromusic.model.Artist
 import code.name.monkey.retromusic.repository.RealRepository
@@ -24,7 +13,7 @@ import kotlinx.coroutines.launch
 class ArtistDetailsViewModel(
     private val realRepository: RealRepository,
     private val artistId: Long?,
-    private val artistName: String?
+    private val artistName: String?,
 ) : ViewModel(), IMusicServiceEventListener {
     private val artistDetails = MutableLiveData<Artist>()
 
@@ -35,7 +24,6 @@ class ArtistDetailsViewModel(
     private fun fetchArtist() {
         viewModelScope.launch(IO) {
             artistId?.let { artistDetails.postValue(realRepository.artistById(it)) }
-
             artistName?.let { artistDetails.postValue(realRepository.albumArtistByName(it)) }
         }
     }

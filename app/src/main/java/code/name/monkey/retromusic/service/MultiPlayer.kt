@@ -71,9 +71,9 @@ class MultiPlayer(context: Context) : LocalPlayback(context) {
         try {
             mCurrentMediaPlayer.setNextMediaPlayer(null)
         } catch (e: IllegalArgumentException) {
-            Log.i(TAG, "Next media player is current one, continuing")
+            Log.i(/* tag = */ TAG, /* msg = */ "Next media player is current one, continuing")
         } catch (e: IllegalStateException) {
-            Log.e(TAG, "Media player not initialized!")
+            Log.e(/* tag = */ TAG, /* msg = */ "Media player not initialized!")
             return
         }
         if (mNextMediaPlayer != null) {
@@ -92,13 +92,19 @@ class MultiPlayer(context: Context) : LocalPlayback(context) {
                     try {
                         mCurrentMediaPlayer.setNextMediaPlayer(mNextMediaPlayer)
                     } catch (e: IllegalArgumentException) {
-                        Log.e(TAG, "setNextDataSource: setNextMediaPlayer()", e)
+                        Log.e(/* tag = */ TAG, /* msg = */
+                            "setNextDataSource: setNextMediaPlayer()", /* tr = */
+                            e
+                        )
                         if (mNextMediaPlayer != null) {
                             mNextMediaPlayer?.release()
                             mNextMediaPlayer = null
                         }
                     } catch (e: IllegalStateException) {
-                        Log.e(TAG, "setNextDataSource: setNextMediaPlayer()", e)
+                        Log.e(/* tag = */ TAG, /* msg = */
+                            "setNextDataSource: setNextMediaPlayer()", /* tr = */
+                            e
+                        )
                         if (mNextMediaPlayer != null) {
                             mNextMediaPlayer?.release()
                             mNextMediaPlayer = null

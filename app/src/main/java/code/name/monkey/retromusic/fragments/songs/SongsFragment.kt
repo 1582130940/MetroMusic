@@ -1,21 +1,12 @@
-/*
- * Cop()yright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.songs
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.SubMenu
+import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.GridLayoutManager
 import code.name.monkey.retromusic.R
@@ -58,9 +49,9 @@ class SongsFragment : AbsRecyclerViewCustomGridSizeFragment<SongAdapter, GridLay
     override fun createAdapter(): SongAdapter {
         val dataSet = if (adapter == null) mutableListOf() else adapter!!.dataSet
         return SongAdapter(
-            requireActivity(),
-            dataSet,
-            itemLayoutRes()
+            activity = requireActivity(),
+            dataSet = dataSet,
+            itemLayoutRes = itemLayoutRes()
         )
     }
 
@@ -80,6 +71,7 @@ class SongsFragment : AbsRecyclerViewCustomGridSizeFragment<SongAdapter, GridLay
         PreferenceUtil.songGridSizeLand = gridColumns
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun setGridSize(gridSize: Int) {
         adapter?.notifyDataSetChanged()
     }
@@ -123,73 +115,73 @@ class SongsFragment : AbsRecyclerViewCustomGridSizeFragment<SongAdapter, GridLay
         val currentSortOrder: String? = getSortOrder()
         sortOrderMenu.clear()
         sortOrderMenu.add(
-            0,
-            R.id.action_song_default_sort_order,
-            0,
-            R.string.sort_order_default
+            /* p0 = */ 0,
+            /* p1 = */ R.id.action_song_default_sort_order,
+            /* p2 = */ 0,
+            /* p3 = */ R.string.sort_order_default
         ).isChecked =
             currentSortOrder == SongSortOrder.SONG_DEFAULT
         sortOrderMenu.add(
-            0,
-            R.id.action_song_sort_order_asc,
-            0,
-            R.string.sort_order_a_z
+            /* p0 = */ 0,
+            /* p1 = */ R.id.action_song_sort_order_asc,
+            /* p2 = */ 0,
+            /* p3 = */ R.string.sort_order_a_z
         ).isChecked =
             currentSortOrder == SongSortOrder.SONG_A_Z
         sortOrderMenu.add(
-            0,
-            R.id.action_song_sort_order_desc,
-            1,
-            R.string.sort_order_z_a
+            /* p0 = */ 0,
+            /* p1 = */ R.id.action_song_sort_order_desc,
+            /* p2 = */ 1,
+            /* p3 = */ R.string.sort_order_z_a
         ).isChecked =
             currentSortOrder == SongSortOrder.SONG_Z_A
         sortOrderMenu.add(
-            0,
-            R.id.action_song_sort_order_artist,
-            2,
-            R.string.sort_order_artist
+            /* p0 = */ 0,
+            /* p1 = */ R.id.action_song_sort_order_artist,
+            /* p2 = */ 2,
+            /* p3 = */ R.string.sort_order_artist
         ).isChecked =
             currentSortOrder == SongSortOrder.SONG_ARTIST
         sortOrderMenu.add(
-            0,
-            R.id.action_song_sort_order_album,
-            3,
-            R.string.sort_order_album
+            /* p0 = */ 0,
+            /* p1 = */ R.id.action_song_sort_order_album,
+            /* p2 = */ 3,
+            /* p3 = */ R.string.sort_order_album
         ).isChecked =
             currentSortOrder == SongSortOrder.SONG_ALBUM
         sortOrderMenu.add(
-            0,
-            R.id.action_song_sort_order_year,
-            4,
-            R.string.sort_order_year
+            /* p0 = */ 0,
+            /* p1 = */ R.id.action_song_sort_order_year,
+            /* p2 = */ 4,
+            /* p3 = */ R.string.sort_order_year
         ).isChecked =
             currentSortOrder == SongSortOrder.SONG_YEAR
         sortOrderMenu.add(
-            0,
-            R.id.action_song_sort_order_date,
-            5,
-            R.string.sort_order_date
+            /* p0 = */ 0,
+            /* p1 = */ R.id.action_song_sort_order_date,
+            /* p2 = */ 5,
+            /* p3 = */ R.string.sort_order_date
         ).isChecked =
             currentSortOrder == SongSortOrder.SONG_DATE
         sortOrderMenu.add(
-            0,
-            R.id.action_song_sort_order_date_modified,
-            6,
-            R.string.sort_order_date_modified
+            /* p0 = */ 0,
+            /* p1 = */ R.id.action_song_sort_order_date_modified,
+            /* p2 = */ 6,
+            /* p3 = */ R.string.sort_order_date_modified
         ).isChecked =
             currentSortOrder == SongSortOrder.SONG_DATE_MODIFIED
         sortOrderMenu.add(
-            0,
-            R.id.action_song_sort_order_composer,
-            7,
-            R.string.sort_order_composer
+            /* p0 = */ 0,
+            /* p1 = */ R.id.action_song_sort_order_composer,
+            /* p2 = */ 7,
+            /* p3 = */ R.string.sort_order_composer
         ).isChecked =
             currentSortOrder == SongSortOrder.COMPOSER
         sortOrderMenu.add(
-            0,
-            R.id.action_song_sort_order_album_artist,
-            8,
-            R.string.album_artist
+            /* p0 = */ 0,
+            /* p1 = */ R.id.action_song_sort_order_album_artist,
+            /* p2 = */ 8,
+            /* p3 = */ R.string.album_artist
         ).isChecked =
             currentSortOrder == SongSortOrder.SONG_ALBUM_ARTIST
 
@@ -202,8 +194,10 @@ class SongsFragment : AbsRecyclerViewCustomGridSizeFragment<SongAdapter, GridLay
             R.layout.item_grid -> subMenu.findItem(R.id.action_layout_normal).isChecked = true
             R.layout.item_card_color ->
                 subMenu.findItem(R.id.action_layout_colored_card).isChecked = true
+
             R.layout.item_grid_circle ->
                 subMenu.findItem(R.id.action_layout_circular).isChecked = true
+
             R.layout.image -> subMenu.findItem(R.id.action_layout_image).isChecked = true
             R.layout.item_image_gradient ->
                 subMenu.findItem(R.id.action_layout_gradient_image).isChecked = true

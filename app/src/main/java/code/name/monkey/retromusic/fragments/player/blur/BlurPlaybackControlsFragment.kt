@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.player.blur
 
 import android.graphics.Color
@@ -118,7 +104,10 @@ class BlurPlaybackControlsFragment :
     override fun setColor(color: MediaNotificationProcessor) {
         lastPlaybackControlsColor = Color.WHITE
         lastDisabledPlaybackControlsColor =
-            ContextCompat.getColor(requireContext(), code.name.monkey.appthemehelper.R.color.md_grey_500)
+            ContextCompat.getColor(
+                /* context = */ requireContext(),
+                /* id = */ code.name.monkey.appthemehelper.R.color.md_grey_500
+            )
 
         binding.title.setTextColor(lastPlaybackControlsColor)
 
@@ -139,11 +128,17 @@ class BlurPlaybackControlsFragment :
 
     private fun setFabColor(i: Int) {
         TintHelper.setTintAuto(
-            binding.playPauseButton,
+            /* view = */ binding.playPauseButton,
+            /* color = */
             MaterialValueHelper.getPrimaryTextColor(context, ColorUtil.isColorLight(i)),
+            /* background = */
             false
         )
-        TintHelper.setTintAuto(binding.playPauseButton, i, true)
+        TintHelper.setTintAuto(
+            /* view = */ binding.playPauseButton,
+            /* color = */ i,
+            /* background = */ true
+        )
     }
 
     private fun setUpPlayPauseFab() {
@@ -167,9 +162,9 @@ class BlurPlaybackControlsFragment :
 
     public override fun show() {
         binding.playPauseButton.animate()
-            .scaleX(1f)
-            .scaleY(1f)
-            .rotation(360f)
+            .scaleX(/* value = */ 1f)
+            .scaleY(/* value = */ 1f)
+            .rotation(/* value = */ 360f)
             .setInterpolator(DecelerateInterpolator())
             .start()
     }

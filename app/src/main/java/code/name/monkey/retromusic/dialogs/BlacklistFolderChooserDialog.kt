@@ -29,7 +29,7 @@ class BlacklistFolderChooserDialog : DialogFragment() {
                     arrayOf("..")
                 } else arrayOf()
             }
-            val results = arrayOfNulls<String>(parentContents!!.size + if (canGoUp) 1 else 0)
+            val results = arrayOfNulls<String>(size = parentContents!!.size + if (canGoUp) 1 else 0)
             if (canGoUp) {
                 results[0] = ".."
             }
@@ -121,7 +121,7 @@ class BlacklistFolderChooserDialog : DialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("current_path", parentFolder?.absolutePath)
+        outState.putString(/* key = */ "current_path", /* value = */ parentFolder?.absolutePath)
     }
 
     fun setCallback(callback: FolderCallback?) {
@@ -129,7 +129,10 @@ class BlacklistFolderChooserDialog : DialogFragment() {
     }
 
     interface FolderCallback {
-        fun onFolderSelection(context: Context, folder: File)
+        fun onFolderSelection(
+            context: Context,
+            folder: File,
+        )
     }
 
     companion object {

@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.activities.tageditor
 
 import android.app.Activity
@@ -81,7 +67,7 @@ abstract class AbsTagEditorActivity<VB : ViewBinding> : AbsBaseActivity() {
 
     protected val show: AlertDialog
         get() =
-            MaterialAlertDialogBuilder(this)
+            MaterialAlertDialogBuilder(/* context = */ this)
                 .setTitle(R.string.update_image)
                 .setItems(items.toTypedArray()) { _, position ->
                     when (position) {
@@ -90,7 +76,7 @@ abstract class AbsTagEditorActivity<VB : ViewBinding> : AbsBaseActivity() {
                         2 -> deleteImage()
                     }
                 }
-                .setNegativeButton(R.string.action_cancel, null)
+                .setNegativeButton(/* textId = */ R.string.action_cancel, /* listener = */ null)
                 .show()
                 .colorButtons()
 
@@ -209,9 +195,8 @@ abstract class AbsTagEditorActivity<VB : ViewBinding> : AbsBaseActivity() {
                 val artworkTag = getAudioFile(songPaths!![0]).tagOrCreateAndSetDefault.firstArtwork
                 if (artworkTag != null) {
                     val artworkBinaryData = artworkTag.binaryData
-                    return BitmapFactory.decodeByteArray(
-                        artworkBinaryData,
-                        0,
+                    return BitmapFactory.decodeByteArray(/* data = */ artworkBinaryData, /* offset = */
+                        0, /* length = */
                         artworkBinaryData.size
                     )
                 }
@@ -259,9 +244,9 @@ abstract class AbsTagEditorActivity<VB : ViewBinding> : AbsBaseActivity() {
     private fun setUpImageView() {
         loadCurrentImage()
         items = listOf(
-            getString(R.string.pick_from_local_storage),
-            getString(R.string.web_search),
-            getString(R.string.remove_cover)
+            getString(/* resId = */ R.string.pick_from_local_storage),
+            getString(/* resId = */ R.string.web_search),
+            getString(/* resId = */ R.string.remove_cover)
         )
         editorImage.setOnClickListener { show }
     }
@@ -328,13 +313,13 @@ abstract class AbsTagEditorActivity<VB : ViewBinding> : AbsBaseActivity() {
 
     private fun showFab() {
         saveFab.animate().setDuration(500).setInterpolator(OvershootInterpolator()).scaleX(1f)
-            .scaleY(1f).start()
+            .scaleY(/* value = */ 1f).start()
         saveFab.isEnabled = true
     }
 
     private fun hideFab() {
         saveFab.animate().setDuration(500).setInterpolator(OvershootInterpolator()).scaleX(0.0f)
-            .scaleY(0.0f).start()
+            .scaleY(/* value = */ 0.0f).start()
         saveFab.isEnabled = false
     }
 
@@ -353,7 +338,7 @@ abstract class AbsTagEditorActivity<VB : ViewBinding> : AbsBaseActivity() {
 
     protected fun writeValuesToFiles(
         fieldKeyValueMap: Map<FieldKey, String>,
-        artworkInfo: ArtworkInfo?
+        artworkInfo: ArtworkInfo?,
     ) {
         hideSoftKeyboard()
 
@@ -362,10 +347,11 @@ abstract class AbsTagEditorActivity<VB : ViewBinding> : AbsBaseActivity() {
         GlobalScope.launch {
             if (VersionUtils.hasR()) {
                 cacheFiles = TagWriter.writeTagsToFilesR(
-                    this@AbsTagEditorActivity, AudioTagInfo(
-                        songPaths,
-                        fieldKeyValueMap,
-                        artworkInfo
+                    context = this@AbsTagEditorActivity,
+                    info = AudioTagInfo(
+                        filePaths = songPaths,
+                        fieldKeyValueMap = fieldKeyValueMap,
+                        artworkInfo = artworkInfo
                     )
                 )
 
@@ -376,10 +362,11 @@ abstract class AbsTagEditorActivity<VB : ViewBinding> : AbsBaseActivity() {
                 }
             } else {
                 TagWriter.writeTagsToFiles(
-                    this@AbsTagEditorActivity, AudioTagInfo(
-                        songPaths,
-                        fieldKeyValueMap,
-                        artworkInfo
+                    context = this@AbsTagEditorActivity,
+                    info = AudioTagInfo(
+                        filePaths = songPaths,
+                        fieldKeyValueMap = fieldKeyValueMap,
+                        artworkInfo = artworkInfo
                     )
                 )
             }
@@ -390,10 +377,11 @@ abstract class AbsTagEditorActivity<VB : ViewBinding> : AbsBaseActivity() {
         GlobalScope.launch {
             if (VersionUtils.hasR()) {
                 cacheFiles = TagWriter.writeTagsToFilesR(
-                    this@AbsTagEditorActivity, AudioTagInfo(
-                        paths,
-                        savedTags,
-                        savedArtworkInfo
+                    context = this@AbsTagEditorActivity,
+                    info = AudioTagInfo(
+                        filePaths = paths,
+                        fieldKeyValueMap = savedTags,
+                        artworkInfo = savedArtworkInfo
                     )
                 )
                 val pendingIntent = MediaStore.createWriteRequest(contentResolver, getSongUris())
@@ -401,10 +389,11 @@ abstract class AbsTagEditorActivity<VB : ViewBinding> : AbsBaseActivity() {
                 launcher.launch(IntentSenderRequest.Builder(pendingIntent).build())
             } else {
                 TagWriter.writeTagsToFiles(
-                    this@AbsTagEditorActivity, AudioTagInfo(
-                        paths,
-                        savedTags,
-                        savedArtworkInfo
+                    context = this@AbsTagEditorActivity,
+                    info = AudioTagInfo(
+                        filePaths = paths,
+                        fieldKeyValueMap = savedTags,
+                        artworkInfo = savedArtworkInfo
                     )
                 )
             }
@@ -420,7 +409,7 @@ abstract class AbsTagEditorActivity<VB : ViewBinding> : AbsBaseActivity() {
             }
             audioFile
         } catch (e: Exception) {
-            Log.e(TAG, "Could not read audio file $path", e)
+            Log.e(/* tag = */ TAG, /* msg = */ "Could not read audio file $path", /* tr = */ e)
             AudioFile()
         }
     }
@@ -436,7 +425,7 @@ abstract class AbsTagEditorActivity<VB : ViewBinding> : AbsBaseActivity() {
             }
         }
         lifecycleScope.launch {
-            TagWriter.scan(this@AbsTagEditorActivity, getSongPaths())
+            TagWriter.scan(context = this@AbsTagEditorActivity, toBeScanned = getSongPaths())
         }
     }
 

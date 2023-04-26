@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.library
 
 import android.os.Bundle
@@ -45,14 +31,14 @@ class LibraryFragment : AbsMainActivityFragment(R.layout.fragment_library) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mainActivity.setBottomNavVisibility(true)
+        mainActivity.setBottomNavVisibility(visible = true)
         mainActivity.setSupportActionBar(binding.toolbar)
         mainActivity.supportActionBar?.title = null
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigate(
-                R.id.action_search,
-                null,
-                navOptions
+                resId = R.id.action_search,
+                args = null,
+                navOptions = navOptions
             )
         }
         setupNavigationController()
@@ -76,38 +62,42 @@ class LibraryFragment : AbsMainActivityFragment(R.layout.fragment_library) {
         navController.graph = navGraph
         NavigationUI.setupWithNavController(mainActivity.navigationView, navController)
         navController.addOnDestinationChangedListener { _, _, _ ->
-            binding.appBarLayout.setExpanded(true, true)
+            binding.appBarLayout.setExpanded(/* expanded = */ true, /* animate = */ true)
         }
     }
 
     override fun onPrepareMenu(menu: Menu) {
-        ToolbarContentTintHelper.handleOnPrepareOptionsMenu(requireActivity(), binding.toolbar)
+        ToolbarContentTintHelper.handleOnPrepareOptionsMenu(/* activity = */ requireActivity(), /* toolbar = */
+            binding.toolbar
+        )
     }
 
     override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_main, menu)
         ToolbarContentTintHelper.handleOnCreateOptionsMenu(
-            requireContext(),
-            binding.toolbar,
-            menu,
-            getToolbarBackgroundColor(binding.toolbar)
+            /* context = */ requireContext(),
+            /* toolbar = */ binding.toolbar,
+            /* menu = */ menu,
+            /* toolbarColor = */ getToolbarBackgroundColor(binding.toolbar)
         )
     }
 
     override fun onMenuItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_settings -> findNavController().navigate(
-                R.id.settings_fragment,
-                null,
-                navOptions
+                resId = R.id.settings_fragment,
+                args = null,
+                navOptions = navOptions
             )
+
             R.id.action_import_playlist -> ImportPlaylistDialog().show(
-                childFragmentManager,
-                "ImportPlaylist"
+                /* manager = */ childFragmentManager,
+                /* tag = */ "ImportPlaylist"
             )
+
             R.id.action_add_to_playlist -> CreatePlaylistDialog.create(emptyList()).show(
-                childFragmentManager,
-                "ShowCreatePlaylistDialog"
+                /* manager = */ childFragmentManager,
+                /* tag = */ "ShowCreatePlaylistDialog"
             )
         }
         return false

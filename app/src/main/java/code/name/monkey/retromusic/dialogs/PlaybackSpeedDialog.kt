@@ -27,17 +27,17 @@ class PlaybackSpeedDialog : DialogFragment() {
         binding.playbackPitchSlider.value = PreferenceUtil.playbackPitch
 
         return materialDialog(R.string.playback_settings)
-            .setNegativeButton(android.R.string.cancel, null)
-            .setPositiveButton(R.string.save) { _, _ ->
+            .setNegativeButton(/* textId = */ android.R.string.cancel, /* listener = */ null)
+            .setPositiveButton(/* textId = */ R.string.save) { _, _ ->
                 updatePlaybackAndPitch(
-                    binding.playbackSpeedSlider.value,
-                    binding.playbackPitchSlider.value
+                    speed = binding.playbackSpeedSlider.value,
+                    pitch = binding.playbackPitchSlider.value
                 )
             }
-            .setNeutralButton(R.string.reset_action) {_, _ ->
+            .setNeutralButton(/* textId = */ R.string.reset_action) { _, _ ->
                 updatePlaybackAndPitch(
-                    1F,
-                    1F
+                    speed = 1F,
+                    pitch = 1F
                 )
             }
             .setView(binding.root)

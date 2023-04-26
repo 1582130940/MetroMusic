@@ -38,7 +38,6 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropM
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-
 class PlaylistDetailsFragment : AbsMainActivityFragment(R.layout.fragment_playlist_detail_new) {
     private val arguments by navArgs<PlaylistDetailsFragmentArgs>()
     private val viewModel by viewModel<PlaylistDetailsViewModel> {
@@ -53,28 +52,34 @@ class PlaylistDetailsFragment : AbsMainActivityFragment(R.layout.fragment_playli
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = MaterialContainerTransform(requireContext(), true).apply {
-            drawingViewId = R.id.fragment_container
-            scrimColor = Color.TRANSPARENT
-            setAllContainerColors(surfaceColor())
-            setPathMotion(MaterialArcMotion())
-        }
+        sharedElementEnterTransition =
+            MaterialContainerTransform(/* context = */ requireContext(), /* entering = */
+                true
+            ).apply {
+                drawingViewId = R.id.fragment_container
+                scrimColor = Color.TRANSPARENT
+                setAllContainerColors(surfaceColor())
+                setPathMotion(MaterialArcMotion())
+            }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentPlaylistDetailNewBinding.bind(view)
-        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).addTarget(view)
-        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+        enterTransition =
+            MaterialSharedAxis(/* axis = */ MaterialSharedAxis.Z, /* forward = */ true).addTarget(
+                view
+            )
+        returnTransition = MaterialSharedAxis(/* axis = */ MaterialSharedAxis.Z, /* forward = */
+            false
+        )
         mainActivity.setSupportActionBar(binding.toolbar)
         binding.toolbar.title = null
-//        binding.container.transitionName = playlist.playlistEntity.playlistName
-
         setUpRecyclerView()
         setupButtons()
         viewModel.getPlaylist().observe(viewLifecycleOwner) { playlistWithSongs ->
             playlist = playlistWithSongs
-            Glide.with(this)
+            Glide.with(/* fragment = */ this)
                 .load(PlaylistPreview(playlistWithSongs))
                 .playlistOptions()
                 .into(binding.image)
@@ -100,13 +105,20 @@ class PlaylistDetailsFragment : AbsMainActivityFragment(R.layout.fragment_playli
     private fun setupButtons() {
         binding.playButton.apply {
             setOnClickListener {
-                MusicPlayerRemote.openQueue(playlistSongAdapter.dataSet, 0, true)
+                MusicPlayerRemote.openQueue(
+                    queue = playlistSongAdapter.dataSet,
+                    startPosition = 0,
+                    startPlaying = true
+                )
             }
             accentColor()
         }
         binding.shuffleButton.apply {
             setOnClickListener {
-                MusicPlayerRemote.openAndShuffleQueue(playlistSongAdapter.dataSet, true)
+                MusicPlayerRemote.openAndShuffleQueue(
+                    queue = playlistSongAdapter.dataSet,
+                    startPlaying = true
+                )
             }
             elevatedAccentColor()
         }
@@ -114,10 +126,10 @@ class PlaylistDetailsFragment : AbsMainActivityFragment(R.layout.fragment_playli
 
     private fun setUpRecyclerView() {
         playlistSongAdapter = OrderablePlaylistSongAdapter(
-            arguments.extraPlaylistId,
-            requireActivity(),
-            ArrayList(),
-            R.layout.item_queue
+            playlistId = arguments.extraPlaylistId,
+            activity = requireActivity(),
+            dataSet = ArrayList(),
+            itemLayoutRes = R.layout.item_queue
         )
 
         val dragDropManager = RecyclerViewDragDropManager()
@@ -129,7 +141,7 @@ class PlaylistDetailsFragment : AbsMainActivityFragment(R.layout.fragment_playli
             adapter = wrappedAdapter
             layoutManager = LinearLayoutManager(requireContext())
             itemAnimator = DraggableItemAnimator()
-            dragDropManager.attachRecyclerView(this)
+            dragDropManager.attachRecyclerView(/* rv = */ this)
             ThemedFastScroller.create(this)
         }
         playlistSongAdapter.registerAdapterDataObserver(object :
@@ -141,12 +153,19 @@ class PlaylistDetailsFragment : AbsMainActivityFragment(R.layout.fragment_playli
         })
     }
 
-    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateMenu(
+        menu: Menu,
+        inflater: MenuInflater,
+    ) {
         inflater.inflate(R.menu.menu_playlist_detail, menu)
     }
 
     override fun onMenuItemSelected(item: MenuItem): Boolean {
-        return PlaylistMenuHelper.handleMenuClick(requireActivity(), playlist, item)
+        return PlaylistMenuHelper.handleMenuClick(
+            activity = requireActivity(),
+            playlistWithSongs = playlist,
+            item = item
+        )
     }
 
     private fun checkIsEmpty() {

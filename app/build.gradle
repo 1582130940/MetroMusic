@@ -20,12 +20,14 @@ android {
 
         multiDexEnabled true
     }
+
     buildTypes {
         release {
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix ' DEBUG'
@@ -35,31 +37,36 @@ android {
     buildFeatures {
         viewBinding true
     }
+
     packagingOptions {
         resources {
             excludes += ['META-INF/LICENSE', 'META-INF/NOTICE', 'META-INF/java.properties']
         }
     }
+
     lint {
         abortOnError true
         warning 'ImpliedQuantity', 'Instantiatable', 'MissingQuantity', 'MissingTranslation'
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
     dependenciesInfo {
         includeInApk = false
         includeInBundle = false
     }
+
     configurations.configureEach {
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
     }
 }
-
 
 dependencies {
     implementation project(':appthemehelper')

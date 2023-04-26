@@ -1,18 +1,3 @@
-/*
- * Copyright (c) 2019 Hemanth Savarala.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by
- *  the Free Software Foundation either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- */
-
-
 package code.name.monkey.retromusic.service
 
 import android.content.Context
@@ -36,7 +21,6 @@ import code.name.monkey.retromusic.service.MusicService.Companion.ACTION_SKIP
 import code.name.monkey.retromusic.service.MusicService.Companion.ACTION_STOP
 import code.name.monkey.retromusic.service.MusicService.Companion.ACTION_TOGGLE_PAUSE
 
-
 /**
  * Used to control headset playback.
  * Single press: pause/resume
@@ -44,9 +28,8 @@ import code.name.monkey.retromusic.service.MusicService.Companion.ACTION_TOGGLE_
  * Triple press: previous track
  */
 class MediaButtonIntentReceiver : MediaButtonReceiver() {
-
     override fun onReceive(context: Context, intent: Intent) {
-        if (DEBUG) Log.v(TAG, "Received intent: $intent")
+        if (DEBUG) Log.v(/* tag = */ TAG, /* msg = */ "Received intent: $intent")
         if (handleIntent(context, intent) && isOrderedBroadcast) {
             abortBroadcast()
         }
@@ -64,13 +47,14 @@ class MediaButtonIntentReceiver : MediaButtonReceiver() {
         private var mLastClickTime: Long = 0
 
         private val mHandler = object : Handler(Looper.getMainLooper()) {
-
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
                     MSG_HEADSET_DOUBLE_CLICK_TIMEOUT -> {
                         val clickCount = msg.arg1
 
-                        if (DEBUG) Log.v(TAG, "Handling headset click, count = $clickCount")
+                        if (DEBUG) Log.v(/* tag = */ TAG, /* msg = */
+                            "Handling headset click, count = $clickCount"
+                        )
                         val command = when (clickCount) {
                             1 -> ACTION_TOGGLE_PAUSE
                             2 -> ACTION_SKIP
@@ -92,7 +76,12 @@ class MediaButtonIntentReceiver : MediaButtonReceiver() {
             println("Intent Action: ${intent.action}")
             val intentAction = intent.action
             if (Intent.ACTION_MEDIA_BUTTON == intentAction) {
-                val event = intent.extras?.let { BundleCompat.getParcelable(it, Intent.EXTRA_KEY_EVENT, KeyEvent::class.java) }
+                val event = intent.extras?.let {
+                    BundleCompat.getParcelable(/* in = */ it, /* key = */
+                        Intent.EXTRA_KEY_EVENT, /* clazz = */
+                        KeyEvent::class.java
+                    )
+                }
                     ?: return false
 
                 val keycode = event.keyCode
@@ -129,11 +118,16 @@ class MediaButtonIntentReceiver : MediaButtonReceiver() {
                                 }
 
                                 mClickCounter++
-                                if (DEBUG) Log.v(TAG, "Got headset click, count = $mClickCounter")
+                                if (DEBUG) Log.v(/* tag = */ TAG, /* msg = */
+                                    "Got headset click, count = $mClickCounter"
+                                )
                                 mHandler.removeMessages(MSG_HEADSET_DOUBLE_CLICK_TIMEOUT)
 
                                 val msg = mHandler.obtainMessage(
-                                    MSG_HEADSET_DOUBLE_CLICK_TIMEOUT, mClickCounter, 0, context
+                                    /* what = */ MSG_HEADSET_DOUBLE_CLICK_TIMEOUT,
+                                    /* arg1 = */ mClickCounter,
+                                    /* arg2 = */ 0,
+                                    /* obj = */ context
                                 )
 
                                 val delay = (if (mClickCounter < 3) DOUBLE_CLICK else 0).toLong()
@@ -168,26 +162,30 @@ class MediaButtonIntentReceiver : MediaButtonReceiver() {
                 val appContext = context.applicationContext
                 val pm = appContext.getSystemService<PowerManager>()
                 wakeLock = pm?.newWakeLock(
-                    PowerManager.PARTIAL_WAKE_LOCK,
-                    "RetroMusicApp:Wakelock headset button"
+                    /* levelAndFlags = */ PowerManager.PARTIAL_WAKE_LOCK,
+                    /* tag = */ "RetroMusicApp:Wakelock headset button"
                 )
                 wakeLock!!.setReferenceCounted(false)
             }
-            if (DEBUG) Log.v(TAG, "Acquiring wake lock and sending " + msg.what)
+            if (DEBUG) Log.v(/* tag = */ TAG, /* msg = */
+                "Acquiring wake lock and sending " + msg.what
+            )
             // Make sure we don't indefinitely hold the wake lock under any circumstances
-            wakeLock!!.acquire(10000)
+            wakeLock!!.acquire(/* timeout = */ 10000)
 
             mHandler.sendMessageDelayed(msg, delay)
         }
 
         private fun releaseWakeLockIfHandlerIdle() {
             if (mHandler.hasMessages(MSG_HEADSET_DOUBLE_CLICK_TIMEOUT)) {
-                if (DEBUG) Log.v(TAG, "Handler still has messages pending, not releasing wake lock")
+                if (DEBUG) Log.v(/* tag = */ TAG, /* msg = */
+                    "Handler still has messages pending, not releasing wake lock"
+                )
                 return
             }
 
             if (wakeLock != null) {
-                if (DEBUG) Log.v(TAG, "Releasing wake lock")
+                if (DEBUG) Log.v(/* tag = */ TAG, /* msg = */ "Releasing wake lock")
                 wakeLock!!.release()
                 wakeLock = null
             }

@@ -1,19 +1,6 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.adapter
 
+import android.annotation.SuppressLint
 import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -42,7 +29,7 @@ class SongFileAdapter(
     override val activity: AppCompatActivity,
     private var dataSet: List<File>,
     private val itemLayoutRes: Int,
-    private val iCallbacks: ICallbacks?
+    private val iCallbacks: ICallbacks?,
 ) : AbsMultiSelectAdapter<SongFileAdapter.ViewHolder, File>(
     activity, R.menu.menu_media_selection
 ), PopupTextProvider {
@@ -59,6 +46,7 @@ class SongFileAdapter(
         return dataSet[position].hashCode().toLong()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun swapDataSet(songFiles: List<File>) {
         this.dataSet = songFiles
         notifyDataSetChanged()
@@ -102,8 +90,8 @@ class SongFileAdapter(
             }
             holder.imageTextContainer?.setCardBackgroundColor(
                 ATHUtil.resolveColor(
-                    activity,
-                    com.google.android.material.R.attr.colorSurface
+                    context = activity,
+                    attr = com.google.android.material.R.attr.colorSurface
                 )
             )
         } else {
@@ -114,7 +102,12 @@ class SongFileAdapter(
                 .error(error)
                 .placeholder(error)
                 .transition(RetroGlideExtension.getDefaultTransition())
-                .signature(MediaStoreSignature("", file.lastModified(), 0))
+                .signature(
+                    MediaStoreSignature(/* mimeType = */ "", /* dateModified = */
+                        file.lastModified(), /* orientation = */
+                        0
+                    )
+                )
                 .into(holder.image!!)
         }
     }
@@ -133,7 +126,7 @@ class SongFileAdapter(
 
     override fun onMultipleItemAction(menuItem: MenuItem, selection: List<File>) {
         if (iCallbacks == null) return
-        iCallbacks.onMultipleItemAction(menuItem, selection as ArrayList<File>)
+        iCallbacks.onMultipleItemAction(item = menuItem, files = selection as ArrayList<File>)
     }
 
     override fun getPopupText(position: Int): String {
@@ -144,7 +137,8 @@ class SongFileAdapter(
         return MusicUtil.getSectionName(dataSet[position].name)
     }
 
-    inner class ViewHolder(itemView: View) : code.name.monkey.retromusic.adapter.base.MediaEntryViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) :
+        code.name.monkey.retromusic.adapter.base.MediaEntryViewHolder(itemView) {
 
         init {
             if (menu != null && iCallbacks != null) {
@@ -190,7 +184,10 @@ class SongFileAdapter(
             if (size <= 0) return "$size B"
             val units = arrayOf("B", "KB", "MB", "GB", "TB")
             val digitGroups = (log10(size.toDouble()) / log10(1024.0)).toInt()
-            return DecimalFormat("#,##0.##").format(size / 1024.0.pow(digitGroups.toDouble())) + " " + units[digitGroups]
+            return DecimalFormat(/* pattern = */ "#,##0.##").format(/* number = */ size / 1024.0.pow(
+                digitGroups.toDouble()
+            )
+            ) + " " + units[digitGroups]
         }
     }
 }

@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.activities.base
 
 import android.content.Context
@@ -25,7 +11,14 @@ import androidx.core.os.LocaleListCompat
 import code.name.monkey.appthemehelper.common.ATHToolbarActivity
 import code.name.monkey.appthemehelper.util.VersionUtils
 import code.name.monkey.retromusic.R
-import code.name.monkey.retromusic.extensions.*
+import code.name.monkey.retromusic.extensions.exitFullscreen
+import code.name.monkey.retromusic.extensions.hideStatusBar
+import code.name.monkey.retromusic.extensions.maybeSetScreenOn
+import code.name.monkey.retromusic.extensions.setEdgeToEdgeOrImmersive
+import code.name.monkey.retromusic.extensions.setImmersiveFullscreen
+import code.name.monkey.retromusic.extensions.setLightNavigationBarAuto
+import code.name.monkey.retromusic.extensions.setLightStatusBarAuto
+import code.name.monkey.retromusic.extensions.surfaceColor
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.theme.getNightMode
 import code.name.monkey.retromusic.util.theme.getThemeResValue
@@ -71,10 +64,10 @@ abstract class AbsThemeActivity : ATHToolbarActivity(), Runnable {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
             hideStatusBar()
-            handler.removeCallbacks(this)
-            handler.postDelayed(this, 300)
+            handler.removeCallbacks(/* r = */ this)
+            handler.postDelayed(/* r = */ this, /* delayMillis = */ 300)
         } else {
-            handler.removeCallbacks(this)
+            handler.removeCallbacks(/* r = */ this)
         }
     }
 
@@ -83,7 +76,7 @@ abstract class AbsThemeActivity : ATHToolbarActivity(), Runnable {
     }
 
     override fun onStop() {
-        handler.removeCallbacks(this)
+        handler.removeCallbacks(/* r = */ this)
         super.onStop()
     }
 
@@ -94,8 +87,8 @@ abstract class AbsThemeActivity : ATHToolbarActivity(), Runnable {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            handler.removeCallbacks(this)
-            handler.postDelayed(this, 500)
+            handler.removeCallbacks(/* r = */ this)
+            handler.postDelayed(/* r = */ this, /* delayMillis = */ 500)
         }
         return super.onKeyDown(keyCode, event)
     }

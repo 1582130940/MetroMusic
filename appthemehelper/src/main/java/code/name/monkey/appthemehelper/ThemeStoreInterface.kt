@@ -6,16 +6,8 @@ import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.StyleRes
 
-/**
- * @author Aidan Follestad (afollestad), Karim Abou Zeid (kabouzeid)
- */
 internal interface ThemeStoreInterface {
-
-    // Activity theme
-
     fun activityTheme(@StyleRes theme: Int): ThemeStore
-
-    // Primary colors
 
     fun primaryColor(@ColorInt color: Int): ThemeStore
 
@@ -31,8 +23,6 @@ internal interface ThemeStoreInterface {
 
     fun primaryColorDarkAttr(@AttrRes colorAttr: Int): ThemeStore
 
-    // Accent colors
-
     fun accentColor(@ColorInt color: Int): ThemeStore
 
     fun wallpaperColor(context: Context, color: Int): ThemeStore
@@ -41,23 +31,17 @@ internal interface ThemeStoreInterface {
 
     fun accentColorAttr(@AttrRes colorAttr: Int): ThemeStore
 
-    // Status bar color
-
     fun statusBarColor(@ColorInt color: Int): ThemeStore
 
     fun statusBarColorRes(@ColorRes colorRes: Int): ThemeStore
 
     fun statusBarColorAttr(@AttrRes colorAttr: Int): ThemeStore
 
-    // Navigation bar color
-
     fun navigationBarColor(@ColorInt color: Int): ThemeStore
 
     fun navigationBarColorRes(@ColorRes colorRes: Int): ThemeStore
 
     fun navigationBarColorAttr(@AttrRes colorAttr: Int): ThemeStore
-
-    // Primary text color
 
     fun textColorPrimary(@ColorInt color: Int): ThemeStore
 
@@ -71,8 +55,6 @@ internal interface ThemeStoreInterface {
 
     fun textColorPrimaryInverseAttr(@AttrRes colorAttr: Int): ThemeStore
 
-    // Secondary text color
-
     fun textColorSecondary(@ColorInt color: Int): ThemeStore
 
     fun textColorSecondaryRes(@ColorRes colorRes: Int): ThemeStore
@@ -85,13 +67,9 @@ internal interface ThemeStoreInterface {
 
     fun textColorSecondaryInverseAttr(@AttrRes colorAttr: Int): ThemeStore
 
-    // Toggle configurations
-
     fun coloredStatusBar(colored: Boolean): ThemeStore
 
     fun coloredNavigationBar(applyToNavBar: Boolean): ThemeStore
-
-    // Commit/apply
 
     fun commit()
 }

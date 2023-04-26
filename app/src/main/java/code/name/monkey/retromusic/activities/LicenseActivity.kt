@@ -1,16 +1,3 @@
-/*
- * Copyright (c) 2019 Hemanth Savarala.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by
- *  the Free Software Foundation either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- */
 package code.name.monkey.retromusic.activities
 
 import android.graphics.Color
@@ -39,7 +26,7 @@ class LicenseActivity : AbsThemeActivity() {
         ToolbarContentTintHelper.colorBackButton(binding.toolbar)
         try {
             val buf = StringBuilder()
-            val json = assets.open("license.html")
+            val json = assets.open(/* fileName = */ "license.html")
             BufferedReader(InputStreamReader(json, StandardCharsets.UTF_8)).use { br ->
                 var str: String?
                 while (br.readLine().also { str = it } != null) {
@@ -48,28 +35,32 @@ class LicenseActivity : AbsThemeActivity() {
             }
 
             // Inject color values for WebView body background and links
-            val isDark = isWindowBackgroundDark(this)
-            val backgroundColor = colorToCSS(
-                surfaceColor(Color.parseColor(if (isDark) "#424242" else "#ffffff"))
-            )
+            val isDark = isWindowBackgroundDark(context = this)
+            val backgroundColor =
+                colorToCSS(surfaceColor(Color.parseColor(if (isDark) "#424242" else "#ffffff")))
             val contentColor = colorToCSS(Color.parseColor(if (isDark) "#ffffff" else "#000000"))
             val changeLog = buf.toString()
                 .replace(
-                    "{style-placeholder}", String.format(
-                        "body { background-color: %s; color: %s; }", backgroundColor, contentColor
+                    oldValue = "{style-placeholder}",
+                    newValue = String.format(
+                        "body { background-color: %s; color: %s; }",
+                        backgroundColor,
+                        contentColor
                     )
                 )
-                .replace("{link-color}", colorToCSS(accentColor()))
+                .replace(oldValue = "{link-color}", newValue = colorToCSS(accentColor()))
                 .replace(
-                    "{link-color-active}",
-                    colorToCSS(
-                        lightenColor(accentColor())
-                    )
+                    oldValue = "{link-color-active}",
+                    newValue = colorToCSS(lightenColor(accentColor()))
                 )
-            binding.license.loadData(changeLog, "text/html", "UTF-8")
+            binding.license.loadData(/* data = */ changeLog, /* mimeType = */
+                "text/html", /* encoding = */
+                "UTF-8"
+            )
         } catch (e: Throwable) {
-            binding.license.loadData(
-                "<h1>Unable to load</h1><p>" + e.localizedMessage + "</p>", "text/html", "UTF-8"
+            binding.license.loadData(/* data = */ "<h1>Unable to load</h1><p>" + e.localizedMessage + "</p>", /* mimeType = */
+                "text/html", /* encoding = */
+                "UTF-8"
             )
         }
         binding.license.drawAboveSystemBars()

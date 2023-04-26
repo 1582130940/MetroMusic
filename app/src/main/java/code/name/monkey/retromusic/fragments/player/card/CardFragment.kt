@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.player.card
 
 import android.graphics.Color
@@ -42,7 +28,6 @@ class CardFragment : AbsPlayerFragment(R.layout.fragment_card_player) {
     private var _binding: FragmentCardPlayerBinding? = null
     private val binding get() = _binding!!
 
-
     override fun onShow() {
         playbackControlsFragment.show()
     }
@@ -59,7 +44,11 @@ class CardFragment : AbsPlayerFragment(R.layout.fragment_card_player) {
         playbackControlsFragment.setColor(color)
         lastColor = color.primaryTextColor
         libraryViewModel.updateColor(color.primaryTextColor)
-        ToolbarContentTintHelper.colorizeToolbar(binding.playerToolbar, Color.WHITE, activity)
+        ToolbarContentTintHelper.colorizeToolbar(
+            /* toolbarView = */ binding.playerToolbar,
+            /* toolbarIconsColor = */ Color.WHITE,
+            /* activity = */ activity
+        )
     }
 
     override fun toggleFavorite(song: Song) {
@@ -95,7 +84,11 @@ class CardFragment : AbsPlayerFragment(R.layout.fragment_card_player) {
             setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
             setOnMenuItemClickListener(this@CardFragment)
 
-            ToolbarContentTintHelper.colorizeToolbar(this, Color.WHITE, activity)
+            ToolbarContentTintHelper.colorizeToolbar(
+                /* toolbarView = */ this,
+                /* toolbarIconsColor = */ Color.WHITE,
+                /* activity = */ activity
+            )
         }
     }
 

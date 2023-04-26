@@ -10,16 +10,37 @@ import code.name.monkey.retromusic.fragments.artists.ArtistDetailsViewModel
 import code.name.monkey.retromusic.fragments.genres.GenreDetailsViewModel
 import code.name.monkey.retromusic.fragments.playlists.PlaylistDetailsViewModel
 import code.name.monkey.retromusic.model.Genre
-import code.name.monkey.retromusic.repository.*
+import code.name.monkey.retromusic.repository.AlbumRepository
+import code.name.monkey.retromusic.repository.ArtistRepository
+import code.name.monkey.retromusic.repository.GenreRepository
+import code.name.monkey.retromusic.repository.LastAddedRepository
+import code.name.monkey.retromusic.repository.PlaylistRepository
+import code.name.monkey.retromusic.repository.RealAlbumRepository
+import code.name.monkey.retromusic.repository.RealArtistRepository
+import code.name.monkey.retromusic.repository.RealGenreRepository
+import code.name.monkey.retromusic.repository.RealLastAddedRepository
+import code.name.monkey.retromusic.repository.RealPlaylistRepository
+import code.name.monkey.retromusic.repository.RealRepository
+import code.name.monkey.retromusic.repository.RealRoomRepository
+import code.name.monkey.retromusic.repository.RealSearchRepository
+import code.name.monkey.retromusic.repository.RealSongRepository
+import code.name.monkey.retromusic.repository.RealTopPlayedRepository
+import code.name.monkey.retromusic.repository.Repository
+import code.name.monkey.retromusic.repository.RoomRepository
+import code.name.monkey.retromusic.repository.SongRepository
+import code.name.monkey.retromusic.repository.TopPlayedRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 private val roomModule = module {
-
     single {
-        Room.databaseBuilder(androidContext(), RetroDatabase::class.java, "playlist.db")
+        Room.databaseBuilder(
+            context = androidContext(),
+            klass = RetroDatabase::class.java,
+            name = "playlist.db"
+        )
             .addMigrations(MIGRATION_23_24)
             .build()
     }
@@ -37,19 +58,19 @@ private val roomModule = module {
     }
 
     single {
-        RealRoomRepository(get(), get(), get())
+        RealRoomRepository(playlistDao = get(), playCountDao = get(), historyDao = get())
     } bind RoomRepository::class
 }
 private val autoModule = module {
     single {
         AutoMusicProvider(
-            androidContext(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get()
+            mContext = androidContext(),
+            songsRepository = get(),
+            albumsRepository = get(),
+            artistsRepository = get(),
+            genresRepository = get(),
+            playlistsRepository = get(),
+            topPlayedRepository = get()
         )
     }
 }
@@ -61,16 +82,16 @@ private val mainModule = module {
 private val dataModule = module {
     single {
         RealRepository(
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
+            context = get(),
+            songRepository = get(),
+            albumRepository = get(),
+            artistRepository = get(),
+            genreRepository = get(),
+            lastAddedRepository = get(),
+            playlistRepository = get(),
+            searchRepository = get(),
+            topPlayedRepository = get(),
+            roomRepository = get()
         )
     } bind Repository::class
 
@@ -100,19 +121,19 @@ private val dataModule = module {
 
     single {
         RealLastAddedRepository(
-            get(),
-            get(),
-            get()
+            songRepository = get(),
+            albumRepository = get(),
+            artistRepository = get()
         )
     } bind LastAddedRepository::class
 
     single {
         RealSearchRepository(
-            get(),
-            get(),
-            get(),
-            get(),
-            get()
+            songRepository = get(),
+            albumRepository = get(),
+            artistRepository = get(),
+            roomRepository = get(),
+            genreRepository = get()
         )
     }
 }
@@ -124,32 +145,19 @@ private val viewModules = module {
     }
 
     viewModel { (albumId: Long) ->
-        AlbumDetailsViewModel(
-            get(),
-            albumId
-        )
+        AlbumDetailsViewModel(repository = get(), albumId = albumId)
     }
 
     viewModel { (artistId: Long?, artistName: String?) ->
-        ArtistDetailsViewModel(
-            get(),
-            artistId,
-            artistName
-        )
+        ArtistDetailsViewModel(realRepository = get(), artistId = artistId, artistName = artistName)
     }
 
     viewModel { (playlistId: Long) ->
-        PlaylistDetailsViewModel(
-            get(),
-            playlistId
-        )
+        PlaylistDetailsViewModel(realRepository = get(), playlistId = playlistId)
     }
 
     viewModel { (genre: Genre) ->
-        GenreDetailsViewModel(
-            get(),
-            genre
-        )
+        GenreDetailsViewModel(realRepository = get(), genre = genre)
     }
 }
 

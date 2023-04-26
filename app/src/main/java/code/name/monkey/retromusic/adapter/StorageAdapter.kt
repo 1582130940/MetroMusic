@@ -10,16 +10,15 @@ import java.io.File
 
 class StorageAdapter(
     val storageList: List<Storage>,
-    val storageClickListener: StorageClickListener
+    val storageClickListener: StorageClickListener,
 ) :
     RecyclerView.Adapter<StorageAdapter.ViewHolder>() {
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(
-                R.layout.item_storage,
-                parent,
-                false
+                /* resource = */ R.layout.item_storage,
+                /* root = */ parent,
+                /* attachToRoot = */ false
             )
         )
     }

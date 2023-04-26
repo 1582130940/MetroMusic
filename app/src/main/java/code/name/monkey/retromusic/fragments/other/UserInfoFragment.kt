@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.other
 
 import android.app.Activity
@@ -130,7 +116,7 @@ class UserInfoFragment : Fragment() {
                     }
                 }
             }
-            .setNegativeButton(R.string.action_cancel, null)
+            .setNegativeButton(/* textId = */ R.string.action_cancel, /* listener = */ null)
             .create()
             .show()
     }
@@ -149,39 +135,39 @@ class UserInfoFragment : Fragment() {
                     }
                 }
             }
-            .setNegativeButton(R.string.action_cancel, null)
+            .setNegativeButton(/* textId = */ R.string.action_cancel, /* listener = */ null)
             .create()
             .show()
     }
 
     private fun loadProfile() {
         binding.bannerImage.let {
-            Glide.with(this)
+            Glide.with(/* fragment = */ this)
                 .load(RetroGlideExtension.getBannerModel())
                 .profileBannerOptions(RetroGlideExtension.getBannerModel())
                 .into(it)
         }
-        Glide.with(this)
+        Glide.with(/* fragment = */ this)
             .load(RetroGlideExtension.getUserModel())
             .userProfileOptions(RetroGlideExtension.getUserModel(), requireContext())
             .into(binding.userImage)
     }
 
     private fun selectBannerImage() {
-        ImagePicker.with(this)
-            .compress(1440)
+        ImagePicker.with(fragment = this)
+            .compress(maxSize = 1440)
             .provider(ImageProvider.GALLERY)
-            .crop(16f, 9f)
+            .crop(x = 16f, y = 9f)
             .createIntent {
                 startForBannerImageResult.launch(it)
             }
     }
 
     private fun pickNewPhoto() {
-        ImagePicker.with(this)
+        ImagePicker.with(fragment = this)
             .provider(ImageProvider.GALLERY)
             .cropSquare()
-            .compress(1440)
+            .compress(maxSize = 1440)
             .createIntent {
                 startForProfileImageResult.launch(it)
             }
@@ -201,7 +187,10 @@ class UserInfoFragment : Fragment() {
             }
         }
 
-    private fun saveImage(result: ActivityResult, doIfResultOk: (uri: Uri) -> Unit) {
+    private fun saveImage(
+        result: ActivityResult,
+        doIfResultOk: (uri: Uri) -> Unit,
+    ) {
         val resultCode = result.resultCode
         val data = result.data
         when (resultCode) {
@@ -216,13 +205,13 @@ class UserInfoFragment : Fragment() {
             }
 
             else -> {
-                showToast("Task Cancelled")
+                showToast(message = "Task Cancelled")
             }
         }
     }
 
     private fun setAndSaveBannerImage(fileUri: Uri) {
-        Glide.with(this)
+        Glide.with(/* fragment = */ this)
             .asBitmap()
             .load(fileUri)
             .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -256,19 +245,26 @@ class UserInfoFragment : Fragment() {
             val file = File(appDir, fileName)
             var successful: Boolean
             file.outputStream().buffered().use {
-                successful = ImageUtil.resizeBitmap(bitmap, 2048)
-                    .compress(Bitmap.CompressFormat.WEBP, 100, it)
+                successful = ImageUtil.resizeBitmap(
+                    /* src = */ bitmap,
+                    /* maxForSmallerSize = */ 2048
+                )
+                    .compress(
+                        /* format = */ Bitmap.CompressFormat.WEBP,
+                        /* quality = */ 100,
+                        /* stream = */ it
+                    )
             }
             if (successful) {
                 withContext(Dispatchers.Main) {
-                    showToast(R.string.message_updated)
+                    showToast(stringRes = R.string.message_updated)
                 }
             }
         }
     }
 
     private fun setAndSaveUserImage(fileUri: Uri) {
-        Glide.with(this)
+        Glide.with(/* fragment = */ this)
             .asBitmap()
             .load(fileUri)
             .diskCacheStrategy(DiskCacheStrategy.NONE)

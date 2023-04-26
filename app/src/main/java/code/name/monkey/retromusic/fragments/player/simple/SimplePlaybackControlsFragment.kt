@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.player.simple
 
 import android.os.Bundle
@@ -35,10 +21,6 @@ import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.util.MusicUtil
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
-
-/**
- * @author Hemanth S (h4h13).
- */
 
 class SimplePlaybackControlsFragment :
     AbsPlayerControlsFragment(R.layout.fragment_simple_controls_fragment) {
@@ -85,7 +67,6 @@ class SimplePlaybackControlsFragment :
         binding.text.setOnClickListener {
             goToArtist(requireActivity())
         }
-
         binding.title.setOnClickListener {
             goToAlbum(requireActivity())
         }
@@ -114,9 +95,9 @@ class SimplePlaybackControlsFragment :
 
     public override fun show() {
         binding.playPauseButton.animate()
-            .scaleX(1f)
-            .scaleY(1f)
-            .rotation(360f)
+            .scaleX(/* value = */ 1f)
+            .scaleY(/* value = */ 1f)
+            .rotation(/* value = */ 360f)
             .setInterpolator(DecelerateInterpolator())
             .start()
     }
@@ -141,14 +122,20 @@ class SimplePlaybackControlsFragment :
         val colorBg = ATHUtil.resolveColor(requireContext(), android.R.attr.colorBackground)
         if (ColorUtil.isColorLight(colorBg)) {
             lastPlaybackControlsColor =
-                MaterialValueHelper.getSecondaryTextColor(requireContext(), true)
+                MaterialValueHelper.getSecondaryTextColor(context = requireContext(), dark = true)
             lastDisabledPlaybackControlsColor =
-                MaterialValueHelper.getSecondaryDisabledTextColor(requireContext(), true)
+                MaterialValueHelper.getSecondaryDisabledTextColor(
+                    context = requireContext(),
+                    dark = true
+                )
         } else {
             lastPlaybackControlsColor =
-                MaterialValueHelper.getPrimaryTextColor(requireContext(), false)
+                MaterialValueHelper.getPrimaryTextColor(context = requireContext(), dark = false)
             lastDisabledPlaybackControlsColor =
-                MaterialValueHelper.getPrimaryDisabledTextColor(requireContext(), false)
+                MaterialValueHelper.getPrimaryDisabledTextColor(
+                    context = requireContext(),
+                    dark = false
+                )
         }
 
         val colorFinal = if (PreferenceUtil.isAdaptiveColor) {
@@ -160,14 +147,18 @@ class SimplePlaybackControlsFragment :
         volumeFragment?.setTintable(colorFinal)
 
         TintHelper.setTintAuto(
-            binding.playPauseButton,
-            MaterialValueHelper.getPrimaryTextColor(
-                requireContext(),
-                ColorUtil.isColorLight(colorFinal)
+            /* view = */ binding.playPauseButton,
+            /* color = */ MaterialValueHelper.getPrimaryTextColor(
+                context = requireContext(),
+                dark = ColorUtil.isColorLight(colorFinal)
             ),
-            false
+            /* background = */ false
         )
-        TintHelper.setTintAuto(binding.playPauseButton, colorFinal, true)
+        TintHelper.setTintAuto(
+            /* view = */ binding.playPauseButton,
+            /* color = */ colorFinal,
+            /* background = */ true
+        )
         binding.text.setTextColor(colorFinal)
 
         updateRepeatState()

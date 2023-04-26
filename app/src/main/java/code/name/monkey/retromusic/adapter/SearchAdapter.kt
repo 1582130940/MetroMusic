@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.adapter
 
 import android.annotation.SuppressLint
@@ -26,7 +12,12 @@ import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import code.name.monkey.appthemehelper.ThemeStore
-import code.name.monkey.retromusic.*
+import code.name.monkey.retromusic.EXTRA_ALBUM_ID
+import code.name.monkey.retromusic.EXTRA_ARTIST_ID
+import code.name.monkey.retromusic.EXTRA_ARTIST_NAME
+import code.name.monkey.retromusic.EXTRA_GENRE
+import code.name.monkey.retromusic.EXTRA_PLAYLIST_ID
+import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.adapter.base.MediaEntryViewHolder
 import code.name.monkey.retromusic.db.PlaylistWithSongs
 import code.name.monkey.retromusic.glide.RetroGlideExtension
@@ -41,11 +32,11 @@ import code.name.monkey.retromusic.model.Genre
 import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.util.MusicUtil
 import com.bumptech.glide.Glide
-import java.util.*
+import java.util.Locale
 
 class SearchAdapter(
     private val activity: FragmentActivity,
-    private var dataSet: List<Any>
+    private var dataSet: List<Any>,
 ) : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
 
     @SuppressLint("NotifyDataSetChanged")
@@ -65,19 +56,19 @@ class SearchAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when (viewType) {
             HEADER -> ViewHolder(
-                LayoutInflater.from(activity).inflate(
-                    R.layout.sub_header,
-                    parent,
-                    false
-                ), viewType
+                itemView = LayoutInflater.from(activity).inflate(
+                    /* resource = */ R.layout.sub_header,
+                    /* root = */ parent,
+                    /* attachToRoot = */ false
+                ), itemViewType = viewType
             )
 
             ALBUM, ARTIST, ALBUM_ARTIST -> ViewHolder(
-                LayoutInflater.from(activity).inflate(
-                    R.layout.item_list_big,
-                    parent,
-                    false
-                ), viewType
+                itemView = LayoutInflater.from(activity).inflate(
+                    /* resource = */ R.layout.item_list_big,
+                    /* root = */ parent,
+                    /* attachToRoot = */ false
+                ), itemViewType = viewType
             )
 
             else -> ViewHolder(
@@ -123,7 +114,7 @@ class SearchAdapter(
                 holder.title?.text = genre.name
                 holder.text?.text = String.format(
                     Locale.getDefault(),
-                    "%d %s",
+                    format = "%d %s",
                     genre.songCount,
                     if (genre.songCount > 1) activity.getString(R.string.songs) else activity.getString(
                         R.string.song
@@ -188,36 +179,36 @@ class SearchAdapter(
             when (itemViewType) {
                 ALBUM -> {
                     activity.findNavController(R.id.fragment_container).navigate(
-                        R.id.albumDetailsFragment,
-                        bundleOf(EXTRA_ALBUM_ID to (item as Album).id)
+                        resId = R.id.albumDetailsFragment,
+                        args = bundleOf(EXTRA_ALBUM_ID to (item as Album).id)
                     )
                 }
 
                 ARTIST -> {
                     activity.findNavController(R.id.fragment_container).navigate(
-                        R.id.artistDetailsFragment,
-                        bundleOf(EXTRA_ARTIST_ID to (item as Artist).id)
+                        resId = R.id.artistDetailsFragment,
+                        args = bundleOf(EXTRA_ARTIST_ID to (item as Artist).id)
                     )
                 }
 
                 ALBUM_ARTIST -> {
                     activity.findNavController(R.id.fragment_container).navigate(
-                        R.id.albumArtistDetailsFragment,
-                        bundleOf(EXTRA_ARTIST_NAME to (item as Artist).name)
+                        resId = R.id.albumArtistDetailsFragment,
+                        args = bundleOf(EXTRA_ARTIST_NAME to (item as Artist).name)
                     )
                 }
 
                 GENRE -> {
                     activity.findNavController(R.id.fragment_container).navigate(
-                        R.id.genreDetailsFragment,
-                        bundleOf(EXTRA_GENRE to (item as Genre))
+                        resId = R.id.genreDetailsFragment,
+                        args = bundleOf(EXTRA_GENRE to (item as Genre))
                     )
                 }
 
                 PLAYLIST -> {
                     activity.findNavController(R.id.fragment_container).navigate(
-                        R.id.playlistDetailsFragment,
-                        bundleOf(EXTRA_PLAYLIST_ID to (item as PlaylistWithSongs).playlistEntity.playListId)
+                        resId = R.id.playlistDetailsFragment,
+                        args = bundleOf(EXTRA_PLAYLIST_ID to (item as PlaylistWithSongs).playlistEntity.playListId)
                     )
                 }
 

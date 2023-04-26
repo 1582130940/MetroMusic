@@ -7,7 +7,6 @@ import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.service.playback.Playback
 import code.name.monkey.retromusic.util.PreferenceUtil
 
-
 class PlaybackManager(val context: Context) {
 
     var playback: Playback? = null
@@ -50,10 +49,10 @@ class PlaybackManager(val context: Context) {
                 if (playbackLocation == PlaybackLocation.LOCAL) {
                     if (playback is CrossFadePlayer) {
                         if (!(playback as CrossFadePlayer).isCrossFading) {
-                            AudioFader.startFadeAnimator(playback!!, true)
+                            AudioFader.startFadeAnimator(playback = playback!!, fadeIn = true)
                         }
                     } else {
-                        AudioFader.startFadeAnimator(playback!!, true)
+                        AudioFader.startFadeAnimator(playback = playback!!, fadeIn = true)
                     }
                 }
                 playback?.start()
@@ -68,7 +67,7 @@ class PlaybackManager(val context: Context) {
                 closeAudioEffectSession()
                 onPause()
             } else {
-                AudioFader.startFadeAnimator(playback!!, false) {
+                AudioFader.startFadeAnimator(playback = playback!!, fadeIn = false) {
                     //Code to run when Animator Ends
                     playback?.pause()
                     closeAudioEffectSession()
@@ -80,11 +79,7 @@ class PlaybackManager(val context: Context) {
 
     fun seek(millis: Int, force: Boolean): Int = playback!!.seek(millis, force)
 
-    fun setDataSource(
-        song: Song,
-        force: Boolean,
-        completion: (success: Boolean) -> Unit,
-    ) {
+    fun setDataSource(song: Song, force: Boolean, completion: (success: Boolean) -> Unit) {
         playback?.setDataSource(song, force, completion)
     }
 
@@ -138,8 +133,10 @@ class PlaybackManager(val context: Context) {
     private fun closeAudioEffectSession() {
         val audioEffectsIntent = Intent(AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION)
         if (playback != null) {
-            audioEffectsIntent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION,
-                playback!!.audioSessionId)
+            audioEffectsIntent.putExtra(
+                AudioEffect.EXTRA_AUDIO_SESSION,
+                playback!!.audioSessionId
+            )
         }
         audioEffectsIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
         context.sendBroadcast(audioEffectsIntent)
@@ -152,7 +149,7 @@ class PlaybackManager(val context: Context) {
 
     private fun switchToPlayback(
         playback: Playback,
-        onChange: (wasPlaying: Boolean, progress: Int) -> Unit,
+        onChange: (wasPlaying: Boolean, progress: Int) -> Unit
     ) {
         val oldPlayback = this.playback
         val wasPlaying: Boolean = oldPlayback?.isPlaying == true

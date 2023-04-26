@@ -21,5 +21,5 @@ import kotlinx.parcelize.Parcelize
 data class Genre(
     val id: Long,
     val name: String,
-    val songCount: Int
+    val songCount: Int,
 ) : Parcelable

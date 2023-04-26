@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.activities
 
 import android.app.KeyguardManager
@@ -64,21 +50,24 @@ class LockScreenActivity : AbsMusicServiceActivity() {
                 if (VersionUtils.hasOreo()) {
                     val keyguardManager =
                         getSystemService<KeyguardManager>()
-                    keyguardManager?.requestDismissKeyguard(this@LockScreenActivity, null)
+                    keyguardManager?.requestDismissKeyguard(/* activity = */ this@LockScreenActivity, /* callback = */
+                        null
+                    )
                 }
                 finish()
                 return true
             }
         }).position(SlidrPosition.BOTTOM).build()
 
-        Slidr.attach(this, config)
+        Slidr.attach(/* activity = */ this, /* config = */ config)
 
         fragment = whichFragment<LockScreenControlsFragment>(R.id.playback_controls_fragment)
 
         binding.slide.apply {
             translationY = 100f
             alpha = 0f
-            animate().translationY(0f).alpha(1f).setDuration(1500).start()
+            animate().translationY(/* value = */ 0f).alpha(/* value = */ 1f).setDuration(1500)
+                .start()
         }
     }
 
@@ -86,12 +75,8 @@ class LockScreenActivity : AbsMusicServiceActivity() {
     private fun lockScreenInit() {
         if (VersionUtils.hasOreoMR1()) {
             setShowWhenLocked(true)
-            //setTurnScreenOn(true)
         } else {
-            window.addFlags(
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                //          or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-            )
+            window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         }
     }
 
@@ -107,7 +92,7 @@ class LockScreenActivity : AbsMusicServiceActivity() {
 
     private fun updateSongs() {
         val song = MusicPlayerRemote.currentSong
-        Glide.with(this)
+        Glide.with(/* activity = */ this)
             .asBitmapPalette()
             .songCoverOptions(song)
             .load(RetroGlideExtension.getSongModel(song))

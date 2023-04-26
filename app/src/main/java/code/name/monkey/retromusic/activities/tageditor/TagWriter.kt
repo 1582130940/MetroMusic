@@ -34,20 +34,19 @@ class TagWriter {
 
         suspend fun scan(context: Context, toBeScanned: List<String?>?) {
             if (toBeScanned.isNullOrEmpty()) {
-                Log.i("scan", "scan: Empty")
-                context.showToast("Scan file from folder")
+                Log.i(/* tag = */ "scan", /* msg = */ "scan: Empty")
+                context.showToast(message = "Scan file from folder")
                 return
             }
-            MediaScannerConnection.scanFile(
-                context,
-                toBeScanned.toTypedArray(),
-                null,
+            MediaScannerConnection.scanFile(/* context = */ context, /* paths = */
+                toBeScanned.toTypedArray(), /* mimeTypes = */
+                null, /* callback = */
                 withContext(Dispatchers.Main) {
-                    if (context is Activity) UpdateToastMediaScannerCompletionListener(
-                        context, toBeScanned
+                    if (context is Activity) UpdateToastMediaScannerCompletionListener(/* activity = */
+                        context, /* toBeScanned = */
+                        toBeScanned
                     ) else null
-                }
-            )
+                })
         }
 
         suspend fun writeTagsToFiles(context: Context, info: AudioTagInfo) {
@@ -57,9 +56,8 @@ class TagWriter {
                 if (info.artworkInfo?.artwork != null) {
                     try {
                         albumArtFile = createAlbumArtFile(context).canonicalFile
-                        info.artworkInfo.artwork.compress(
-                            Bitmap.CompressFormat.JPEG,
-                            100,
+                        info.artworkInfo.artwork.compress(/* format = */ Bitmap.CompressFormat.JPEG, /* quality = */
+                            100, /* stream = */
                             albumArtFile.outputStream()
                         )
                         artwork = AndroidArtwork.createArtworkFromFile(albumArtFile)
@@ -130,9 +128,8 @@ class TagWriter {
                 if (info.artworkInfo?.artwork != null) {
                     try {
                         albumArtFile = createAlbumArtFile(context).canonicalFile
-                        info.artworkInfo.artwork.compress(
-                            Bitmap.CompressFormat.JPEG,
-                            100,
+                        info.artworkInfo.artwork.compress(/* format = */ Bitmap.CompressFormat.JPEG, /* quality = */
+                            100, /* stream = */
                             albumArtFile.outputStream()
                         )
                         artwork = AndroidArtwork.createArtworkFromFile(albumArtFile)

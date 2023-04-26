@@ -9,9 +9,9 @@ import code.name.monkey.appthemehelper.ThemeStore
 class AccentIcon @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = -1
+    defStyleAttr: Int = -1,
 ) : AppCompatImageView(context, attrs, defStyleAttr) {
     init {
-        imageTintList = ColorStateList.valueOf(ThemeStore.accentColor(context))
+        imageTintList = ColorStateList.valueOf(/* color = */ ThemeStore.accentColor(context))
     }
 }

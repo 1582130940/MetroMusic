@@ -8,14 +8,11 @@ import androidx.preference.CheckBoxPreference
 import code.name.monkey.appthemehelper.R
 import code.name.monkey.appthemehelper.util.ATHUtil
 
-/**
- * @author Aidan Follestad (afollestad)
- */
 class ATESwitchPreference @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = -1,
-    defStyleRes: Int = -1
+    defStyleRes: Int = -1,
 ) :
     CheckBoxPreference(context, attrs, defStyleAttr, defStyleRes) {
 

@@ -15,7 +15,13 @@ import code.name.monkey.retromusic.service.AudioFader.Companion.createFadeAnimat
 import code.name.monkey.retromusic.service.playback.Playback.PlaybackCallbacks
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.logE
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 /** @author Prathamesh M */
 
@@ -34,7 +40,7 @@ class CrossFadePlayer(context: Context) : LocalPlayback(context) {
     private var durationListener = DurationListener()
     private var mIsInitialized = false
     private var hasDataSource: Boolean = false /* Whether first player has DataSource */
-    private var nextDataSource:String? = null
+    private var nextDataSource: String? = null
     private var crossFadeAnimator: Animator? = null
     override var callbacks: PlaybackCallbacks? = null
     private var crossFadeDuration = PreferenceUtil.crossFadeDuration
@@ -93,7 +99,10 @@ class CrossFadePlayer(context: Context) : LocalPlayback(context) {
         return true
     }
 
-    override fun seek(whereto: Int, force: Boolean): Int {
+    override fun seek(
+        whereto: Int,
+        force: Boolean,
+    ): Int {
         if (force) {
             endFade()
         }
@@ -211,9 +220,11 @@ class CrossFadePlayer(context: Context) : LocalPlayback(context) {
             CurrentPlayer.PLAYER_ONE -> {
                 player1
             }
+
             CurrentPlayer.PLAYER_TWO -> {
                 player2
             }
+
             CurrentPlayer.NOT_SET -> {
                 null
             }
@@ -225,16 +236,21 @@ class CrossFadePlayer(context: Context) : LocalPlayback(context) {
             CurrentPlayer.PLAYER_ONE -> {
                 player2
             }
+
             CurrentPlayer.PLAYER_TWO -> {
                 player1
             }
+
             CurrentPlayer.NOT_SET -> {
                 null
             }
         }
     }
 
-    private fun crossFade(fadeInMp: MediaPlayer, fadeOutMp: MediaPlayer) {
+    private fun crossFade(
+        fadeInMp: MediaPlayer,
+        fadeOutMp: MediaPlayer,
+    ) {
         isCrossFading = true
         crossFadeAnimator = createFadeAnimator(context, fadeInMp, fadeOutMp) {
             crossFadeAnimator = null
@@ -264,7 +280,11 @@ class CrossFadePlayer(context: Context) : LocalPlayback(context) {
         }
     }
 
-    override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
+    override fun onError(
+        mp: MediaPlayer?,
+        what: Int,
+        extra: Int,
+    ): Boolean {
         mIsInitialized = false
         mp?.release()
         player1 = MediaPlayer()
@@ -290,8 +310,8 @@ class CrossFadePlayer(context: Context) : LocalPlayback(context) {
             job?.cancel()
             job = launch {
                 while (isActive) {
-                    delay(250)
-                    onDurationUpdated(position(), duration())
+                    delay(timeMillis = 250)
+                    onDurationUpdated(progress = position(), total = duration())
                 }
             }
         }
@@ -302,7 +322,7 @@ class CrossFadePlayer(context: Context) : LocalPlayback(context) {
     }
 
     fun onDurationUpdated(progress: Int, total: Int) {
-        if (total > 0 && (total - progress).div(1000) == crossFadeDuration) {
+        if (total > 0 && (total - progress).div(other = 1000) == crossFadeDuration) {
             getNextPlayer()?.let { player ->
                 val nextSong = MusicPlayerRemote.nextSong
                 // Switch to other player (Crossfade) only if next song exists
@@ -354,7 +374,8 @@ class CrossFadePlayer(context: Context) : LocalPlayback(context) {
     }
 }
 
-internal fun crossFadeScope(): CoroutineScope = CoroutineScope(Job() + Dispatchers.Default)
+internal fun crossFadeScope(): CoroutineScope =
+    CoroutineScope(context = Job() + Dispatchers.Default)
 
 fun MediaPlayer.setPlaybackSpeedPitch(speed: Float, pitch: Float) {
     if (hasMarshmallow()) {

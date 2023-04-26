@@ -51,9 +51,12 @@ class BackupFragment : Fragment(R.layout.fragment_backup), BackupAdapter.BackupC
         val openFilePicker = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
             lifecycleScope.launch(Dispatchers.IO) {
                 it?.let {
-                    startActivity(Intent(context, RestoreActivity::class.java).apply {
-                        data = it
-                    })
+                    startActivity(
+                        Intent(/* packageContext = */ context, /* cls = */
+                            RestoreActivity::class.java
+                        ).apply {
+                            data = it
+                        })
                 }
             }
         }
@@ -68,7 +71,11 @@ class BackupFragment : Fragment(R.layout.fragment_backup), BackupAdapter.BackupC
     }
 
     private fun initAdapter() {
-        backupAdapter = BackupAdapter(requireActivity(), ArrayList(), this)
+        backupAdapter = BackupAdapter(
+            activity = requireActivity(),
+            dataSet = ArrayList(),
+            backupClickedListener = this
+        )
         backupAdapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onChanged() {
                 super.onChanged()
@@ -127,17 +134,21 @@ class BackupFragment : Fragment(R.layout.fragment_backup), BackupAdapter.BackupC
                 backupViewModel.loadBackups()
                 return true
             }
+
             R.id.action_share -> {
-                Share.shareFile(requireContext(), file, "*/*")
+                Share.shareFile(context = requireContext(), file = file, mimeType = "*/*")
                 return true
             }
+
             R.id.action_rename -> {
                 materialDialog().show {
                     title(res = R.string.action_rename)
                     input(prefill = file.nameWithoutExtension) { _, text ->
                         // Text submitted with the action button
                         val renamedFile =
-                            File(file.parent, "$text${BackupHelper.APPEND_EXTENSION}")
+                            File(/* parent = */ file.parent, /* child = */
+                                "$text${BackupHelper.APPEND_EXTENSION}"
+                            )
                         if (!renamedFile.exists()) {
                             file.renameTo(renamedFile)
                             backupViewModel.loadBackups()

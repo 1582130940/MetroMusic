@@ -56,18 +56,18 @@ import com.bumptech.glide.request.transition.Transition
  * @author Hemanth S (h4h13).
  */
 @SuppressLint("RestrictedApi")
-class PlayingNotificationClassic(
-    val context: Context,
-) : PlayingNotification(context) {
+class PlayingNotificationClassic(val context: Context) : PlayingNotification(context) {
     private var primaryColor: Int = 0
 
-    private fun getCombinedRemoteViews(collapsed: Boolean, song: Song): RemoteViews {
+    private fun getCombinedRemoteViews(
+        collapsed: Boolean,
+        song: Song,
+    ): RemoteViews {
         val remoteViews = RemoteViews(
             context.packageName,
             if (collapsed) R.layout.layout_notification_collapsed else R.layout.layout_notification_expanded
         )
-        remoteViews.setTextViewText(
-            R.id.appName,
+        remoteViews.setTextViewText(/* viewId = */ R.id.appName, /* text = */
             context.getString(R.string.app_name) + " • " + song.albumName
         )
         remoteViews.setTextViewText(R.id.title, song.title)
@@ -78,23 +78,23 @@ class PlayingNotificationClassic(
 
     override fun updateMetadata(song: Song, onUpdate: () -> Unit) {
         if (song == Song.emptySong) return
-        val notificationLayout = getCombinedRemoteViews(true, song)
-        val notificationLayoutBig = getCombinedRemoteViews(false, song)
+        val notificationLayout = getCombinedRemoteViews(collapsed = true, song = song)
+        val notificationLayoutBig = getCombinedRemoteViews(collapsed = false, song = song)
 
         val action = Intent(context, MainActivity::class.java)
         action.putExtra(MainActivity.EXPAND_PANEL, PreferenceUtil.isExpandPanel)
         action.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
 
         val clickIntent = PendingIntent
-            .getActivity(
-                context,
-                0,
-                action,
+            .getActivity(/* context = */ context, /* requestCode = */
+                0, /* intent = */
+                action, /* flags = */
                 PendingIntent.FLAG_UPDATE_CURRENT or if (VersionUtils.hasMarshmallow())
                     PendingIntent.FLAG_IMMUTABLE
                 else 0
             )
-        val deleteIntent = buildPendingIntent(context, ACTION_QUIT, null)
+        val deleteIntent =
+            buildPendingIntent(context = context, action = ACTION_QUIT, serviceName = null)
 
         setSmallIcon(R.drawable.ic_notification)
         setContentIntent(clickIntent)
@@ -118,31 +118,33 @@ class PlayingNotificationClassic(
             ) {
                 override fun onResourceReady(
                     resource: BitmapPaletteWrapper,
-                    transition: Transition<in BitmapPaletteWrapper>?,
+                    transition: Transition<in BitmapPaletteWrapper>?
                 ) {
-                    val colors = MediaNotificationProcessor(context, resource.bitmap)
-                    update(resource.bitmap, colors.backgroundColor)
+                    val colors = MediaNotificationProcessor(/* context = */ context, /* bitmap = */
+                        resource.bitmap
+                    )
+                    update(bitmap = resource.bitmap, bgColor = colors.backgroundColor)
                 }
 
                 override fun onLoadFailed(errorDrawable: Drawable?) {
                     super.onLoadFailed(errorDrawable)
                     update(
-                        null,
-                        resolveColor(
-                            context,
-                            com.google.android.material.R.attr.colorSurface,
-                            Color.WHITE
+                        bitmap = null,
+                        bgColor = resolveColor(
+                            context = context,
+                            attr = com.google.android.material.R.attr.colorSurface,
+                            fallback = Color.WHITE
                         )
                     )
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
                     update(
-                        null,
-                        resolveColor(
-                            context,
-                            com.google.android.material.R.attr.colorSurface,
-                            Color.WHITE
+                        bitmap = null,
+                        bgColor = resolveColor(
+                            context = context,
+                            attr = com.google.android.material.R.attr.colorSurface,
+                            fallback = Color.WHITE
                         )
                     )
                 }
@@ -153,12 +155,10 @@ class PlayingNotificationClassic(
                         contentView.setImageViewBitmap(R.id.largeIcon, bitmap)
                         bigContentView.setImageViewBitmap(R.id.largeIcon, bitmap)
                     } else {
-                        contentView.setImageViewResource(
-                            R.id.largeIcon,
+                        contentView.setImageViewResource(/* viewId = */ R.id.largeIcon, /* srcId = */
                             R.drawable.default_audio_art
                         )
-                        bigContentView.setImageViewResource(
-                            R.id.largeIcon,
+                        bigContentView.setImageViewResource(/* viewId = */ R.id.largeIcon, /* srcId = */
                             R.drawable.default_audio_art
                         )
                     }
@@ -170,9 +170,9 @@ class PlayingNotificationClassic(
                         if (!PreferenceUtil.isColoredNotification) {
                             bgColorFinal =
                                 resolveColor(
-                                    context,
-                                    com.google.android.material.R.attr.colorSurface,
-                                    Color.WHITE
+                                    context = context,
+                                    attr = com.google.android.material.R.attr.colorSurface,
+                                    fallback = Color.WHITE
                                 )
                         }
                         setBackgroundColor(bgColorFinal)
@@ -190,8 +190,14 @@ class PlayingNotificationClassic(
                 }
 
                 private fun setBackgroundColor(color: Int) {
-                    contentView.setInt(R.id.image, "setBackgroundColor", color)
-                    bigContentView.setInt(R.id.image, "setBackgroundColor", color)
+                    contentView.setInt(/* viewId = */ R.id.image, /* methodName = */
+                        "setBackgroundColor", /* value = */
+                        color
+                    )
+                    bigContentView.setInt(/* viewId = */ R.id.image, /* methodName = */
+                        "setBackgroundColor", /* value = */
+                        color
+                    )
                 }
 
                 private fun setNotificationContent(dark: Boolean) {
@@ -199,21 +205,15 @@ class PlayingNotificationClassic(
                     val secondary = MaterialValueHelper.getSecondaryTextColor(context, dark)
                     primaryColor = primary
 
-                    val close = context.getTintedDrawable(
-                        R.drawable.ic_close,
-                        primary
-                    ).toBitmap()
+                    val close = context.getTintedDrawable(id = R.drawable.ic_close, color = primary)
+                        .toBitmap()
                     val prev =
-                        context.getTintedDrawable(
-                            R.drawable.ic_skip_previous,
-                            primary
-                        ).toBitmap()
+                        context.getTintedDrawable(id = R.drawable.ic_skip_previous, color = primary)
+                            .toBitmap()
                     val next =
-                        context.getTintedDrawable(
-                            R.drawable.ic_skip_next,
-                            primary
-                        ).toBitmap()
-                    val playPause = getPlayPauseBitmap(true)
+                        context.getTintedDrawable(id = R.drawable.ic_skip_next, color = primary)
+                            .toBitmap()
+                    val playPause = getPlayPauseBitmap(isPlaying = true)
 
                     contentView.setTextColor(R.id.title, primary)
                     contentView.setTextColor(R.id.subtitle, secondary)
@@ -232,19 +232,17 @@ class PlayingNotificationClassic(
                     bigContentView.setImageViewBitmap(R.id.action_next, next)
                     bigContentView.setImageViewBitmap(R.id.action_play_pause, playPause)
 
-                    contentView.setImageViewBitmap(
-                        R.id.smallIcon,
+                    contentView.setImageViewBitmap(/* viewId = */ R.id.smallIcon, /* bitmap = */
                         context.getTintedDrawable(
-                            R.drawable.ic_notification,
-                            secondary
-                        ).toBitmap(0.6f)
+                            id = R.drawable.ic_notification,
+                            color = secondary
+                        ).toBitmap(scaleFactor = 0.6f)
                     )
-                    bigContentView.setImageViewBitmap(
-                        R.id.smallIcon,
+                    bigContentView.setImageViewBitmap(/* viewId = */ R.id.smallIcon, /* bitmap = */
                         context.getTintedDrawable(
-                            R.drawable.ic_notification,
-                            secondary
-                        ).toBitmap(0.6f)
+                            id = R.drawable.ic_notification,
+                            color = secondary
+                        ).toBitmap(scaleFactor = 0.6f)
                     )
                 }
             })
@@ -252,10 +250,10 @@ class PlayingNotificationClassic(
 
     private fun getPlayPauseBitmap(isPlaying: Boolean): Bitmap {
         return context.getTintedDrawable(
-            if (isPlaying)
+            id = if (isPlaying)
                 R.drawable.ic_pause_white_48dp
             else
-                R.drawable.ic_play_arrow_white_48dp, primaryColor
+                R.drawable.ic_play_arrow_white_48dp, color = primaryColor
         ).toBitmap()
     }
 
@@ -274,13 +272,14 @@ class PlayingNotificationClassic(
     ): PendingIntent {
         val intent = Intent(action)
         intent.component = serviceName
-        return PendingIntent.getService(
-            context, 0, intent, if (VersionUtils.hasMarshmallow())
+        return PendingIntent.getService(/* context = */ context, /* requestCode = */
+            0, /* intent = */
+            intent, /* flags = */
+            if (VersionUtils.hasMarshmallow())
                 PendingIntent.FLAG_IMMUTABLE
             else 0
         )
     }
-
 
     private fun linkButtons(notificationLayout: RemoteViews) {
         var pendingIntent: PendingIntent

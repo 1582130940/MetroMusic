@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.activities.tageditor
 
 import android.annotation.SuppressLint
@@ -30,7 +16,11 @@ import androidx.core.widget.doAfterTextChanged
 import code.name.monkey.appthemehelper.util.MaterialValueHelper
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.ActivitySongTagEditorBinding
-import code.name.monkey.retromusic.extensions.*
+import code.name.monkey.retromusic.extensions.appHandleColor
+import code.name.monkey.retromusic.extensions.defaultFooterColor
+import code.name.monkey.retromusic.extensions.isColorLight
+import code.name.monkey.retromusic.extensions.setTint
+import code.name.monkey.retromusic.extensions.showToast
 import code.name.monkey.retromusic.glide.RetroGlideExtension.asBitmapPalette
 import code.name.monkey.retromusic.glide.palette.BitmapPaletteWrapper
 import code.name.monkey.retromusic.model.ArtworkInfo
@@ -46,13 +36,12 @@ import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.shape.MaterialShapeDrawable
 import org.jaudiotagger.tag.FieldKey
 import org.koin.android.ext.android.inject
-import java.util.*
+import java.util.EnumMap
 
 class SongTagEditorActivity : AbsTagEditorActivity<ActivitySongTagEditorBinding>() {
 
     override val bindingInflater: (LayoutInflater) -> ActivitySongTagEditorBinding =
         ActivitySongTagEditorBinding::inflate
-
 
     private val songRepository by inject<SongRepository>()
 
@@ -64,7 +53,7 @@ class SongTagEditorActivity : AbsTagEditorActivity<ActivitySongTagEditorBinding>
         setUpViews()
         setSupportActionBar(binding.toolbar)
         binding.appBarLayout?.statusBarForeground =
-            MaterialShapeDrawable.createWithElevationOverlay(this)
+            MaterialShapeDrawable.createWithElevationOverlay(/* context = */ this)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -110,9 +99,8 @@ class SongTagEditorActivity : AbsTagEditorActivity<ActivitySongTagEditorBinding>
     override fun loadCurrentImage() {
         val bitmap = albumArt
         setImageBitmap(
-            bitmap,
-            RetroColorUtil.getColor(
-                RetroColorUtil.generatePalette(bitmap),
+            bitmap = bitmap,
+            bgColor = RetroColorUtil.getColor(/* palette = */ RetroColorUtil.generatePalette(bitmap), /* fallback = */
                 defaultFooterColor()
             )
         )
@@ -125,8 +113,10 @@ class SongTagEditorActivity : AbsTagEditorActivity<ActivitySongTagEditorBinding>
 
     override fun deleteImage() {
         setImageBitmap(
-            BitmapFactory.decodeResource(resources, R.drawable.default_audio_art),
-            defaultFooterColor()
+            bitmap = BitmapFactory.decodeResource(
+                resources,
+                R.drawable.default_audio_art
+            ), bgColor = defaultFooterColor()
         )
         deleteAlbumArt = true
         dataChanged()
@@ -136,9 +126,9 @@ class SongTagEditorActivity : AbsTagEditorActivity<ActivitySongTagEditorBinding>
         super.setColors(color)
         saveFab.backgroundTintList = ColorStateList.valueOf(color)
         ColorStateList.valueOf(
-            MaterialValueHelper.getPrimaryTextColor(
-                this,
-                color.isColorLight
+            /* color = */ MaterialValueHelper.getPrimaryTextColor(
+                context = this,
+                dark = color.isColorLight
             )
         ).also {
             saveFab.iconTint = it
@@ -159,8 +149,8 @@ class SongTagEditorActivity : AbsTagEditorActivity<ActivitySongTagEditorBinding>
         fieldKeyValueMap[FieldKey.ALBUM_ARTIST] = binding.albumArtistText.text.toString()
         fieldKeyValueMap[FieldKey.COMPOSER] = binding.songComposerText.text.toString()
         writeValuesToFiles(
-            fieldKeyValueMap, when {
-                deleteAlbumArt -> ArtworkInfo(id, null)
+            fieldKeyValueMap = fieldKeyValueMap, artworkInfo = when {
+                deleteAlbumArt -> ArtworkInfo(albumId = id, artwork = null)
                 albumArtBitmap == null -> null
                 else -> ArtworkInfo(id, albumArtBitmap!!)
             }
@@ -172,22 +162,25 @@ class SongTagEditorActivity : AbsTagEditorActivity<ActivitySongTagEditorBinding>
     override fun getSongUris(): List<Uri> = listOf(MusicUtil.getSongFileUri(id))
 
     override fun loadImageFromFile(selectedFile: Uri?) {
-        Glide.with(this@SongTagEditorActivity)
+        Glide.with(/* activity = */ this@SongTagEditorActivity)
             .asBitmapPalette()
             .load(selectedFile)
             .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .skipMemoryCache(true)
+            .skipMemoryCache(/* skip = */ true)
             .into(object : ImageViewTarget<BitmapPaletteWrapper>(binding.editorImage) {
                 override fun onResourceReady(
                     resource: BitmapPaletteWrapper,
                     transition: Transition<in BitmapPaletteWrapper>?
                 ) {
                     RetroColorUtil.getColor(resource.palette, Color.TRANSPARENT)
-                    albumArtBitmap = resource.bitmap?.let { ImageUtil.resizeBitmap(it, 2048) }
+                    albumArtBitmap = resource.bitmap?.let {
+                        ImageUtil.resizeBitmap(/* src = */ it, /* maxForSmallerSize = */
+                            2048
+                        )
+                    }
                     setImageBitmap(
-                        albumArtBitmap,
-                        RetroColorUtil.getColor(
-                            resource.palette,
+                        bitmap = albumArtBitmap,
+                        bgColor = RetroColorUtil.getColor(/* palette = */ resource.palette, /* fallback = */
                             defaultFooterColor()
                         )
                     )

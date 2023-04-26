@@ -7,7 +7,12 @@ import android.view.ViewConfiguration
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.abs
 
 /**
@@ -35,13 +40,13 @@ class MusicSeekSkipTouchListener(val activity: FragmentActivity, val next: Boole
                 job = activity.lifecycleScope.launch(Dispatchers.Default) {
                     counter = 0
                     while (isActive) {
-                        delay(500)
+                        delay(timeMillis = 500)
                         wasSeeking = true
                         var seekingDuration = MusicPlayerRemote.songProgressMillis
                         if (next) {
-                            seekingDuration += 5000 * (counter.floorDiv(2) + 1)
+                            seekingDuration += 5000 * (counter.floorDiv(other = 2) + 1)
                         } else {
-                            seekingDuration -= 5000 * (counter.floorDiv(2) + 1)
+                            seekingDuration -= 5000 * (counter.floorDiv(other = 2) + 1)
                         }
                         withContext(Dispatchers.Main) {
                             MusicPlayerRemote.seekTo(seekingDuration)
@@ -50,6 +55,7 @@ class MusicSeekSkipTouchListener(val activity: FragmentActivity, val next: Boole
                     }
                 }
             }
+
             MotionEvent.ACTION_UP -> {
                 job?.cancel()
                 val endX = event.x
@@ -64,6 +70,7 @@ class MusicSeekSkipTouchListener(val activity: FragmentActivity, val next: Boole
 
                 wasSeeking = false
             }
+
             MotionEvent.ACTION_CANCEL -> {
                 job?.cancel()
             }
@@ -71,9 +78,14 @@ class MusicSeekSkipTouchListener(val activity: FragmentActivity, val next: Boole
         return false
     }
 
-    private fun isAClick(startX: Float, endX: Float, startY: Float, endY: Float): Boolean {
-        val differenceX = abs(startX - endX)
-        val differenceY = abs(startY - endY)
+    private fun isAClick(
+        startX: Float,
+        endX: Float,
+        startY: Float,
+        endY: Float,
+    ): Boolean {
+        val differenceX = abs(x = startX - endX)
+        val differenceY = abs(x = startY - endY)
         return !(differenceX > scaledTouchSlop || differenceY > scaledTouchSlop)
     }
 }

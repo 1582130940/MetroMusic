@@ -1,19 +1,6 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.dialogs
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.Dialog
 import android.app.PendingIntent
@@ -55,6 +42,7 @@ class SleepTimerDialog : DialogFragment() {
     private val seekBar: SeekBar get() = binding.seekBar
     private val timerDisplay: TextView get() = binding.timerDisplay
 
+    @SuppressLint(/* ...value = */ "ScheduleExactAlarm")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         timerUpdater = TimerUpdater()
         _binding = DialogSleepTimerBinding.inflate(layoutInflater)
@@ -94,7 +82,7 @@ class SleepTimerDialog : DialogFragment() {
                 seekBar.isVisible = false
                 shouldFinishLastSong.isVisible = false
                 timerUpdater.start()
-                setPositiveButton(android.R.string.ok, null)
+                setPositiveButton(/* textId = */ android.R.string.ok, /* listener = */ null)
                 setNegativeButton(R.string.action_cancel) { _, _ ->
                     timerUpdater.cancel()
                     val previous = makeTimerPendingIntent(PendingIntent.FLAG_NO_CREATE)
@@ -103,16 +91,20 @@ class SleepTimerDialog : DialogFragment() {
                         am?.cancel(previous)
                         previous.cancel()
                         Toast.makeText(
-                            requireContext(),
+                            /* context = */ requireContext(),
+                            /* text = */
                             requireContext().resources.getString(R.string.sleep_timer_canceled),
+                            /* duration = */
                             Toast.LENGTH_SHORT
                         ).show()
                         val musicService = MusicPlayerRemote.musicService
                         if (musicService != null && musicService.pendingQuit) {
                             musicService.pendingQuit = false
                             Toast.makeText(
-                                requireContext(),
+                                /* context = */ requireContext(),
+                                /* text = */
                                 requireContext().resources.getString(R.string.sleep_timer_canceled),
+                                /* duration = */
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -129,15 +121,19 @@ class SleepTimerDialog : DialogFragment() {
                         SystemClock.elapsedRealtime() + minutes * 60 * 1000
                     PreferenceUtil.nextSleepTimerElapsedRealTime = nextSleepTimerElapsedTime.toInt()
                     val am = requireContext().getSystemService<AlarmManager>()
-                    am?.setExact(
-                        AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                        nextSleepTimerElapsedTime,
-                        pi
-                    )
+                    if (pi != null) {
+                        am?.setExact(
+                            /* type = */ AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                            /* triggerAtMillis = */ nextSleepTimerElapsedTime,
+                            /* operation = */ pi
+                        )
+                    }
 
                     Toast.makeText(
-                        requireContext(),
+                        /* context = */ requireContext(),
+                        /* text = */
                         requireContext().resources.getString(R.string.sleep_timer_set, minutes),
+                        /* duration = */
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -149,13 +145,17 @@ class SleepTimerDialog : DialogFragment() {
         return dialog
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateTimeDisplayTime() {
         timerDisplay.text = "$seekArcProgress min"
     }
 
     private fun makeTimerPendingIntent(flag: Int): PendingIntent? {
         return PendingIntent.getService(
-            requireActivity(), 0, makeTimerIntent(), flag or if (VersionUtils.hasMarshmallow())
+            /* context = */ requireActivity(),
+            /* requestCode = */ 0,
+            /* intent = */ makeTimerIntent(),
+            /* flags = */ flag or if (VersionUtils.hasMarshmallow())
                 PendingIntent.FLAG_IMMUTABLE
             else 0
         )
@@ -176,8 +176,8 @@ class SleepTimerDialog : DialogFragment() {
 
     private inner class TimerUpdater :
         CountDownTimer(
-            PreferenceUtil.nextSleepTimerElapsedRealTime - SystemClock.elapsedRealtime(),
-            1000
+            /* millisInFuture = */ PreferenceUtil.nextSleepTimerElapsedRealTime - SystemClock.elapsedRealtime(),
+            /* countDownInterval = */ 1000
         ) {
 
         override fun onTick(millisUntilFinished: Long) {

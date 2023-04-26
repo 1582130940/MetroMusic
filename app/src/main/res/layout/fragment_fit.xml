@@ -25,7 +25,6 @@
                 android:layout_height="match_parent"
                 tools:layout="@layout/fragment_album_full_cover" />
 
-
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/cover_lyrics"
                 android:name="code.name.monkey.retromusic.fragments.player.CoverLyricsFragment"
@@ -51,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_weight="0"
-                app:navigationIcon="@drawable/ic_keyboard_arrow_down" />
+            app:navigationIcon="@drawable/ic_keyboard_arrow_down" />
     </LinearLayout>
 
     <include layout="@layout/shadow_statusbar_toolbar" />

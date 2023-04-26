@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.player.md3
 
 import android.os.Bundle
@@ -22,9 +8,16 @@ import code.name.monkey.appthemehelper.util.ATHUtil
 import code.name.monkey.appthemehelper.util.ColorUtil
 import code.name.monkey.appthemehelper.util.MaterialValueHelper
 import code.name.monkey.appthemehelper.util.TintHelper
-import code.name.monkey.retromusic.extensions.*
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.FragmentMd3PlayerPlaybackControlsBinding
+import code.name.monkey.retromusic.extensions.accentColor
+import code.name.monkey.retromusic.extensions.animateRadius
+import code.name.monkey.retromusic.extensions.animateToCircle
+import code.name.monkey.retromusic.extensions.applyColor
+import code.name.monkey.retromusic.extensions.getSongInfo
+import code.name.monkey.retromusic.extensions.hide
+import code.name.monkey.retromusic.extensions.ripAlpha
+import code.name.monkey.retromusic.extensions.show
 import code.name.monkey.retromusic.fragments.base.AbsPlayerControlsFragment
 import code.name.monkey.retromusic.fragments.base.goToAlbum
 import code.name.monkey.retromusic.fragments.base.goToArtist
@@ -83,28 +76,37 @@ class MD3PlaybackControlsFragment :
     }
 
     override fun setColor(color: MediaNotificationProcessor) {
-        val colorBg = ATHUtil.resolveColor(requireContext(), android.R.attr.colorBackground)
+        val colorBg = ATHUtil.resolveColor(
+            context = requireContext(),
+            attr = android.R.attr.colorBackground
+        )
         if (ColorUtil.isColorLight(colorBg)) {
             lastPlaybackControlsColor =
-                MaterialValueHelper.getSecondaryTextColor(requireContext(), true)
+                MaterialValueHelper.getSecondaryTextColor(context = requireContext(), dark = true)
             lastDisabledPlaybackControlsColor =
-                MaterialValueHelper.getSecondaryDisabledTextColor(requireContext(), true)
+                MaterialValueHelper.getSecondaryDisabledTextColor(
+                    context = requireContext(),
+                    dark = true
+                )
         } else {
             lastPlaybackControlsColor =
-                MaterialValueHelper.getPrimaryTextColor(requireContext(), false)
+                MaterialValueHelper.getPrimaryTextColor(context = requireContext(), dark = false)
             lastDisabledPlaybackControlsColor =
-                MaterialValueHelper.getPrimaryDisabledTextColor(requireContext(), false)
+                MaterialValueHelper.getPrimaryDisabledTextColor(
+                    context = requireContext(),
+                    dark = false
+                )
         }
 
         val colorFinal = accentColor().ripAlpha()
 
         TintHelper.setTintAuto(
-            binding.playPauseButton,
-            MaterialValueHelper.getPrimaryTextColor(
-                requireContext(),
-                ColorUtil.isColorLight(colorFinal)
+            /* view = */ binding.playPauseButton,
+            /* color = */ MaterialValueHelper.getPrimaryTextColor(
+                context = requireContext(),
+                dark = ColorUtil.isColorLight(colorFinal)
             ),
-            false
+            /* background = */ false
         )
         binding.playPauseCard.setCardBackgroundColor(colorFinal)
 
@@ -160,7 +162,7 @@ class MD3PlaybackControlsFragment :
     private fun updatePlayPauseDrawableState() {
         if (MusicPlayerRemote.isPlaying) {
             binding.playPauseButton.setImageResource(R.drawable.ic_pause_outline_small)
-            binding.playPauseCard.animateRadius(40F)
+            binding.playPauseCard.animateRadius(cornerRadius = 40F)
         } else {
             binding.playPauseButton.setImageResource(R.drawable.ic_play_arrow_outline_small)
             binding.playPauseCard.animateToCircle()

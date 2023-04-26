@@ -1,5 +1,6 @@
 package code.name.monkey.retromusic.adapter.base
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.ActionMode
 import android.view.Menu
@@ -51,6 +52,7 @@ abstract class AbsMultiSelectAdapter<V : RecyclerView.ViewHolder?, I>(
         onBackPressedCallback.remove()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun checkAll() {
         if (actionMode != null) {
             checked.clear()
@@ -91,6 +93,7 @@ abstract class AbsMultiSelectAdapter<V : RecyclerView.ViewHolder?, I>(
         return true
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun clearChecked() {
         checked.clear()
         notifyDataSetChanged()
@@ -98,7 +101,7 @@ abstract class AbsMultiSelectAdapter<V : RecyclerView.ViewHolder?, I>(
 
     private fun updateCab() {
         if (actionMode == null) {
-            actionMode = activity.startActionMode(this)?.apply {
+            actionMode = activity.startActionMode(/* callback = */ this)?.apply {
                 customView = NumberRollViewBinding.inflate(activity.layoutInflater).root
             }
             activity.onBackPressedDispatcher.addCallback(onBackPressedCallback)
@@ -108,9 +111,10 @@ abstract class AbsMultiSelectAdapter<V : RecyclerView.ViewHolder?, I>(
             size <= 0 -> {
                 actionMode?.finish()
             }
+
             else -> {
                 actionMode?.customView?.findViewById<NumberRollView>(R.id.selection_mode_number)
-                    ?.setNumber(size, true)
+                    ?.setNumber(number = size, animate = true)
             }
         }
     }
@@ -120,7 +124,7 @@ abstract class AbsMultiSelectAdapter<V : RecyclerView.ViewHolder?, I>(
         this.menuRes = menuRes
     }
 
-    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+    private val onBackPressedCallback = object : OnBackPressedCallback(/* enabled = */ true) {
         override fun handleOnBackPressed() {
             if (actionMode != null) {
                 actionMode?.finish()

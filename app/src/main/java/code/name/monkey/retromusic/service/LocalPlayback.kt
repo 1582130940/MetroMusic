@@ -24,7 +24,6 @@ import code.name.monkey.retromusic.util.PreferenceUtil.playbackSpeed
 
 abstract class LocalPlayback(val context: Context) : Playback, MediaPlayer.OnErrorListener,
     MediaPlayer.OnCompletionListener {
-
     private val becomingNoisyReceiverIntentFilter =
         IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
 
@@ -55,6 +54,7 @@ abstract class LocalPlayback(val context: Context) : Playback, MediaPlayer.OnErr
                 }
                 setVolume(Volume.NORMAL)
             }
+
             AudioManager.AUDIOFOCUS_LOSS -> {
                 // Lost focus for an unbounded amount of time: stop playback and release media playback
                 if (!isAudioFocusEnabled) {
@@ -62,6 +62,7 @@ abstract class LocalPlayback(val context: Context) : Playback, MediaPlayer.OnErr
                     callbacks?.onPlayStateChanged()
                 }
             }
+
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
                 // Lost focus for a short time, but we have to stop
                 // playback. We don't release the media playback because playback
@@ -71,6 +72,7 @@ abstract class LocalPlayback(val context: Context) : Playback, MediaPlayer.OnErr
                 callbacks?.onPlayStateChanged()
                 isPausedByTransientLossOfFocus = wasPlaying
             }
+
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
                 // Lost focus for a short time, but it's ok to keep playing
                 // at an attenuated level
@@ -82,9 +84,8 @@ abstract class LocalPlayback(val context: Context) : Playback, MediaPlayer.OnErr
     private val audioFocusRequest: AudioFocusRequestCompat =
         AudioFocusRequestCompat.Builder(AudioManagerCompat.AUDIOFOCUS_GAIN)
             .setOnAudioFocusChangeListener(audioFocusListener)
-            .setAudioAttributes(
-                AudioAttributesCompat.Builder()
-                    .setContentType(AudioAttributesCompat.CONTENT_TYPE_MUSIC).build()
+            .setAudioAttributes(/* attributes = */ AudioAttributesCompat.Builder()
+                .setContentType(AudioAttributesCompat.CONTENT_TYPE_MUSIC).build()
             ).build()
 
     @CallSuper
@@ -116,11 +117,11 @@ abstract class LocalPlayback(val context: Context) : Playback, MediaPlayer.OnErr
     fun setDataSourceImpl(
         player: MediaPlayer,
         path: String,
-        completion: (success: Boolean) -> Unit,
+        completion: (success: Boolean) -> Unit
     ) {
         player.reset()
         try {
-            if (path.startsWith("content://")) {
+            if (path.startsWith(prefix = "content://")) {
                 player.setDataSource(context, path.toUri())
             } else {
                 player.setDataSource(path)

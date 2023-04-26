@@ -1,18 +1,6 @@
-/*
- * Copyright (c) 2019 Hemanth Savarala.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by
- *  the Free Software Foundation either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- */
 package code.name.monkey.retromusic.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Point
@@ -20,7 +8,7 @@ import code.name.monkey.retromusic.App.Companion.getContext
 import java.net.InetAddress
 import java.net.NetworkInterface
 import java.text.DecimalFormat
-import java.util.*
+import java.util.Collections
 
 object RetroUtil {
     fun formatValue(numValue: Float): String {
@@ -31,7 +19,7 @@ object RetroUtil {
             value /= 1000
             index++
         }
-        val decimalFormat = DecimalFormat("#.##")
+        val decimalFormat = DecimalFormat(/* pattern = */ "#.##")
         return String.format("%s %s", decimalFormat.format(value.toDouble()), arr[index])
     }
 
@@ -46,11 +34,15 @@ object RetroUtil {
     }
 
     val statusBarHeight: Int
+        @SuppressLint("InternalInsetResource")
         get() {
             var result = 0
             val resourceId = getContext()
                 .resources
-                .getIdentifier("status_bar_height", "dimen", "android")
+                .getIdentifier(/* name = */ "status_bar_height", /* defType = */
+                    "dimen", /* defPackage = */
+                    "android"
+                )
             if (resourceId > 0) {
                 result = getContext().resources.getDimensionPixelSize(resourceId)
             }
@@ -58,11 +50,15 @@ object RetroUtil {
         }
 
     val navigationBarHeight: Int
+        @SuppressLint("InternalInsetResource")
         get() {
             var result = 0
             val resourceId = getContext()
                 .resources
-                .getIdentifier("navigation_bar_height", "dimen", "android")
+                .getIdentifier(/* name = */ "navigation_bar_height", /* defType = */
+                    "dimen", /* defPackage = */
+                    "android"
+                )
             if (resourceId > 0) {
                 result = getContext().resources.getDimensionPixelSize(resourceId)
             }
@@ -87,19 +83,16 @@ object RetroUtil {
                         val sAddr = addr.hostAddress
 
                         if (sAddr != null) {
-                            val isIPv4 = sAddr.indexOf(':') < 0
+                            val isIPv4 = sAddr.indexOf(char = ':') < 0
                             if (useIPv4) {
                                 if (isIPv4) return sAddr
                             } else {
                                 if (!isIPv4) {
-                                    val delim = sAddr.indexOf('%') // drop ip6 zone suffix
+                                    val delim = sAddr.indexOf(char = '%') // drop ip6 zone suffix
                                     return if (delim < 0) {
                                         sAddr.uppercase()
                                     } else {
-                                        sAddr.substring(
-                                            0,
-                                            delim
-                                        ).uppercase()
+                                        sAddr.substring(0, delim).uppercase()
                                     }
                                 }
                             }

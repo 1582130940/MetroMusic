@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2019 Hemanth Savarala.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by
- *  the Free Software Foundation either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- */
-
 package code.name.monkey.retromusic.util
 
 import android.content.res.ColorStateList
@@ -28,11 +14,9 @@ import code.name.monkey.appthemehelper.util.ColorUtil
 import code.name.monkey.appthemehelper.util.MaterialValueHelper
 
 object ViewUtil {
-
     const val RETRO_MUSIC_ANIM_TIME = 1000
 
     fun setProgressDrawable(progressSlider: SeekBar, newColor: Int, thumbTint: Boolean = false) {
-
         if (thumbTint) {
             progressSlider.thumbTintList = ColorStateList.valueOf(newColor)
         }
@@ -46,9 +30,7 @@ object ViewUtil {
         }
     }
 
-
     fun setProgressDrawable(progressSlider: ProgressBar, newColor: Int) {
-
         val layerDrawable = progressSlider.progressDrawable as LayerDrawable
 
         val progress = layerDrawable.findDrawableByLayerId(android.R.id.progress)
@@ -67,11 +49,10 @@ object ViewUtil {
 
         val secondaryProgress = layerDrawable.findDrawableByLayerId(android.R.id.secondaryProgress)
         secondaryProgress?.colorFilter =
-            BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
-                ColorUtil.withAlpha(
-                    newColor,
-                    0.65f
-                ), SRC_IN
+            BlendModeColorFilterCompat.createBlendModeColorFilterCompat(/* color = */ ColorUtil.withAlpha(
+                baseColor = newColor,
+                alpha = 0.65f
+            ), /* blendModeCompat = */ SRC_IN
             )
     }
 
@@ -83,7 +64,7 @@ object ViewUtil {
         val top = v.top + ty
         val bottom = v.bottom + ty
 
-        return x in left..right && y >= top && y <= bottom
+        return (x in (left..right)) && (y >= top) && (y <= bottom)
     }
 
     fun convertDpToPixel(dp: Float, resources: Resources): Float {

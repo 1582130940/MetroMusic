@@ -1,24 +1,14 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.player.tiny
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.*
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
@@ -27,10 +17,13 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.getSystemService
 import code.name.monkey.appthemehelper.util.ToolbarContentTintHelper
 import code.name.monkey.appthemehelper.util.VersionUtils
-import code.name.monkey.retromusic.extensions.*
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.FragmentTinyPlayerBinding
-import code.name.monkey.retromusic.extensions.*
+import code.name.monkey.retromusic.extensions.drawAboveSystemBars
+import code.name.monkey.retromusic.extensions.getSongInfo
+import code.name.monkey.retromusic.extensions.hide
+import code.name.monkey.retromusic.extensions.show
+import code.name.monkey.retromusic.extensions.whichFragment
 import code.name.monkey.retromusic.fragments.base.AbsPlayerFragment
 import code.name.monkey.retromusic.fragments.base.goToAlbum
 import code.name.monkey.retromusic.fragments.base.goToArtist
@@ -84,9 +77,9 @@ class TinyPlayerFragment : AbsPlayerFragment(R.layout.fragment_tiny_player),
 
         Handler(Looper.myLooper()!!).post {
             ToolbarContentTintHelper.colorizeToolbar(
-                binding.playerToolbar,
-                color.secondaryTextColor,
-                requireActivity()
+                /* toolbarView = */ binding.playerToolbar,
+                /* toolbarIconsColor = */ color.secondaryTextColor,
+                /* activity = */ requireActivity()
             )
         }
     }
@@ -101,7 +94,7 @@ class TinyPlayerFragment : AbsPlayerFragment(R.layout.fragment_tiny_player),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        progressViewUpdateHelper = MusicProgressViewUpdateHelper(this)
+        progressViewUpdateHelper = MusicProgressViewUpdateHelper(callback = this)
     }
 
     override fun onResume() {
@@ -128,7 +121,10 @@ class TinyPlayerFragment : AbsPlayerFragment(R.layout.fragment_tiny_player),
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentTinyPlayerBinding.bind(view)
         binding.title.isSelected = true
@@ -184,7 +180,11 @@ class TinyPlayerFragment : AbsPlayerFragment(R.layout.fragment_tiny_player),
         if (isDragEnabled) {
             binding.progressBar.progress = progress
         } else {
-            animator = ObjectAnimator.ofInt(binding.progressBar, "progress", progress)
+            animator = ObjectAnimator.ofInt(
+                /* target = */ binding.progressBar,
+                /* propertyName = */ "progress",
+                /* ...values = */ progress
+            )
 
             val animatorSet = AnimatorSet()
             animatorSet.playSequentially(animator)
@@ -194,7 +194,7 @@ class TinyPlayerFragment : AbsPlayerFragment(R.layout.fragment_tiny_player),
             animatorSet.start()
         }
         binding.playerSongTotalTime.text = String.format(
-            "%s/%s", MusicUtil.getReadableDurationString(total.toLong()),
+            format = "%s/%s", MusicUtil.getReadableDurationString(total.toLong()),
             MusicUtil.getReadableDurationString(progress.toLong())
         )
     }
@@ -211,7 +211,7 @@ class TinyPlayerFragment : AbsPlayerFragment(R.layout.fragment_tiny_player),
                 GestureDetector.SimpleOnGestureListener() {
 
                 override fun onLongPress(e: MotionEvent) {
-                    if (abs(e.y - initialY) <= 2) {
+                    if (abs(x = e.y - initialY) <= 2) {
                         vibrate()
                         isDragEnabled = true
                         binding.progressBar.parent.requestDisallowInterceptTouchEvent(true)
@@ -221,10 +221,10 @@ class TinyPlayerFragment : AbsPlayerFragment(R.layout.fragment_tiny_player),
                 }
 
                 override fun onFling(
-                    e1: MotionEvent,
+                    e1: MotionEvent?,
                     e2: MotionEvent,
                     velocityX: Float,
-                    velocityY: Float
+                    velocityY: Float,
                 ): Boolean {
                     if (abs(velocityX) > abs(velocityY)) {
                         if (velocityX < 0) {
@@ -250,7 +250,8 @@ class TinyPlayerFragment : AbsPlayerFragment(R.layout.fragment_tiny_player),
                 }
 
                 MotionEvent.ACTION_UP,
-                MotionEvent.ACTION_CANCEL -> {
+                MotionEvent.ACTION_CANCEL,
+                -> {
                     progressViewUpdateHelper.start()
                     if (isDragEnabled) {
                         MusicPlayerRemote.seekTo(progress)
@@ -280,9 +281,14 @@ class TinyPlayerFragment : AbsPlayerFragment(R.layout.fragment_tiny_player),
         private fun vibrate() {
             val v = requireContext().getSystemService<Vibrator>()
             if (VersionUtils.hasOreo()) {
-                v?.vibrate(VibrationEffect.createOneShot(10, VibrationEffect.DEFAULT_AMPLITUDE))
+                v?.vibrate(
+                    VibrationEffect.createOneShot(
+                        /* milliseconds = */ 10,
+                        /* amplitude = */ VibrationEffect.DEFAULT_AMPLITUDE
+                    )
+                )
             } else {
-                v?.vibrate(10)
+                v?.vibrate(/* milliseconds = */ 10)
             }
         }
     }

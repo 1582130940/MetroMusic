@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.player.peek
 
 import android.os.Bundle
@@ -20,7 +6,12 @@ import androidx.appcompat.widget.Toolbar
 import code.name.monkey.appthemehelper.util.ToolbarContentTintHelper
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.FragmentPeekPlayerBinding
-import code.name.monkey.retromusic.extensions.*
+import code.name.monkey.retromusic.extensions.colorControlNormal
+import code.name.monkey.retromusic.extensions.drawAboveSystemBarsWithPadding
+import code.name.monkey.retromusic.extensions.getSongInfo
+import code.name.monkey.retromusic.extensions.hide
+import code.name.monkey.retromusic.extensions.show
+import code.name.monkey.retromusic.extensions.whichFragment
 import code.name.monkey.retromusic.fragments.base.AbsPlayerFragment
 import code.name.monkey.retromusic.fragments.base.goToAlbum
 import code.name.monkey.retromusic.fragments.base.goToArtist
@@ -29,12 +20,7 @@ import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
 
-/**
- * Created by hemanths on 2019-10-03.
- */
-
 class PeekPlayerFragment : AbsPlayerFragment(R.layout.fragment_peek_player) {
-
     private lateinit var controlsFragment: PeekPlayerControlFragment
     private var lastColor: Int = 0
     private var _binding: FragmentPeekPlayerBinding? = null
@@ -71,9 +57,9 @@ class PeekPlayerFragment : AbsPlayerFragment(R.layout.fragment_peek_player) {
             setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
             setOnMenuItemClickListener(this@PeekPlayerFragment)
             ToolbarContentTintHelper.colorizeToolbar(
-                this,
-                colorControlNormal(),
-                requireActivity()
+                /* toolbarView = */ this,
+                /* toolbarIconsColor = */ colorControlNormal(),
+                /* activity = */ requireActivity()
             )
         }
     }

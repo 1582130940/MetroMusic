@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.player.cardblur
 
 import android.graphics.Color
@@ -71,7 +57,7 @@ class CardBlurPlaybackControlsFragment :
 
     override fun setColor(color: MediaNotificationProcessor) {
         lastPlaybackControlsColor = Color.WHITE
-        lastDisabledPlaybackControlsColor = ColorUtil.withAlpha(Color.WHITE, 0.3f)
+        lastDisabledPlaybackControlsColor = ColorUtil.withAlpha(Color.WHITE, alpha = 0.3f)
 
         updateRepeatState()
         updateShuffleState()
@@ -83,8 +69,16 @@ class CardBlurPlaybackControlsFragment :
 
     private fun setUpPlayPauseFab() {
         binding.mediaButton.playPauseButton.apply {
-            TintHelper.setTintAuto(this, Color.WHITE, true)
-            TintHelper.setTintAuto(this, Color.BLACK, false)
+            TintHelper.setTintAuto(
+                /* view = */ this,
+                /* color = */ Color.WHITE,
+                /* background = */ true
+            )
+            TintHelper.setTintAuto(
+                /* view = */ this,
+                /* color = */ Color.BLACK,
+                /* background = */ false
+            )
             setOnClickListener(PlayPauseButtonOnClickHandler())
         }
     }
@@ -138,9 +132,9 @@ class CardBlurPlaybackControlsFragment :
 
     public override fun show() {
         binding.mediaButton.playPauseButton.animate()
-            .scaleX(1f)
-            .scaleY(1f)
-            .rotation(360f)
+            .scaleX(/* value = */ 1f)
+            .scaleY(/* value = */ 1f)
+            .rotation(/* value = */ 360f)
             .setInterpolator(DecelerateInterpolator())
             .start()
     }

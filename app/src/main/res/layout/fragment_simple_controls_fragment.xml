@@ -132,7 +132,6 @@
         tools:ignore="MissingPrefix"
         tools:tint="@color/md_black_1000" />
 
-
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/shuffleButton"
         android:layout_width="wrap_content"
@@ -146,7 +145,6 @@
         app:srcCompat="@drawable/ic_shuffle"
         tools:ignore="MissingPrefix"
         tools:tint="@color/md_black_1000" />
-
 
     <FrameLayout
         android:id="@+id/volumeFragmentContainer"

@@ -1,33 +1,34 @@
-/*
- * Copyright (c) 2019 Hemanth Savarala.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by
- *  the Free Software Foundation either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- */
-
 package code.name.monkey.retromusic.repository
 
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
-import code.name.monkey.retromusic.*
-import code.name.monkey.retromusic.db.*
+import code.name.monkey.retromusic.FAVOURITES
+import code.name.monkey.retromusic.GENRES
+import code.name.monkey.retromusic.PLAYLISTS
+import code.name.monkey.retromusic.R
+import code.name.monkey.retromusic.RECENT_ALBUMS
+import code.name.monkey.retromusic.RECENT_ARTISTS
+import code.name.monkey.retromusic.TOP_ALBUMS
+import code.name.monkey.retromusic.TOP_ARTISTS
+import code.name.monkey.retromusic.db.HistoryEntity
+import code.name.monkey.retromusic.db.PlayCountEntity
+import code.name.monkey.retromusic.db.PlaylistEntity
+import code.name.monkey.retromusic.db.PlaylistWithSongs
+import code.name.monkey.retromusic.db.SongEntity
+import code.name.monkey.retromusic.db.fromHistoryToSongs
+import code.name.monkey.retromusic.db.toSong
 import code.name.monkey.retromusic.fragments.search.Filter
-import code.name.monkey.retromusic.model.*
+import code.name.monkey.retromusic.model.AbsCustomPlaylist
+import code.name.monkey.retromusic.model.Album
+import code.name.monkey.retromusic.model.Artist
+import code.name.monkey.retromusic.model.Genre
+import code.name.monkey.retromusic.model.Home
+import code.name.monkey.retromusic.model.Playlist
+import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.model.smartplaylist.NotPlayedPlaylist
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 
 interface Repository {
-
     fun historySong(): List<HistoryEntity>
     fun favorites(): LiveData<List<SongEntity>>
     fun observableHistorySongs(): LiveData<List<Song>>
@@ -58,7 +59,6 @@ interface Repository {
     suspend fun genresHome(): Home
     suspend fun playlists(): Home
     suspend fun homeSections(): List<Home>
-
     suspend fun playlist(playlistId: Long): Playlist
     suspend fun fetchPlaylistWithSongs(): List<PlaylistWithSongs>
     suspend fun playlistSongs(playlistWithSongs: PlaylistWithSongs): List<Song>
@@ -178,14 +178,14 @@ class RealRepository(
         return homeSections
     }
 
-
     override suspend fun playlist(playlistId: Long) =
         playlistRepository.playlist(playlistId)
 
     override suspend fun fetchPlaylistWithSongs(): List<PlaylistWithSongs> =
         roomRepository.playlistWithSongs()
 
-    override fun getPlaylist(playlistId: Long): LiveData<PlaylistWithSongs> = roomRepository.getPlaylist(playlistId)
+    override fun getPlaylist(playlistId: Long): LiveData<PlaylistWithSongs> =
+        roomRepository.getPlaylist(playlistId)
 
     override suspend fun playlistSongs(playlistWithSongs: PlaylistWithSongs): List<Song> =
         playlistWithSongs.songs.map {
@@ -278,39 +278,46 @@ class RealRepository(
 
     override suspend fun genresHome(): Home {
         val genres = genreRepository.genres().shuffled()
-        return Home(genres, GENRES, R.string.genres)
+        return Home(arrayList = genres, homeSection = GENRES, titleRes = R.string.genres)
     }
 
     override suspend fun playlists(): Home {
         val playlist = playlistRepository.playlists()
-        return Home(playlist, PLAYLISTS, R.string.playlists)
+        return Home(arrayList = playlist, homeSection = PLAYLISTS, titleRes = R.string.playlists)
     }
 
     override suspend fun recentArtistsHome(): Home {
         val artists = lastAddedRepository.recentArtists().take(5)
-        return Home(artists, RECENT_ARTISTS, R.string.recent_artists)
+        return Home(
+            arrayList = artists,
+            homeSection = RECENT_ARTISTS,
+            titleRes = R.string.recent_artists
+        )
     }
 
     override suspend fun recentAlbumsHome(): Home {
         val albums = lastAddedRepository.recentAlbums().take(5)
-        return Home(albums, RECENT_ALBUMS, R.string.recent_albums)
+        return Home(
+            arrayList = albums,
+            homeSection = RECENT_ALBUMS,
+            titleRes = R.string.recent_albums
+        )
     }
 
     override suspend fun topAlbumsHome(): Home {
         val albums = topPlayedRepository.topAlbums().take(5)
-        return Home(albums, TOP_ALBUMS, R.string.top_albums)
+        return Home(arrayList = albums, homeSection = TOP_ALBUMS, titleRes = R.string.top_albums)
     }
 
     override suspend fun topArtistsHome(): Home {
         val artists = topPlayedRepository.topArtists().take(5)
-        return Home(artists, TOP_ARTISTS, R.string.top_artists)
+        return Home(arrayList = artists, homeSection = TOP_ARTISTS, titleRes = R.string.top_artists)
     }
 
     override suspend fun favoritePlaylistHome(): Home {
         val songs = favoritePlaylistSongs().map {
             it.toSong()
         }
-        return Home(songs, FAVOURITES, R.string.favorites)
+        return Home(arrayList = songs, homeSection = FAVOURITES, titleRes = R.string.favorites)
     }
-
 }

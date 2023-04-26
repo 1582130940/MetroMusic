@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.other
 
 import android.os.Bundle
@@ -30,9 +16,6 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeMana
 import com.h6ah4i.android.widget.advrecyclerview.touchguard.RecyclerViewTouchActionGuardManager
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils
 
-/**
- * Created by hemanths on 2019-12-08.
- */
 class PlayingQueueRVFragment : AbsRecyclerViewFragment<PlayingQueueAdapter, LinearLayoutManager>() {
 
     private lateinit var wrappedAdapter: RecyclerView.Adapter<*>
@@ -77,7 +60,9 @@ class PlayingQueueRVFragment : AbsRecyclerViewFragment<PlayingQueueAdapter, Line
         recyclerViewDragDropManager?.attachRecyclerView(recyclerView)
         recyclerViewSwipeManager?.attachRecyclerView(recyclerView)
 
-        layoutManager?.scrollToPositionWithOffset(MusicPlayerRemote.position + 1, 0)
+        layoutManager?.scrollToPositionWithOffset(/* position = */ MusicPlayerRemote.position + 1, /* offset = */
+            0
+        )
     }
 
     override fun createLayoutManager(): LinearLayoutManager {
@@ -101,12 +86,12 @@ class PlayingQueueRVFragment : AbsRecyclerViewFragment<PlayingQueueAdapter, Line
     override fun onQueueChanged() {
         super.onQueueChanged()
         updateQueue()
-        mainActivity.hideBottomSheet(true)
+        mainActivity.hideBottomSheet(hide = true)
     }
 
     override fun onPlayingMetaChanged() {
         updateQueuePosition()
-        mainActivity.hideBottomSheet(true)
+        mainActivity.hideBottomSheet(hide = true)
     }
 
     private fun updateQueuePosition() {
@@ -121,7 +106,9 @@ class PlayingQueueRVFragment : AbsRecyclerViewFragment<PlayingQueueAdapter, Line
 
     private fun resetToCurrentPosition() {
         recyclerView.stopScroll()
-        layoutManager?.scrollToPositionWithOffset(MusicPlayerRemote.position + 1, 0)
+        layoutManager?.scrollToPositionWithOffset(/* position = */ MusicPlayerRemote.position + 1, /* offset = */
+            0
+        )
     }
 
     override fun onPause() {

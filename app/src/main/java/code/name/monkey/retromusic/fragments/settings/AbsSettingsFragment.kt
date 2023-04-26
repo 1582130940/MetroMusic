@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.settings
 
 import android.graphics.Color
@@ -26,12 +12,17 @@ import androidx.preference.PreferenceManager
 import code.name.monkey.appthemehelper.common.prefs.supportv7.ATEPreferenceFragmentCompat
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.extensions.dip
-import code.name.monkey.retromusic.preferences.*
+import code.name.monkey.retromusic.preferences.AlbumCoverStylePreference
+import code.name.monkey.retromusic.preferences.AlbumCoverStylePreferenceDialog
+import code.name.monkey.retromusic.preferences.BlacklistPreference
+import code.name.monkey.retromusic.preferences.BlacklistPreferenceDialog
+import code.name.monkey.retromusic.preferences.DurationPreference
+import code.name.monkey.retromusic.preferences.DurationPreferenceDialog
+import code.name.monkey.retromusic.preferences.LibraryPreference
+import code.name.monkey.retromusic.preferences.LibraryPreferenceDialog
+import code.name.monkey.retromusic.preferences.NowPlayingScreenPreference
+import code.name.monkey.retromusic.preferences.NowPlayingScreenPreferenceDialog
 import dev.chrisbanes.insetter.applyInsetter
-
-/**
- * @author Hemanth S (h4h13).
- */
 
 abstract class AbsSettingsFragment : ATEPreferenceFragmentCompat() {
 
@@ -52,12 +43,15 @@ abstract class AbsSettingsFragment : ATEPreferenceFragmentCompat() {
             setSummary(
                 it, PreferenceManager
                     .getDefaultSharedPreferences(it.context)
-                    .getString(it.key, "")
+                    .getString(/* p0 = */ it.key, /* p1 = */ "")
             )
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         setDivider(ColorDrawable(Color.TRANSPARENT))
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
@@ -77,24 +71,29 @@ abstract class AbsSettingsFragment : ATEPreferenceFragmentCompat() {
         when (preference) {
             is LibraryPreference -> {
                 val fragment = LibraryPreferenceDialog.newInstance()
-                fragment.show(childFragmentManager, preference.key)
+                fragment.show(/* manager = */ childFragmentManager, /* tag = */ preference.key)
             }
+
             is NowPlayingScreenPreference -> {
                 val fragment = NowPlayingScreenPreferenceDialog.newInstance()
-                fragment.show(childFragmentManager, preference.key)
+                fragment.show(/* manager = */ childFragmentManager, /* tag = */ preference.key)
             }
+
             is AlbumCoverStylePreference -> {
                 val fragment = AlbumCoverStylePreferenceDialog.newInstance()
-                fragment.show(childFragmentManager, preference.key)
+                fragment.show(/* manager = */ childFragmentManager, /* tag = */ preference.key)
             }
+
             is BlacklistPreference -> {
                 val fragment = BlacklistPreferenceDialog.newInstance()
-                fragment.show(childFragmentManager, preference.key)
+                fragment.show(/* manager = */ childFragmentManager, /* tag = */ preference.key)
             }
+
             is DurationPreference -> {
                 val fragment = DurationPreferenceDialog.newInstance()
-                fragment.show(childFragmentManager, preference.key)
+                fragment.show(/* manager = */ childFragmentManager, /* tag = */ preference.key)
             }
+
             else -> super.onDisplayPreferenceDialog(preference)
         }
     }

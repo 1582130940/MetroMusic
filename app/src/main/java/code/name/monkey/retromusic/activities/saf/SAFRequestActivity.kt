@@ -23,7 +23,10 @@ import code.name.monkey.retromusic.util.SAFUtil
 class SAFRequestActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val intent = Intent(this, code.name.monkey.retromusic.activities.saf.SAFGuideActivity::class.java)
+        val intent =
+            Intent(/* packageContext = */ this, /* cls = */
+                code.name.monkey.retromusic.activities.saf.SAFGuideActivity::class.java
+            )
         startActivityForResult(intent, REQUEST_CODE_SAF_GUIDE)
     }
 
@@ -31,11 +34,12 @@ class SAFRequestActivity : Activity() {
         super.onActivityResult(requestCode, resultCode, intent)
         when (requestCode) {
             REQUEST_CODE_SAF_GUIDE -> {
-                SAFUtil.openTreePicker(this)
+                SAFUtil.openTreePicker(/* activity = */ this)
             }
+
             SAFUtil.REQUEST_SAF_PICK_TREE -> {
                 if (resultCode == RESULT_OK) {
-                    SAFUtil.saveTreeUri(this, intent)
+                    SAFUtil.saveTreeUri(/* context = */ this, /* data = */ intent)
                 }
                 finish()
             }

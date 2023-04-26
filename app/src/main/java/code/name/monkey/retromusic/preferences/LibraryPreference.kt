@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2019 Hemanth Savarala.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by
- *  the Free Software Foundation either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- */
-
 package code.name.monkey.retromusic.preferences
 
 import android.app.Dialog
@@ -23,8 +9,8 @@ import androidx.core.graphics.BlendModeCompat.SRC_IN
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import code.name.monkey.appthemehelper.common.prefs.supportv7.ATEDialogPreference
-import code.name.monkey.retromusic.adapter.CategoryInfoAdapter
 import code.name.monkey.retromusic.R
+import code.name.monkey.retromusic.adapter.CategoryInfoAdapter
 import code.name.monkey.retromusic.databinding.PreferenceDialogLibraryCategoriesBinding
 import code.name.monkey.retromusic.extensions.colorButtons
 import code.name.monkey.retromusic.extensions.colorControlNormal
@@ -37,12 +23,12 @@ class LibraryPreference @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-    defStyleRes: Int = 0
+    defStyleRes: Int = 0,
 ) : ATEDialogPreference(context, attrs, defStyleAttr, defStyleRes) {
     init {
         icon?.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
-            context.colorControlNormal(),
-            SRC_IN
+            /* color = */ context.colorControlNormal(),
+            /* blendModeCompat = */ SRC_IN
         )
     }
 }
@@ -56,7 +42,7 @@ class LibraryPreferenceDialog : DialogFragment() {
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = categoryAdapter
-            categoryAdapter.attachToRecyclerView(this)
+            categoryAdapter.attachToRecyclerView(recyclerView = this)
         }
 
         return materialDialog(R.string.library_categories)
@@ -65,7 +51,7 @@ class LibraryPreferenceDialog : DialogFragment() {
             ) { _, _ ->
                 updateCategories(PreferenceUtil.defaultCategories)
             }
-            .setNegativeButton(android.R.string.cancel, null)
+            .setNegativeButton(/* textId = */ android.R.string.cancel, /* listener = */ null)
             .setPositiveButton(R.string.done) { _, _ -> updateCategories(categoryAdapter.categoryInfos) }
             .setView(binding.root)
             .create()

@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.extensions
 
 import android.content.Context
@@ -19,7 +5,11 @@ import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.os.PowerManager
 import android.widget.Toast
-import androidx.annotation.*
+import androidx.annotation.DimenRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.IdRes
+import androidx.annotation.IntegerRes
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.getSystemService
@@ -73,20 +63,28 @@ fun <T> Fragment.whichFragment(@IdRes id: Int): T {
     return childFragmentManager.findFragmentById(id) as T
 }
 
-fun Fragment.showToast(@StringRes stringRes: Int, duration: Int = Toast.LENGTH_SHORT) {
+fun Fragment.showToast(
+    @StringRes stringRes: Int,
+    duration: Int = Toast.LENGTH_SHORT,
+) {
     showToast(getString(stringRes), duration)
 }
 
-fun Fragment.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
+fun Fragment.showToast(
+    message: String,
+    duration: Int = Toast.LENGTH_SHORT,
+) {
     Toast.makeText(requireContext(), message, duration).show()
 }
 
 fun Context.getDrawableCompat(@DrawableRes drawableRes: Int): Drawable {
-    return AppCompatResources.getDrawable(this, drawableRes)!!
+    return AppCompatResources.getDrawable(/* context = */ this, /* resId = */ drawableRes)!!
 }
 
 fun Fragment.getDrawableCompat(@DrawableRes drawableRes: Int): Drawable {
-    return AppCompatResources.getDrawable(requireContext(), drawableRes)!!
+    return AppCompatResources.getDrawable(/* context = */ requireContext(), /* resId = */
+        drawableRes
+    )!!
 }
 
 fun Fragment.applyToolbar(toolbar: MaterialToolbar) {

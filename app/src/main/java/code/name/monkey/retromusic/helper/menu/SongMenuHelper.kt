@@ -1,18 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
-
 package code.name.monkey.retromusic.helper.menu
 
 import android.content.Intent
@@ -62,37 +47,48 @@ object SongMenuHelper : KoinComponent {
                 }
                 return true
             }
+
             R.id.action_share -> {
                 activity.startActivity(
                     Intent.createChooser(
-                        MusicUtil.createShareSongFileIntent(activity, song),
-                        null
+                        /* target = */ MusicUtil.createShareSongFileIntent(activity, song),
+                        /* title = */ null
                     )
                 )
                 return true
             }
+
             R.id.action_delete_from_device -> {
-                DeleteSongsDialog.create(song).show(activity.supportFragmentManager, "DELETE_SONGS")
+                DeleteSongsDialog.create(song)
+                    .show(/* manager = */ activity.supportFragmentManager, /* tag = */
+                        "DELETE_SONGS"
+                    )
                 return true
             }
+
             R.id.action_add_to_playlist -> {
                 CoroutineScope(Dispatchers.IO).launch {
                     val playlists = get<RealRepository>().fetchPlaylists()
                     withContext(Dispatchers.Main) {
                         AddToPlaylistDialog.create(playlists, song)
-                            .show(activity.supportFragmentManager, "ADD_PLAYLIST")
+                            .show(/* manager = */ activity.supportFragmentManager, /* tag = */
+                                "ADD_PLAYLIST"
+                            )
                     }
                 }
                 return true
             }
+
             R.id.action_play_next -> {
                 MusicPlayerRemote.playNext(song)
                 return true
             }
+
             R.id.action_add_to_current_playing -> {
                 MusicPlayerRemote.enqueue(song)
                 return true
             }
+
             R.id.action_tag_editor -> {
                 val tagEditorIntent = Intent(activity, SongTagEditorActivity::class.java)
                 tagEditorIntent.putExtra(AbsTagEditorActivity.EXTRA_ID, song.id)
@@ -104,24 +100,31 @@ object SongMenuHelper : KoinComponent {
                 activity.startActivity(tagEditorIntent)
                 return true
             }
+
             R.id.action_details -> {
-                SongDetailDialog.create(song).show(activity.supportFragmentManager, "SONG_DETAILS")
+                SongDetailDialog.create(song)
+                    .show(/* manager = */ activity.supportFragmentManager, /* tag = */
+                        "SONG_DETAILS"
+                    )
                 return true
             }
+
             R.id.action_go_to_album -> {
                 activity.findNavController(R.id.fragment_container).navigate(
-                    R.id.albumDetailsFragment,
-                    bundleOf(EXTRA_ALBUM_ID to song.albumId)
+                    resId = R.id.albumDetailsFragment,
+                    args = bundleOf(EXTRA_ALBUM_ID to song.albumId)
                 )
                 return true
             }
+
             R.id.action_go_to_artist -> {
                 activity.findNavController(R.id.fragment_container).navigate(
-                    R.id.artistDetailsFragment,
-                    bundleOf(EXTRA_ARTIST_ID to song.artistId)
+                    resId = R.id.artistDetailsFragment,
+                    args = bundleOf(EXTRA_ARTIST_ID to song.artistId)
                 )
                 return true
             }
+
             R.id.action_add_to_blacklist -> {
                 BlacklistStore.getInstance(activity).addPath(File(song.data))
                 libraryViewModel.forceReload(ReloadType.Songs)

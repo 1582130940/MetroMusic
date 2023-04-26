@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                        app:navigationIcon="@drawable/ic_keyboard_arrow_down" />
+                app:navigationIcon="@drawable/ic_keyboard_arrow_down" />
         </LinearLayout>
 
         <include
@@ -63,10 +63,10 @@
         style="@style/BottomSheetStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:shapeAppearanceOverlay="@style/TopCornerCardView"
         app:behavior_hideable="false"
         app:cardElevation="24dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        app:shapeAppearanceOverlay="@style/TopCornerCardView"
         tools:peekHeight="0dp">
 
         <LinearLayout

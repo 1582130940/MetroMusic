@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.dialogs
 
 import android.app.Activity
@@ -75,9 +61,13 @@ class DeleteSongsDialog : DialogFragment() {
                     dismiss()
                 }
             val pendingIntent =
-                MediaStore.createDeleteRequest(requireActivity().contentResolver, songs.map {
-                    MusicUtil.getSongFileUri(it.id)
-                })
+                MediaStore.createDeleteRequest(
+                    /* resolver = */ requireActivity().contentResolver,
+                    /* uris = */
+                    songs.map {
+                        MusicUtil.getSongFileUri(it.id)
+                    },
+                )
             deleteResultLauncher.launch(
                 IntentSenderRequest.Builder(pendingIntent.intentSender).build()
             )
@@ -85,13 +75,15 @@ class DeleteSongsDialog : DialogFragment() {
         } else {
             val pair = if (songs.size > 1) {
                 Pair(
-                    R.string.delete_songs_title,
-                    String.format(getString(R.string.delete_x_songs), songs.size).parseAsHtml()
+                    first = R.string.delete_songs_title,
+                    second = String.format(getString(R.string.delete_x_songs), songs.size)
+                        .parseAsHtml()
                 )
             } else {
                 Pair(
-                    R.string.delete_song_title,
-                    String.format(getString(R.string.delete_song_x), songs[0].title).parseAsHtml()
+                    first = R.string.delete_song_title,
+                    second = String.format(getString(R.string.delete_song_x), songs[0].title)
+                        .parseAsHtml()
                 )
             }
 
@@ -119,7 +111,10 @@ class DeleteSongsDialog : DialogFragment() {
                             deleteSongs(songs)
                         } else {
                             startActivityForResult(
-                                Intent(requireActivity(), code.name.monkey.retromusic.activities.saf.SAFGuideActivity::class.java),
+                                Intent(
+                                    requireActivity(),
+                                    code.name.monkey.retromusic.activities.saf.SAFGuideActivity::class.java
+                                ),
                                 code.name.monkey.retromusic.activities.saf.SAFGuideActivity.REQUEST_CODE_SAF_GUIDE
                             )
                         }
@@ -132,12 +127,14 @@ class DeleteSongsDialog : DialogFragment() {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             code.name.monkey.retromusic.activities.saf.SAFGuideActivity.REQUEST_CODE_SAF_GUIDE -> {
-                SAFUtil.openTreePicker(this)
+                SAFUtil.openTreePicker(/* fragment = */ this)
             }
+
             SAFUtil.REQUEST_SAF_PICK_TREE,
-            SAFUtil.REQUEST_SAF_PICK_FILE -> {
+            SAFUtil.REQUEST_SAF_PICK_FILE,
+            -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    SAFUtil.saveTreeUri(requireActivity(), data)
+                    SAFUtil.saveTreeUri(/* context = */ requireActivity(), /* data = */ data)
                     val songs = extraNotNull<List<Song>>(EXTRA_SONG).value
                     deleteSongs(songs)
                 }
@@ -148,7 +145,12 @@ class DeleteSongsDialog : DialogFragment() {
     fun deleteSongs(songs: List<Song>) {
         CoroutineScope(Dispatchers.IO).launch {
             dismiss()
-            MusicUtil.deleteTracks(requireActivity(), songs, null, null)
+            MusicUtil.deleteTracks(
+                activity = requireActivity(),
+                songs = songs,
+                safUris = null,
+                callback = null
+            )
             reloadTabs()
         }
     }

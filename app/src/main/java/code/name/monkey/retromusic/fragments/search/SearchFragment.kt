@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.search
 
 import android.app.Activity.RESULT_OK
@@ -20,11 +6,19 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.speech.RecognizerIntent
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.getSystemService
-import androidx.core.view.*
+import androidx.core.view.children
+import androidx.core.view.doOnPreDraw
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,7 +26,11 @@ import androidx.transition.TransitionManager
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.adapter.SearchAdapter
 import code.name.monkey.retromusic.databinding.FragmentSearchBinding
-import code.name.monkey.retromusic.extensions.*
+import code.name.monkey.retromusic.extensions.accentColor
+import code.name.monkey.retromusic.extensions.addAlpha
+import code.name.monkey.retromusic.extensions.dip
+import code.name.monkey.retromusic.extensions.focusAndShowKeyboard
+import code.name.monkey.retromusic.extensions.showToast
 import code.name.monkey.retromusic.fragments.base.AbsMainActivityFragment
 import code.name.monkey.retromusic.util.PreferenceUtil
 import com.google.android.material.chip.Chip
@@ -42,8 +40,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.transition.MaterialFadeThrough
 import kotlinx.coroutines.Job
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
-import java.util.*
-
+import java.util.Locale
 
 class SearchFragment : AbsMainActivityFragment(R.layout.fragment_search),
     ChipGroup.OnCheckedStateChangeListener {
@@ -128,7 +125,7 @@ class SearchFragment : AbsMainActivityFragment(R.layout.fragment_search),
 
             val colors = intArrayOf(
                 android.R.color.transparent,
-                accentColor().addAlpha(0.5F)
+                accentColor().addAlpha(alpha = 0.5F)
             )
 
             chips.forEach {
@@ -166,7 +163,11 @@ class SearchFragment : AbsMainActivityFragment(R.layout.fragment_search),
             layoutManager = LinearLayoutManager(requireContext())
             adapter = searchAdapter
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                override fun onScrolled(
+                    recyclerView: RecyclerView,
+                    dx: Int,
+                    dy: Int,
+                ) {
                     super.onScrolled(recyclerView, dx, dy)
                     if (dy > 0) {
                         binding.keyboardPopup.shrink()
@@ -185,7 +186,7 @@ class SearchFragment : AbsMainActivityFragment(R.layout.fragment_search),
         binding.clearText.isVisible = query.isNotEmpty()
         val filter = getFilter()
         job?.cancel()
-        job = libraryViewModel.search(query, filter)
+        job = libraryViewModel.search(query = query, filter = filter)
     }
 
     private fun getFilter(): Filter {
@@ -245,15 +246,22 @@ class SearchFragment : AbsMainActivityFragment(R.layout.fragment_search),
         if (view != null) {
             val imm =
                 requireContext().getSystemService<InputMethodManager>()
-            imm?.hideSoftInputFromWindow(view.windowToken, 0)
+            imm?.hideSoftInputFromWindow(/* windowToken = */ view.windowToken, /* flags = */ 0)
         }
     }
 
-    override fun onCheckedChanged(group: ChipGroup, checkedIds: MutableList<Int>) {
+    override fun onCheckedChanged(
+        group: ChipGroup,
+        checkedIds: MutableList<Int>,
+    ) {
         search(binding.searchView.text.toString())
     }
 
-    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+    override fun onCreateMenu(
+        menu: Menu,
+        menuInflater: MenuInflater,
+    ) {
+    }
 
     override fun onMenuItemSelected(menuItem: MenuItem) = false
 }

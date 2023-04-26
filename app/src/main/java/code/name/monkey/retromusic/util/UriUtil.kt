@@ -13,8 +13,11 @@ object UriUtil {
     fun getUriFromPath(context: Context, path: String): Uri {
         val uri = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL)
         val proj = arrayOf(MediaStore.Files.FileColumns._ID)
-        context.contentResolver.query(
-            uri, proj, Constants.DATA + "=?", arrayOf(path), null
+        context.contentResolver.query(/* uri = */ uri, /* projection = */
+            proj, /* selection = */
+            Constants.DATA + "=?", /* selectionArgs = */
+            arrayOf(path), /* sortOrder = */
+            null
         )?.use { cursor ->
             if (cursor.count != 0) {
                 cursor.moveToFirst()

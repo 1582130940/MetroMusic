@@ -23,7 +23,10 @@ import code.name.monkey.retromusic.adapter.album.HorizontalAlbumAdapter
 import code.name.monkey.retromusic.adapter.song.SimpleSongAdapter
 import code.name.monkey.retromusic.databinding.FragmentArtistDetailsBinding
 import code.name.monkey.retromusic.dialogs.AddToPlaylistDialog
-import code.name.monkey.retromusic.extensions.*
+import code.name.monkey.retromusic.extensions.applyColor
+import code.name.monkey.retromusic.extensions.applyOutlineColor
+import code.name.monkey.retromusic.extensions.showToast
+import code.name.monkey.retromusic.extensions.surfaceColor
 import code.name.monkey.retromusic.fragments.base.AbsMainActivityFragment
 import code.name.monkey.retromusic.glide.RetroGlideExtension
 import code.name.monkey.retromusic.glide.RetroGlideExtension.artistImageOptions
@@ -34,7 +37,9 @@ import code.name.monkey.retromusic.helper.SortOrder
 import code.name.monkey.retromusic.interfaces.IAlbumClickListener
 import code.name.monkey.retromusic.model.Artist
 import code.name.monkey.retromusic.repository.RealRepository
-import code.name.monkey.retromusic.util.*
+import code.name.monkey.retromusic.util.CustomArtistImageUtil
+import code.name.monkey.retromusic.util.MusicUtil
+import code.name.monkey.retromusic.util.PreferenceUtil
 import com.bumptech.glide.Glide
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.transition.MaterialContainerTransform
@@ -42,7 +47,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.get
-import java.util.*
 
 abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragment_artist_details),
     IAlbumClickListener {
@@ -65,7 +69,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             drawingViewId = R.id.fragment_container
             scrimColor = Color.TRANSPARENT
-            setAllContainerColors(surfaceColor())
+            setAllContainerColors(/* containerColor = */ surfaceColor())
         }
     }
 
@@ -86,10 +90,21 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         setupRecyclerView()
 
         binding.fragmentArtistContent.playAction.apply {
-            setOnClickListener { MusicPlayerRemote.openQueue(artist.sortedSongs, 0, true) }
+            setOnClickListener {
+                MusicPlayerRemote.openQueue(
+                    queue = artist.sortedSongs,
+                    startPosition = 0,
+                    startPlaying = true
+                )
+            }
         }
         binding.fragmentArtistContent.shuffleAction.apply {
-            setOnClickListener { MusicPlayerRemote.openAndShuffleQueue(artist.songs, true) }
+            setOnClickListener {
+                MusicPlayerRemote.openAndShuffleQueue(
+                    queue = artist.songs,
+                    startPlaying = true
+                )
+            }
         }
 
         setupSongSortButton()
@@ -98,13 +113,26 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun setupRecyclerView() {
-        albumAdapter = HorizontalAlbumAdapter(requireActivity(), ArrayList(), this)
+        albumAdapter = HorizontalAlbumAdapter(
+            activity = requireActivity(),
+            dataSet = ArrayList(),
+            albumClickListener = this
+        )
         binding.fragmentArtistContent.albumRecyclerView.apply {
             itemAnimator = DefaultItemAnimator()
-            layoutManager = GridLayoutManager(this.context, 1, GridLayoutManager.HORIZONTAL, false)
+            layoutManager = GridLayoutManager(
+                /* context = */ this.context,
+                /* spanCount = */ 1,
+                /* orientation = */ GridLayoutManager.HORIZONTAL,
+                /* reverseLayout = */ false
+            )
             adapter = albumAdapter
         }
-        songAdapter = SimpleSongAdapter(requireActivity(), ArrayList(), R.layout.item_song)
+        songAdapter = SimpleSongAdapter(
+            context = requireActivity(),
+            songs = ArrayList(),
+            layoutRes = R.layout.item_song
+        )
         binding.fragmentArtistContent.recyclerView.apply {
             itemAnimator = DefaultItemAnimator()
             layoutManager = LinearLayoutManager(this.context)
@@ -121,15 +149,19 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         loadArtistImage(artist)
         binding.artistTitle.text = artist.name
         binding.text.text = String.format(
-            "%s • %s",
-            MusicUtil.getArtistInfoString(requireContext(), artist),
+            format = "%s • %s",
+            MusicUtil.getArtistInfoString(context = requireContext(), artist = artist),
             MusicUtil.getReadableDurationString(MusicUtil.getTotalDuration(artist.songs))
         )
         val songText = resources.getQuantityString(
-            R.plurals.albumSongs, artist.songCount, artist.songCount
+            /* id = */ R.plurals.albumSongs,
+            /* quantity = */ artist.songCount,
+            /* ...formatArgs = */ artist.songCount
         )
         val albumText = resources.getQuantityString(
-            R.plurals.albums, artist.songCount, artist.songCount
+            /* id = */ R.plurals.albums,
+            /* quantity = */ artist.songCount,
+            /* ...formatArgs = */ artist.songCount
         )
         binding.fragmentArtistContent.songTitle.text = songText
         binding.fragmentArtistContent.albumTitle.text = albumText
@@ -156,10 +188,10 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
 
     override fun onAlbumClick(albumId: Long, view: View) {
         findNavController().navigate(
-            R.id.albumDetailsFragment,
-            bundleOf(EXTRA_ALBUM_ID to albumId),
-            null,
-            FragmentNavigatorExtras(
+            resId = R.id.albumDetailsFragment,
+            args = bundleOf(EXTRA_ALBUM_ID to albumId),
+            navOptions = null,
+            navigatorExtras = FragmentNavigatorExtras(
                 view to albumId.toString()
             )
         )
@@ -188,7 +220,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
                     val playlists = get<RealRepository>().fetchPlaylists()
                     withContext(Dispatchers.Main) {
                         AddToPlaylistDialog.create(playlists, songs)
-                            .show(childFragmentManager, "ADD_PLAYLIST")
+                            .show(/* manager = */ childFragmentManager, /* tag = */ "ADD_PLAYLIST")
                     }
                 }
                 return true

@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.activities
 
 import android.Manifest.permission.BLUETOOTH_CONNECT
@@ -31,7 +17,11 @@ import code.name.monkey.appthemehelper.util.VersionUtils
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.activities.base.AbsMusicServiceActivity
 import code.name.monkey.retromusic.databinding.ActivityPermissionBinding
-import code.name.monkey.retromusic.extensions.*
+import code.name.monkey.retromusic.extensions.accentBackgroundColor
+import code.name.monkey.retromusic.extensions.accentColor
+import code.name.monkey.retromusic.extensions.setStatusBarColorAuto
+import code.name.monkey.retromusic.extensions.setTaskDescriptionColorAuto
+import code.name.monkey.retromusic.extensions.show
 
 class PermissionActivity : AbsMusicServiceActivity() {
     private lateinit var binding: ActivityPermissionBinding
@@ -61,9 +51,8 @@ class PermissionActivity : AbsMusicServiceActivity() {
         if (VersionUtils.hasS()) {
             binding.bluetoothPermission.show()
             binding.bluetoothPermission.setButtonClick {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(BLUETOOTH_CONNECT),
+                ActivityCompat.requestPermissions(/* activity = */ this, /* permissions = */
+                    arrayOf(BLUETOOTH_CONNECT), /* requestCode = */
                     BLUETOOTH_PERMISSION_REQUEST
                 )
             }
@@ -75,15 +64,16 @@ class PermissionActivity : AbsMusicServiceActivity() {
         binding.finish.setOnClickListener {
             if (hasPermissions()) {
                 startActivity(
-                    Intent(this, MainActivity::class.java).addFlags(
-                        Intent.FLAG_ACTIVITY_NEW_TASK or
-                                Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    Intent(/* packageContext = */ this, /* cls = */
+                        MainActivity::class.java
+                    ).addFlags(/* flags = */ Intent.FLAG_ACTIVITY_NEW_TASK or
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK
                     )
                 )
                 finish()
             }
         }
-        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(/* enabled = */ true) {
             override fun handleOnBackPressed() {
                 finishAffinity()
                 remove()
@@ -93,8 +83,7 @@ class PermissionActivity : AbsMusicServiceActivity() {
 
     private fun setupTitle() {
         val appName =
-            getString(
-                R.string.message_welcome,
+            getString(/* resId = */ R.string.message_welcome, /* ...formatArgs = */
                 "<b>Metro Music</b>"
             )
                 .parseAsHtml()
@@ -131,14 +120,13 @@ class PermissionActivity : AbsMusicServiceActivity() {
 
     @RequiresApi(Build.VERSION_CODES.S)
     private fun hasBluetoothPermission(): Boolean {
-        return ActivityCompat.checkSelfPermission(
-            this,
+        return ActivityCompat.checkSelfPermission(/* context = */ this, /* permission = */
             BLUETOOTH_CONNECT
         ) == PackageManager.PERMISSION_GRANTED
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun hasAudioPermission(): Boolean {
-        return Settings.System.canWrite(this)
+        return Settings.System.canWrite(/* context = */ this)
     }
 }

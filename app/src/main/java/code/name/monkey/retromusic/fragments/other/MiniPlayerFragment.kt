@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.other
 
 import android.annotation.SuppressLint
@@ -50,7 +36,7 @@ open class MiniPlayerFragment : AbsMusicServiceFragment(R.layout.fragment_mini_p
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        progressViewUpdateHelper = MusicProgressViewUpdateHelper(this)
+        progressViewUpdateHelper = MusicProgressViewUpdateHelper(callback = this)
     }
 
     override fun onClick(view: View) {
@@ -90,26 +76,28 @@ open class MiniPlayerFragment : AbsMusicServiceFragment(R.layout.fragment_mini_p
     }
 
     private fun updateSongTitle() {
-
         val song = MusicPlayerRemote.currentSong
-
         val builder = SpannableStringBuilder()
-
         val title = song.title.toSpannable()
-        title.setSpan(ForegroundColorSpan(textColorPrimary()), 0, title.length, 0)
+        title.setSpan(
+            /* p0 = */ ForegroundColorSpan(textColorPrimary()),
+            /* p1 = */ 0,
+            /* p2 = */ title.length,
+            /* p3 = */ 0
+        )
 
         val text = song.artistName.toSpannable()
-        text.setSpan(ForegroundColorSpan(textColorSecondary()), 0, text.length, 0)
+        text.setSpan(
+            /* p0 = */ ForegroundColorSpan(textColorSecondary()),
+            /* p1 = */ 0,
+            /* p2 = */ text.length,
+            /* p3 = */ 0
+        )
 
         builder.append(title).append(" • ").append(text)
 
         binding.miniPlayerTitle.isSelected = true
         binding.miniPlayerTitle.text = builder
-
-//        binding.title.isSelected = true
-//        binding.title.text = song.title
-//        binding.text.isSelected = true
-//        binding.text.text = song.artistName
     }
 
     private fun updateSongCover() {
@@ -164,10 +152,10 @@ open class MiniPlayerFragment : AbsMusicServiceFragment(R.layout.fragment_mini_p
         private var flingPlayBackController = GestureDetector(context,
             object : GestureDetector.SimpleOnGestureListener() {
                 override fun onFling(
-                    e1: MotionEvent,
+                    e1: MotionEvent?,
                     e2: MotionEvent,
                     velocityX: Float,
-                    velocityY: Float
+                    velocityY: Float,
                 ): Boolean {
                     if (abs(velocityX) > abs(velocityY)) {
                         if (velocityX < 0) {

@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.player.material
 
 import android.graphics.PorterDuff
@@ -22,9 +8,14 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import code.name.monkey.appthemehelper.util.ATHUtil
 import code.name.monkey.appthemehelper.util.MaterialValueHelper
-import code.name.monkey.retromusic.extensions.*
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.FragmentMaterialPlaybackControlsBinding
+import code.name.monkey.retromusic.extensions.applyColor
+import code.name.monkey.retromusic.extensions.getSongInfo
+import code.name.monkey.retromusic.extensions.hide
+import code.name.monkey.retromusic.extensions.ripAlpha
+import code.name.monkey.retromusic.extensions.show
+import code.name.monkey.retromusic.extensions.textColorSecondary
 import code.name.monkey.retromusic.fragments.base.AbsPlayerControlsFragment
 import code.name.monkey.retromusic.fragments.base.goToAlbum
 import code.name.monkey.retromusic.fragments.base.goToArtist
@@ -34,13 +25,8 @@ import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
 import com.google.android.material.slider.Slider
 
-/**
- * @author Hemanth S (h4h13).
- */
 class MaterialControlsFragment :
     AbsPlayerControlsFragment(R.layout.fragment_material_playback_controls) {
-
-
     private var _binding: FragmentMaterialPlaybackControlsBinding? = null
     private val binding get() = _binding!!
 
@@ -117,16 +103,22 @@ class MaterialControlsFragment :
     }
 
     override fun setColor(color: MediaNotificationProcessor) {
-        if (ATHUtil.isWindowBackgroundDark(requireContext())) {
+        if (ATHUtil.isWindowBackgroundDark(context = requireContext())) {
             lastPlaybackControlsColor =
-                MaterialValueHelper.getPrimaryTextColor(requireContext(), false)
+                MaterialValueHelper.getPrimaryTextColor(context = requireContext(), dark = false)
             lastDisabledPlaybackControlsColor =
-                MaterialValueHelper.getPrimaryDisabledTextColor(requireContext(), false)
+                MaterialValueHelper.getPrimaryDisabledTextColor(
+                    context = requireContext(),
+                    dark = false
+                )
         } else {
             lastPlaybackControlsColor =
-                MaterialValueHelper.getSecondaryTextColor(requireContext(), true)
+                MaterialValueHelper.getSecondaryTextColor(context = requireContext(), dark = true)
             lastDisabledPlaybackControlsColor =
-                MaterialValueHelper.getSecondaryDisabledTextColor(requireContext(), true)
+                MaterialValueHelper.getSecondaryDisabledTextColor(
+                    context = requireContext(),
+                    dark = true
+                )
         }
         updateRepeatState()
         updateShuffleState()
@@ -149,7 +141,10 @@ class MaterialControlsFragment :
     }
 
     private fun updatePlayPauseColor() {
-        binding.playPauseButton.setColorFilter(lastPlaybackControlsColor, PorterDuff.Mode.SRC_IN)
+        binding.playPauseButton.setColorFilter(
+            /* color = */ lastPlaybackControlsColor,
+            /* mode = */ PorterDuff.Mode.SRC_IN
+        )
     }
 
     private fun setUpPlayPauseFab() {
@@ -160,15 +155,15 @@ class MaterialControlsFragment :
         if (MusicPlayerRemote.isPlaying) {
             binding.playPauseButton.setImageDrawable(
                 ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_pause_outline
+                    /* context = */ requireContext(),
+                    /* id = */ R.drawable.ic_pause_outline
                 )
             )
         } else if (!MusicPlayerRemote.isPlaying) {
             binding.playPauseButton.setImageDrawable(
                 ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_play_arrow_outline
+                    /* context = */ requireContext(),
+                    /* id = */ R.drawable.ic_play_arrow_outline
                 )
             )
         }

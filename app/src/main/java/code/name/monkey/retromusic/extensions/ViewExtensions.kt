@@ -1,16 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- */
 package code.name.monkey.retromusic.extensions
 
 import android.animation.Animator
@@ -31,7 +18,19 @@ import androidx.annotation.Px
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.content.getSystemService
-import androidx.core.view.*
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.drawToBitmap
+import androidx.core.view.isGone
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
+import androidx.core.view.marginBottom
+import androidx.core.view.marginLeft
+import androidx.core.view.marginRight
+import androidx.core.view.marginTop
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updateMargins
+import androidx.core.view.updatePadding
 import code.name.monkey.appthemehelper.ThemeStore
 import code.name.monkey.appthemehelper.util.TintHelper
 import code.name.monkey.retromusic.util.PreferenceUtil
@@ -47,7 +46,11 @@ const val ANIM_DURATION = 300L
 
 @Suppress("UNCHECKED_CAST")
 fun <T : View> ViewGroup.inflate(@LayoutRes layout: Int): T {
-    return LayoutInflater.from(context).inflate(layout, this, false) as T
+    return LayoutInflater.from(context).inflate(
+        /* resource = */ layout,
+        /* root = */ this,
+        /* attachToRoot = */ false
+    ) as T
 }
 
 fun View.show() {
@@ -64,14 +67,17 @@ fun View.hidden() {
 
 fun EditText.appHandleColor(): EditText {
     if (PreferenceUtil.materialYou) return this
-    TintHelper.colorHandles(this, ThemeStore.accentColor(context))
+    TintHelper.colorHandles(/* view = */ this, /* color = */ ThemeStore.accentColor(context))
     return this
 }
 
 fun NavigationBarView.setItemColors(@ColorInt normalColor: Int, @ColorInt selectedColor: Int) {
     val csl = ColorStateList(
-        arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked)),
-        intArrayOf(normalColor, selectedColor)
+        /* states = */ arrayOf(
+            intArrayOf(-android.R.attr.state_checked),
+            intArrayOf(android.R.attr.state_checked)
+        ),
+        /* colors = */ intArrayOf(normalColor, selectedColor)
     )
     itemIconTintList = csl
     itemTextColor = csl
@@ -95,24 +101,43 @@ fun NavigationBarView.show() {
     // laid out yet, need to do this manually.
     if (!isLaidOut) {
         measure(
-            View.MeasureSpec.makeMeasureSpec(parent.width, View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.makeMeasureSpec(parent.height, View.MeasureSpec.AT_MOST)
+            View.MeasureSpec.makeMeasureSpec(/* size = */ parent.width, /* mode = */
+                View.MeasureSpec.EXACTLY
+            ),
+            View.MeasureSpec.makeMeasureSpec(/* size = */ parent.height, /* mode = */
+                View.MeasureSpec.AT_MOST
+            )
         )
-        layout(parent.left, parent.height - measuredHeight, parent.right, parent.height)
+        layout(
+            /* l = */ parent.left,
+            /* t = */ parent.height - measuredHeight,
+            /* r = */ parent.right,
+            /* b = */ parent.height
+        )
     }
 
-    val drawable = BitmapDrawable(context.resources, drawToBitmap())
-    drawable.setBounds(left, parent.height, right, parent.height + height)
+    val drawable = BitmapDrawable(/* res = */ context.resources, /* bitmap = */ drawToBitmap())
+    drawable.setBounds(
+        /* left = */ left,
+        /* top = */ parent.height,
+        /* right = */ right,
+        /* bottom = */ parent.height + height
+    )
     parent.overlay.add(drawable)
-    ValueAnimator.ofInt(parent.height, top).apply {
+    ValueAnimator.ofInt(/* ...values = */ parent.height, top).apply {
         duration = ANIM_DURATION
         interpolator = AnimationUtils.loadInterpolator(
-            context,
-            android.R.interpolator.accelerate_decelerate
+            /* context = */ context,
+            /* id = */ android.R.interpolator.accelerate_decelerate
         )
         addUpdateListener {
             val newTop = it.animatedValue as Int
-            drawable.setBounds(left, newTop, right, newTop + height)
+            drawable.setBounds(
+                /* left = */ left,
+                /* top = */ newTop,
+                /* right = */ right,
+                /* bottom = */ newTop + height
+            )
         }
         doOnEnd {
             parent.overlay.remove(drawable)
@@ -140,20 +165,30 @@ fun NavigationBarView.hide() {
         return
     }
 
-    val drawable = BitmapDrawable(context.resources, drawToBitmap())
+    val drawable = BitmapDrawable(/* res = */ context.resources, /* bitmap = */ drawToBitmap())
     val parent = parent as ViewGroup
-    drawable.setBounds(left, top, right, bottom)
+    drawable.setBounds(
+        /* left = */ left,
+        /* top = */ top,
+        /* right = */ right,
+        /* bottom = */ bottom
+    )
     parent.overlay.add(drawable)
     isGone = true
     ValueAnimator.ofInt(top, parent.height).apply {
         duration = ANIM_DURATION
         interpolator = AnimationUtils.loadInterpolator(
-            context,
-            android.R.interpolator.accelerate_decelerate
+            /* context = */ context,
+            /* id = */ android.R.interpolator.accelerate_decelerate
         )
         addUpdateListener {
             val newTop = it.animatedValue as Int
-            drawable.setBounds(left, newTop, right, newTop + height)
+            drawable.setBounds(
+                /* left = */ left,
+                /* top = */ newTop,
+                /* right = */ right,
+                /* bottom = */ newTop + height
+            )
         }
         doOnEnd {
             parent.overlay.remove(drawable)
@@ -163,7 +198,11 @@ fun NavigationBarView.hide() {
 }
 
 fun View.translateYAnimate(value: Float): Animator {
-    return ObjectAnimator.ofFloat(this, "translationY", value)
+    return ObjectAnimator.ofFloat(
+        /* target = */ this,
+        /* propertyName = */ "translationY",
+        /* ...values = */ value
+    )
         .apply {
             duration = 300
             doOnStart {
@@ -178,7 +217,11 @@ fun View.translateYAnimate(value: Float): Animator {
 }
 
 fun BottomSheetBehavior<*>.peekHeightAnimate(value: Int): Animator {
-    return ObjectAnimator.ofInt(this, "peekHeight", value)
+    return ObjectAnimator.ofInt(
+        /* target = */ this,
+        /* propertyName = */ "peekHeight",
+        /* ...values = */ value
+    )
         .apply {
             duration = ANIM_DURATION
             start()
@@ -199,7 +242,7 @@ fun MaterialCardView.animateRadius(cornerRadius: Float, pause: Boolean = true) {
 }
 
 fun MaterialCardView.animateToCircle() {
-    animateRadius(measuredHeight / 2F, pause = false)
+    animateRadius(cornerRadius = measuredHeight / 2F, pause = false)
 }
 
 fun View.focusAndShowKeyboard() {
@@ -213,7 +256,9 @@ fun View.focusAndShowKeyboard() {
                 // but InputMethodManager didn't get properly setup yet.
                 val imm =
                     context.getSystemService<InputMethodManager>()
-                imm?.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+                imm?.showSoftInput(/* view = */ this, /* flags = */
+                    InputMethodManager.SHOW_IMPLICIT
+                )
             }
         }
     }
@@ -231,7 +276,7 @@ fun View.focusAndShowKeyboard() {
                     if (hasFocus) {
                         this@focusAndShowKeyboard.showTheKeyboardNow()
                         // It’s very important to remove this listener once we are done.
-                        viewTreeObserver.removeOnWindowFocusChangeListener(this)
+                        viewTreeObserver.removeOnWindowFocusChangeListener(/* victim = */ this)
                     }
                 }
             })
@@ -283,7 +328,7 @@ fun View.updateMargin(
 
 fun View.applyBottomInsets() {
     if (PreferenceUtil.isFullScreenMode) return
-    val initialPadding = recordInitialPaddingForView(this)
+    val initialPadding = recordInitialPaddingForView(view = this)
 
     ViewCompat.setOnApplyWindowInsetsListener(
         (this)
@@ -306,7 +351,7 @@ fun View.requestApplyInsetsWhenAttached() {
         // request when we are
         addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
             override fun onViewAttachedToWindow(v: View) {
-                v.removeOnAttachStateChangeListener(this)
+                v.removeOnAttachStateChangeListener(/* listener = */ this)
                 v.requestApplyInsets()
             }
 

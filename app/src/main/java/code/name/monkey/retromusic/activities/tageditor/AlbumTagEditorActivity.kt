@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.activities.tageditor
 
 import android.app.Activity
@@ -30,7 +16,11 @@ import androidx.core.widget.doAfterTextChanged
 import code.name.monkey.appthemehelper.util.MaterialValueHelper
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.ActivityAlbumTagEditorBinding
-import code.name.monkey.retromusic.extensions.*
+import code.name.monkey.retromusic.extensions.appHandleColor
+import code.name.monkey.retromusic.extensions.defaultFooterColor
+import code.name.monkey.retromusic.extensions.isColorLight
+import code.name.monkey.retromusic.extensions.setTint
+import code.name.monkey.retromusic.extensions.showToast
 import code.name.monkey.retromusic.glide.RetroGlideExtension.asBitmapPalette
 import code.name.monkey.retromusic.glide.palette.BitmapPaletteWrapper
 import code.name.monkey.retromusic.model.ArtworkInfo
@@ -46,7 +36,7 @@ import com.bumptech.glide.request.target.ImageViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.shape.MaterialShapeDrawable
 import org.jaudiotagger.tag.FieldKey
-import java.util.*
+import java.util.EnumMap
 
 class AlbumTagEditorActivity : AbsTagEditorActivity<ActivityAlbumTagEditorBinding>() {
 
@@ -55,10 +45,12 @@ class AlbumTagEditorActivity : AbsTagEditorActivity<ActivityAlbumTagEditorBindin
 
     private fun windowEnterTransition() {
         val slide = Slide()
-        slide.excludeTarget(R.id.appBarLayout, true)
-        slide.excludeTarget(R.id.status_bar, true)
-        slide.excludeTarget(android.R.id.statusBarBackground, true)
-        slide.excludeTarget(android.R.id.navigationBarBackground, true)
+        slide.excludeTarget(/* targetId = */ R.id.appBarLayout, /* exclude = */ true)
+        slide.excludeTarget(/* targetId = */ R.id.status_bar, /* exclude = */ true)
+        slide.excludeTarget(/* targetId = */ android.R.id.statusBarBackground, /* exclude = */ true)
+        slide.excludeTarget(/* targetId = */ android.R.id.navigationBarBackground, /* exclude = */
+            true
+        )
 
         window.enterTransition = slide
     }
@@ -69,7 +61,7 @@ class AlbumTagEditorActivity : AbsTagEditorActivity<ActivityAlbumTagEditorBindin
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         binding.appBarLayout?.statusBarForeground =
-            MaterialShapeDrawable.createWithElevationOverlay(this)
+            MaterialShapeDrawable.createWithElevationOverlay(/* context = */ this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,9 +98,8 @@ class AlbumTagEditorActivity : AbsTagEditorActivity<ActivityAlbumTagEditorBindin
     override fun loadCurrentImage() {
         val bitmap = albumArt
         setImageBitmap(
-            bitmap,
-            getColor(
-                generatePalette(bitmap),
+            bitmap = bitmap,
+            bgColor = getColor(/* palette = */ generatePalette(/* bitmap = */ bitmap), /* fallback = */
                 defaultFooterColor()
             )
         )
@@ -120,34 +111,40 @@ class AlbumTagEditorActivity : AbsTagEditorActivity<ActivityAlbumTagEditorBindin
     }
 
     override fun searchImageOnWeb() {
-        searchWebFor(binding.albumText.text.toString(), binding.albumArtistText.text.toString())
+        searchWebFor(
+            binding.albumText.text.toString(),
+            binding.albumArtistText.text.toString()
+        )
     }
 
     override fun deleteImage() {
         setImageBitmap(
-            BitmapFactory.decodeResource(resources, R.drawable.default_audio_art),
-            defaultFooterColor()
+            bitmap = BitmapFactory.decodeResource(
+                resources,
+                R.drawable.default_audio_art
+            ), bgColor = defaultFooterColor()
         )
         deleteAlbumArt = true
         dataChanged()
     }
 
     override fun loadImageFromFile(selectedFile: Uri?) {
-        Glide.with(this@AlbumTagEditorActivity)
+        Glide.with(/* activity = */ this@AlbumTagEditorActivity)
             .asBitmapPalette()
             .load(selectedFile)
-            .diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
+            .diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(/* skip = */ true)
             .into(object : ImageViewTarget<BitmapPaletteWrapper>(binding.editorImage) {
                 override fun onResourceReady(
                     resource: BitmapPaletteWrapper,
-                    transition: Transition<in BitmapPaletteWrapper>?
+                    transition: Transition<in BitmapPaletteWrapper>?,
                 ) {
                     getColor(resource.palette, Color.TRANSPARENT)
-                    albumArtBitmap = resource.bitmap?.let { ImageUtil.resizeBitmap(it, 2048) }
+                    albumArtBitmap = resource.bitmap?.let {
+                        ImageUtil.resizeBitmap(/* src = */ it, /* maxForSmallerSize = */ 2048)
+                    }
                     setImageBitmap(
-                        albumArtBitmap,
-                        getColor(
-                            resource.palette,
+                        bitmap = albumArtBitmap,
+                        bgColor = getColor(/* palette = */ resource.palette, /* fallback = */
                             defaultFooterColor()
                         )
                     )
@@ -158,7 +155,7 @@ class AlbumTagEditorActivity : AbsTagEditorActivity<ActivityAlbumTagEditorBindin
 
                 override fun onLoadFailed(errorDrawable: Drawable?) {
                     super.onLoadFailed(errorDrawable)
-                    showToast(R.string.error_load_failed, Toast.LENGTH_LONG)
+                    showToast(stringRes = R.string.error_load_failed, duration = Toast.LENGTH_LONG)
                 }
 
                 override fun setResource(resource: BitmapPaletteWrapper?) {}
@@ -177,7 +174,7 @@ class AlbumTagEditorActivity : AbsTagEditorActivity<ActivityAlbumTagEditorBindin
         writeValuesToFiles(
             fieldKeyValueMap,
             when {
-                deleteAlbumArt -> ArtworkInfo(id, null)
+                deleteAlbumArt -> ArtworkInfo(albumId = id, artwork = null)
                 albumArtBitmap == null -> null
                 else -> ArtworkInfo(id, albumArtBitmap!!)
             }
@@ -197,11 +194,10 @@ class AlbumTagEditorActivity : AbsTagEditorActivity<ActivityAlbumTagEditorBindin
         super.setColors(color)
         saveFab.backgroundTintList = ColorStateList.valueOf(color)
         saveFab.backgroundTintList = ColorStateList.valueOf(color)
-        ColorStateList.valueOf(
-            MaterialValueHelper.getPrimaryTextColor(
-                this,
-                color.isColorLight
-            )
+        ColorStateList.valueOf(/* color = */ MaterialValueHelper.getPrimaryTextColor(
+            context = this,
+            dark = color.isColorLight
+        )
         ).also {
             saveFab.iconTint = it
             saveFab.setTextColor(it)

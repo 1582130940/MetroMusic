@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.fragments.other
 
 import android.graphics.Color
@@ -49,7 +35,11 @@ class VolumeFragment : Fragment(), Slider.OnChangeListener, OnAudioVolumeChanged
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentVolumeBinding.inflate(inflater, container, false)
+        _binding = FragmentVolumeBinding.inflate(
+            /* inflater = */ inflater,
+            /* parent = */ container,
+            /* attachToParent = */ false
+        )
         return binding.root
     }
 
@@ -65,14 +55,14 @@ class VolumeFragment : Fragment(), Slider.OnChangeListener, OnAudioVolumeChanged
         if (audioVolumeObserver == null) {
             audioVolumeObserver = AudioVolumeObserver(requireActivity())
         }
-        audioVolumeObserver?.register(AudioManager.STREAM_MUSIC, this)
+        audioVolumeObserver?.register(audioStreamType = AudioManager.STREAM_MUSIC, listener = this)
 
         val audioManager = audioManager
         binding.volumeSeekBar.valueTo =
             audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
         binding.volumeSeekBar.value =
             audioManager.getStreamVolume(AudioManager.STREAM_MUSIC).toFloat()
-        binding.volumeSeekBar.addOnChangeListener(this)
+        binding.volumeSeekBar.addOnChangeListener(/* listener = */ this)
     }
 
     override fun onAudioVolumeChanged(currentVolume: Int, maxVolume: Int) {
@@ -89,9 +79,17 @@ class VolumeFragment : Fragment(), Slider.OnChangeListener, OnAudioVolumeChanged
         _binding = null
     }
 
-    override fun onValueChange(slider: Slider, value: Float, fromUser: Boolean) {
+    override fun onValueChange(
+        slider: Slider,
+        value: Float,
+        fromUser: Boolean,
+    ) {
         val audioManager = audioManager
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, value.toInt(), 0)
+        audioManager.setStreamVolume(
+            /* streamType = */ AudioManager.STREAM_MUSIC,
+            /* index = */ value.toInt(),
+            /* flags = */ 0
+        )
         setPauseWhenZeroVolume(value < 1f)
         binding.volumeDown.setImageResource(if (value == 0f) R.drawable.ic_volume_off else R.drawable.ic_volume_down)
     }
@@ -100,18 +98,23 @@ class VolumeFragment : Fragment(), Slider.OnChangeListener, OnAudioVolumeChanged
         val audioManager = audioManager
         when (view.id) {
             R.id.volumeDown -> audioManager.adjustStreamVolume(
-                AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, 0
+                /* streamType = */ AudioManager.STREAM_MUSIC,
+                /* direction = */ AudioManager.ADJUST_LOWER,
+                /* flags = */ 0
             )
+
             R.id.volumeUp -> audioManager.adjustStreamVolume(
-                AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, 0
+                /* streamType = */ AudioManager.STREAM_MUSIC,
+                /* direction = */ AudioManager.ADJUST_RAISE,
+                /* flags = */ 0
             )
         }
     }
 
     fun tintWhiteColor() {
         val color = Color.WHITE
-        binding.volumeDown.setColorFilter(color, PorterDuff.Mode.SRC_IN)
-        binding.volumeUp.setColorFilter(color, PorterDuff.Mode.SRC_IN)
+        binding.volumeDown.setColorFilter(/* color = */ color, /* mode = */ PorterDuff.Mode.SRC_IN)
+        binding.volumeUp.setColorFilter(/* color = */ color, /* mode = */ PorterDuff.Mode.SRC_IN)
         binding.volumeSeekBar.applyColor(color)
     }
 
@@ -126,8 +129,8 @@ class VolumeFragment : Fragment(), Slider.OnChangeListener, OnAudioVolumeChanged
     }
 
     fun setTintableColor(color: Int) {
-        binding.volumeDown.setColorFilter(color, PorterDuff.Mode.SRC_IN)
-        binding.volumeUp.setColorFilter(color, PorterDuff.Mode.SRC_IN)
+        binding.volumeDown.setColorFilter(/* color = */ color, /* mode = */ PorterDuff.Mode.SRC_IN)
+        binding.volumeUp.setColorFilter(/* color = */ color, /* mode = */ PorterDuff.Mode.SRC_IN)
         // TintHelper.setTint(volumeSeekBar, color, false)
         binding.volumeSeekBar.applyColor(color)
     }

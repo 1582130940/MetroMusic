@@ -44,7 +44,11 @@ class CoverLyricsFragment : AbsMusicServiceFragment(R.layout.fragment_cover_lyri
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentCoverLyricsBinding.bind(view)
-        progressViewUpdateHelper = MusicProgressViewUpdateHelper(this, 500, 1000)
+        progressViewUpdateHelper = MusicProgressViewUpdateHelper(
+            callback = this,
+            intervalPlaying = 500,
+            intervalPaused = 1000
+        )
         if (PreferenceUtil.showLyrics) {
             progressViewUpdateHelper?.start()
         }
@@ -62,14 +66,26 @@ class CoverLyricsFragment : AbsMusicServiceFragment(R.layout.fragment_cover_lyri
         binding.run {
             playerLyrics.background = null
             playerLyricsLine1.setTextColor(color.primaryTextColor)
-            playerLyricsLine1.setShadowLayer(dipToPix(10f), 0f, 0f, color.backgroundColor)
+            playerLyricsLine1.setShadowLayer(
+                /* radius = */ dipToPix(dpInFloat = 10f),
+                /* dx = */ 0f,
+                /* dy = */ 0f,
+                /* color = */ color.backgroundColor
+            )
             playerLyricsLine2.setTextColor(color.primaryTextColor)
-            playerLyricsLine2.setShadowLayer(dipToPix(10f), 0f, 0f, color.backgroundColor)
+            playerLyricsLine2.setShadowLayer(
+                /* radius = */ dipToPix(dpInFloat = 10f),
+                /* dx = */ 0f,
+                /* dy = */ 0f,
+                /* color = */ color.backgroundColor
+            )
         }
-
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+    override fun onSharedPreferenceChanged(
+        sharedPreferences: SharedPreferences?,
+        key: String?,
+    ) {
         if (key == SHOW_LYRICS) {
             if (sharedPreferences?.getBoolean(key, false) == true) {
                 progressViewUpdateHelper?.start()
@@ -117,7 +133,10 @@ class CoverLyricsFragment : AbsMusicServiceFragment(R.layout.fragment_cover_lyri
         }
     }
 
-    override fun onUpdateProgressViews(progress: Int, total: Int) {
+    override fun onUpdateProgressViews(
+        progress: Int,
+        total: Int,
+    ) {
         if (_binding == null) return
 
         if (!isLyricsLayoutVisible()) {
@@ -152,22 +171,23 @@ class CoverLyricsFragment : AbsMusicServiceFragment(R.layout.fragment_cover_lyri
 
             lyricsLine1.alpha = 1f
             lyricsLine1.translationY = 0f
-            lyricsLine1.animate().alpha(0f).translationY(-h).duration =
+            lyricsLine1.animate().alpha(/* value = */ 0f).translationY(-h).duration =
                 AbsPlayerFragment.VISIBILITY_ANIM_DURATION
 
             lyricsLine2.alpha = 0f
             lyricsLine2.translationY = h
-            lyricsLine2.animate().alpha(1f).translationY(0f).duration =
+            lyricsLine2.animate().alpha(/* value = */ 1f).translationY(/* value = */ 0f).duration =
                 AbsPlayerFragment.VISIBILITY_ANIM_DURATION
         }
     }
 
     private fun isLyricsLayoutVisible(): Boolean {
-        return lyrics != null && lyrics!!.isSynchronized && lyrics!!.isValid
+        return lyrics != null && lyrics?.isSynchronized == true && lyrics?.isValid == true
     }
 
     private fun hideLyricsLayout() {
-        lyricsLayout.animate().alpha(0f).setDuration(AbsPlayerFragment.VISIBILITY_ANIM_DURATION)
+        lyricsLayout.animate().alpha(/* value = */ 0f)
+            .setDuration(AbsPlayerFragment.VISIBILITY_ANIM_DURATION)
             .withEndAction {
                 if (_binding == null) return@withEndAction
                 lyricsLayout.isVisible = false

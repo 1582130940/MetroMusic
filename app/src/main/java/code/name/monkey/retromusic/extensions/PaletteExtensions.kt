@@ -1,17 +1,3 @@
-/*
- * Copyright (c) 2020 Hemanth Savarla.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- */
 package code.name.monkey.retromusic.extensions
 
 import androidx.annotation.ColorInt
@@ -78,7 +64,7 @@ fun isBlack(fArr: FloatArray): Boolean {
 
 fun isNearRedLine(fArr: FloatArray): Boolean {
     val f = fArr[0]
-    return f in 10.0f..37.0f && fArr[1] <= 0.82f
+    return (f in (10.0f..37.0f)) && (fArr[1] <= 0.82f)
 }
 
 fun isDark(@ColorInt i: Int): Boolean {
