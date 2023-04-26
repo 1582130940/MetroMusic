@@ -92,19 +92,6 @@
     <string name="blacklist">Lista negra</string>
     <string name="blur">Difuminado</string>
     <string name="blur_card">Tarjeta difuminado</string>
-    <string name="bug_report_failed">No se puede enviar el informe</string>
-    <string name="bug_report_failed_invalid_token">Token de acceso no válido. Póngase en contacto con el desarrollador de la aplicación.</string>
-    <string name="bug_report_failed_issues_not_available">Los problemas no están habilitados para el repositorio seleccionado. Póngase en contacto con el desarrollador de la aplicación.</string>
-    <string name="bug_report_failed_unknown">Ocurrió un error inesperado. Póngase en contacto con el desarrollador de la aplicación.</string>
-    <string name="bug_report_failed_wrong_credentials">Nombre de usuario o contraseña incorrectos</string>
-    <string name="bug_report_issue">Problema</string>
-    <string name="bug_report_manual">Enviar manualmente</string>
-    <string name="bug_report_no_description">Ingrese una descripción del problema</string>
-    <string name="bug_report_no_password">Ingrese su contraseña válida de GitHub</string>
-    <string name="bug_report_no_title">Por favor ingrese un título de problema</string>
-    <string name="bug_report_no_username">Ingrese su nombre de usuario válido de GitHub</string>
-    <string name="bug_report_summary">Ocurrió un error inesperado. Lamento haber encontrado este error, si sigue fallando \"Borre los datos de la aplicación\" o enviar un correo electrónico </string>
-    <string name="bug_report_use_account">Enviar usando la cuenta de GitHub</string>
     <string name="buy_now">Compre ahora</string>
     <string name="cancel_current_timer">Cancelar</string>
     <string name="card">Tarjeta</string>
@@ -416,8 +403,6 @@
     <string name="remove_x_songs_from_playlist"><![CDATA[Remove <b>%1$d</b> songs from the playlist?]]></string>
     <string name="rename_playlist_title">Rename playlist</string>
     <string name="replace_cover">Replace Cover</string>
-    <string name="report_an_issue">Report an issue</string>
-    <string name="report_bug">Report bug</string>
     <string name="reset_action">Reset</string>
     <string name="reset_artist_image">Reset artist image</string>
     <string name="restore">Restore</string>
@@ -531,5 +516,4 @@
     <string name="you_have_to_select_at_least_one_category">You have to select at least one category.</string>
     <string name="you_will_be_forwarded_to_the_issue_tracker_website">You will be forwarded to the issue tracker website.</string>
     <string name="your_account_data_is_only_used_for_authentication">Your account data is only used for authentication.</string>
-    <string name="bug_report_success">Bug report successful</string>
 </resources>

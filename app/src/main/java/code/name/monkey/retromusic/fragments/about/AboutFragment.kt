@@ -47,7 +47,6 @@ class AboutFragment : Fragment(R.layout.fragment_about), View.OnClickListener {
     private fun setUpView() {
         binding.aboutContent.cardRetroInfo.appGithub.setOnClickListener(this)
         binding.aboutContent.cardRetroInfo.faqLink.setOnClickListener(this)
-        binding.aboutContent.cardRetroInfo.bugReportLink.setOnClickListener(this)
         binding.aboutContent.cardRetroInfo.changelog.setOnClickListener(this)
         binding.aboutContent.cardRetroInfo.openSource.setOnClickListener(this)
     }
@@ -58,7 +57,6 @@ class AboutFragment : Fragment(R.layout.fragment_about), View.OnClickListener {
             R.id.appGithub -> openUrl(Constants.GITHUB_PROJECT)
             R.id.changelog -> NavigationUtil.gotoWhatNews(requireActivity())
             R.id.openSource -> NavigationUtil.goToOpenSource(requireActivity())
-            R.id.bugReportLink -> NavigationUtil.bugReport(requireActivity())
         }
     }
 

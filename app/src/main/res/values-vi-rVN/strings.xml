@@ -93,21 +93,6 @@
     <string name="bluetooth_title">Thiết bị lân cận</string>
     <string name="blur">Làm mờ</string>
     <string name="blur_card">Thẻ mờ</string>
-    <string name="bug_report_failed">Không thể gửi báo cáo</string>
-    <string name="bug_report_failed_invalid_token">Mã token không hợp lệ. Vui lòng liên hệ với nhà phát triển ứng dụng.</string>
-    <string name="bug_report_failed_issues_not_available">Các vấn đề không được kích hoạt cho repository đã chọn. Vui lòng liên hệ với nhà phát triển ứng dụng.</string>
-    <string name="bug_report_failed_unknown">Đã xảy ra lỗi không mong muốn. Vui lòng liên hệ với nhà phát triển ứng dụng.</string>
-    <string name="bug_report_failed_wrong_credentials">Tên người dùng hoặc mật khẩu không đúng</string>
-    <string name="bug_report_issue">Vấn đề</string>
-    <string name="bug_report_manual">Gửi thủ công</string>
-    <string name="bug_report_no_description">Vui lòng nhập mô tả vấn đề</string>
-    <string name="bug_report_no_password">Vui lòng nhập đúng mật khẩu dùng Github của bạn</string>
-    <string name="bug_report_no_title">Vui lòng nhập tiêu đề vấn đề</string>
-    <string name="bug_report_no_username">Vui lòng nhập đúng tên người dùng Github của bạn</string>
-    <string name="bug_report_success">Báo cáo lỗi thành công</string>
-    <string name="bug_report_summary">Đã xảy ra lỗi không mong muốn. Xin lỗi bạn vì lỗi này, nếu nó
-tiếp tục xảy ra hãy \"Xóa dữ liệu ứng dụng\"</string>
-    <string name="bug_report_use_account">Gửi bằng tài khoản GitHub </string>
     <string name="buy_now">Mua ngay</string>
     <string name="cancel_current_timer">Hủy</string>
     <string name="card">Thẻ</string>
@@ -438,8 +423,6 @@ tiếp tục xảy ra hãy \"Xóa dữ liệu ứng dụng\"</string>
     <string name="remove_x_songs_from_playlist"><![CDATA[Xóa <b>%1$d</b> bài hát khỏi danh sách phát?]]></string>
     <string name="rename_playlist_title">Đổi tên danh sách phát</string>
     <string name="replace_cover">Thay thế Ảnh bìa Album</string>
-    <string name="report_an_issue">Báo cáo vấn đề</string>
-    <string name="report_bug">Báo cáo lỗi</string>
     <string name="reset_action">Cài lại</string>
     <string name="reset_artist_image">Đặt lại ảnh nghệ sĩ</string>
     <string name="restore">Khôi phục</string>

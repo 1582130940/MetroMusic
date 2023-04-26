@@ -93,21 +93,6 @@
     <string name="bluetooth_title">付近のデバイス</string>
     <string name="blur">ぼかし</string>
     <string name="blur_card">ブラーカード</string>
-    <string name="bug_report_failed">レポートを送信できませんでした</string>
-    <string name="bug_report_failed_invalid_token">無効なトークン:アプリの開発者に連絡してください</string>
-    <string name="bug_report_failed_issues_not_available">選択されたリポジトリで問題が有効になっていません。開発者に連絡してください</string>
-    <string name="bug_report_failed_unknown">予期しないエラーが発生しました。開発者に連絡してください。</string>
-    <string name="bug_report_failed_wrong_credentials">ユーザー名かパスワードが違います</string>
-    <string name="bug_report_issue">問題</string>
-    <string name="bug_report_manual">手動で送信</string>
-    <string name="bug_report_no_description">問題の説明を入力してください</string>
-    <string name="bug_report_no_password">有効なGitHubのパスワードを入力してください</string>
-    <string name="bug_report_no_title">問題のタイトルを入力してください</string>
-    <string name="bug_report_no_username">有効なGitHubアカウントのユーザー名を入力してください</string>
-    <string name="bug_report_success">バグ報告に成功しました</string>
-    <string name="bug_report_summary">予期しないエラーが発生しました。申し訳ございません。
-このバグが何度も発生する場合は、端末のアプリ設定より「データを削除する(Androidバージョンによって異なります)」を実行するか、概要をメールで送信してください。</string>
-    <string name="bug_report_use_account">GitHubアカウントを使って送信</string>
     <string name="buy_now">今すぐ購入</string>
     <string name="cancel_current_timer">キャンセル</string>
     <string name="card">カード</string>
@@ -438,8 +423,6 @@
     <string name="remove_x_songs_from_playlist"><![CDATA[<b>%1$d</b> をプレイリストから削除しますか？]]></string>
     <string name="rename_playlist_title">プレイリストの名前を変更</string>
     <string name="replace_cover">カバーを交換する</string>
-    <string name="report_an_issue">問題を報告</string>
-    <string name="report_bug">不具合を報告する</string>
     <string name="reset_action">リセット</string>
     <string name="reset_artist_image">アーティスト画像をリセット</string>
     <string name="restore">復元</string>
