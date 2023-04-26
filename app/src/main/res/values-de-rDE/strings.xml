@@ -165,7 +165,6 @@
     <string name="error_load_failed">Laden fehlgeschlagen</string>
     <string name="error_share_file">Datei konnte nicht geteilt werden</string>
     <string name="expanded">Erweitert</string>
-    <string name="faq">FAQ</string>
     <string name="favorites">Favoriten</string>
     <string name="file_already_exists">Datei existiert bereits</string>
     <string name="finish_last_song">Letzten Titel beenden</string>

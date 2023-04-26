@@ -163,7 +163,6 @@
     <string name="error_load_failed">読み込み失敗</string>
     <string name="error_share_file">ファイルを共有できませんでした</string>
     <string name="expanded">展開</string>
-    <string name="faq">よくある質問</string>
     <string name="favorites">お気に入り</string>
     <string name="file_already_exists">ファイルは既に存在します</string>
     <string name="finish_last_song">最後の曲の終了を待つ</string>

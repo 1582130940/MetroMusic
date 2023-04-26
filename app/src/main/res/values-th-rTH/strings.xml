@@ -163,7 +163,6 @@
     <string name="error_load_failed">Load failed</string>
     <string name="error_share_file">Couldn\'t share file</string>
     <string name="expanded">Expanded</string>
-    <string name="faq">คำถามที่พบบ่อย</string>
     <string name="favorites">เพลงโปรด</string>
     <string name="file_already_exists">File already exists</string>
     <string name="finish_last_song">ปิดเมื่อเพลงสุดท้ายจบ</string>

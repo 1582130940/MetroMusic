@@ -169,7 +169,6 @@
     <string name="error_load_failed">Ошибка загрузки</string>
     <string name="error_share_file">Не удалось просканировать файл</string>
     <string name="expanded">Увеличенная</string>
-    <string name="faq">ЧаВО</string>
     <string name="favorites">Любимые</string>
     <string name="file_already_exists">Файл уже существует</string>
     <string name="finish_last_song">Закончить вопсроизведение последнего трека</string>

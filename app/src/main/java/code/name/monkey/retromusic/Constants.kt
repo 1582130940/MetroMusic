@@ -21,7 +21,6 @@ object Constants {
     const val GITHUB_PROJECT = "https://github.com/1582130940/MetroMusic"
     const val USER_PROFILE = "profile.jpg"
     const val USER_BANNER = "banner.jpg"
-    const val FAQ_LINK = "https://github.com/1582130940/MetroMusic/blob/master/FAQ.md"
 
     const val IS_MUSIC =
         MediaStore.Audio.AudioColumns.IS_MUSIC + "=1" + " AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''"

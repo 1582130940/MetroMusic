@@ -166,7 +166,6 @@ https://play.google.com/store/apps/details?id=%s</string>
     <string name="error_load_failed">Caricamento fallito</string>
     <string name="error_share_file">Impossibile condividere il file</string>
     <string name="expanded">Esteso</string>
-    <string name="faq">FAQ</string>
     <string name="favorites">Preferiti</string>
     <string name="file_already_exists">Il file esiste già</string>
     <string name="finish_last_song">Termina ultimo brano</string>

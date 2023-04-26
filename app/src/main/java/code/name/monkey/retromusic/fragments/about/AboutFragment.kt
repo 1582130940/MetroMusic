@@ -46,14 +46,12 @@ class AboutFragment : Fragment(R.layout.fragment_about), View.OnClickListener {
 
     private fun setUpView() {
         binding.aboutContent.cardRetroInfo.appGithub.setOnClickListener(this)
-        binding.aboutContent.cardRetroInfo.faqLink.setOnClickListener(this)
         binding.aboutContent.cardRetroInfo.changelog.setOnClickListener(this)
         binding.aboutContent.cardRetroInfo.openSource.setOnClickListener(this)
     }
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.faqLink -> openUrl(Constants.FAQ_LINK)
             R.id.appGithub -> openUrl(Constants.GITHUB_PROJECT)
             R.id.changelog -> NavigationUtil.gotoWhatNews(requireActivity())
             R.id.openSource -> NavigationUtil.goToOpenSource(requireActivity())

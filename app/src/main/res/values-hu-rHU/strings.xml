@@ -165,7 +165,6 @@
     <string name="error_load_failed">Betöltés sikertelen</string>
     <string name="error_share_file">Nem sikerült megosztani a fájlt</string>
     <string name="expanded">Kibővített</string>
-    <string name="faq">GYIK</string>
     <string name="favorites">Kedvencek</string>
     <string name="file_already_exists">A fájl már létezik</string>
     <string name="finish_last_song">Fejezze be az utolsó dalt</string>

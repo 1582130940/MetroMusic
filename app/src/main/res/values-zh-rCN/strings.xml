@@ -163,7 +163,6 @@
     <string name="error_load_failed">加载失败</string>
     <string name="error_share_file">无法分享文件</string>
     <string name="expanded">展开</string>
-    <string name="faq">常见问题和解答</string>
     <string name="favorites">收藏夹</string>
     <string name="file_already_exists">文件已存在</string>
     <string name="finish_last_song">播放完最后一首歌曲</string>

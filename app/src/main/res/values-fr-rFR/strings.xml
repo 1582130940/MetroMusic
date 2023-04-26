@@ -165,7 +165,6 @@
     <string name="error_load_failed">Échec du chargement</string>
     <string name="error_share_file">Impossible de partager le fichier</string>
     <string name="expanded">Développé</string>
-    <string name="faq">Foire aux questions</string>
     <string name="favorites">Favoris</string>
     <string name="file_already_exists">Le fichier existe déjà</string>
     <string name="finish_last_song">Finissez le dernier morceau</string>
