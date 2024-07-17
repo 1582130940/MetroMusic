@@ -2,12 +2,12 @@
 
 buildscript {
     ext {
-        lifecycle_version = '2.6.1'
+        lifecycle_version = '2.7.0'
         navigation_version = '2.5.3'
-        mdc_version = '1.9.0-beta01'
-        preference_version = '1.2.0'
+        mdc_version = '1.12.0'
+        preference_version = '1.2.1'
         appcompat_version = '1.6.1'
-        core_version = '1.10.0-rc01'
+        core_version = '1.13.1'
     }
 
     repositories {
@@ -16,7 +16,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.0'
+        classpath 'com.android.tools.build:gradle:7.4.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.10"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
     }
@@ -28,7 +28,7 @@ plugins {
 }
 
 tasks.register('clean', Delete) {
-    delete rootProject.buildDir
+    delete rootProject.layout.buildDirectory
 }
 
 allprojects {

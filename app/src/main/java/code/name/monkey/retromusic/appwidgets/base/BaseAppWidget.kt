@@ -161,7 +161,7 @@ abstract class BaseAppWidget : AppWidgetProvider() {
                 /* right = */width,
                 /* bottom = */ height
             )
-            drawable.draw(/* p0 = */ c)
+            drawable.draw(/* canvas = */ c)
 
             val rounded = Bitmap.createBitmap(
                 /* width = */ width,
